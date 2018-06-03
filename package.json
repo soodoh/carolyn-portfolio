@@ -1,0 +1,35 @@
+{
+  "name": "carolyn-portfolio",
+  "version": "0.1.0",
+  "description": "Serverless UI/UX Designer Portfolio, built with React & Contentful",
+  "main": "index.js",
+  "dependencies": {
+    "react": "^16.4.0",
+    "react-dom": "^16.4.0",
+    "react-scripts": "1.1.4"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/paulmichaelxd/carolyn-portfolio.git"
+  },
+  "keywords": [
+    "serverless",
+    "portfolio",
+    "designer",
+    "contentful",
+    "api",
+    "aws"
+  ],
+  "author": "Paul DiLoreto",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/paulmichaelxd/carolyn-portfolio/issues"
+  },
+  "homepage": "https://github.com/paulmichaelxd/carolyn-portfolio#readme"
+}
