@@ -9,7 +9,7 @@ const Header = props => (
 	<AppBar position='sticky'>
 		<Toolbar>
 			<NavLink to='/' className={props.classes.brand}>
-				<Typography variant='subheading' color='inherit'>Carolyn DiLoreto</Typography>
+				<Typography variant='title' color='inherit'>Carolyn DiLoreto</Typography>
 			</NavLink>
 			
 			<NavLink to='/about'
