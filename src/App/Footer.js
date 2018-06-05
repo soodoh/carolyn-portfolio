@@ -14,22 +14,22 @@ const Footer = props => {
 		<footer className={classes.footer}>
 			<section className={classes.content}>
 				<div>
-					<Typography variant='caption'>
+					<Typography variant='caption' color='inherit'>
 						Copyright &copy; {new Date().getFullYear()} Carolyn DiLoreto
 					</Typography>
-					<Typography variant='caption'>
+					<Typography variant='caption' color='inherit'>
 						Designed by Carolyn DiLoreto
 					</Typography>
-					<Typography variant='caption'>
+					<Typography variant='caption' color='inherit'>
 						Developed by Paul DiLoreto
 					</Typography>
 				</div>
 				
 				<div>
-					<IconButton>
+					<IconButton color='inherit'>
 						<Instagram />
 					</IconButton>
-					<IconButton>
+					<IconButton color='inherit'>
 						<LinkedIn />
 					</IconButton>
 				</div>
@@ -51,7 +51,8 @@ const styles = theme => ({
 		flex: 1,
 		justifyContent: 'space-between',
 		alignItems: 'center',
-		padding: `0 ${theme.spacing.unit * 2}px`
+		padding: `0 ${theme.spacing.unit * 2}px`,
+		color: theme.palette.gray[700]
 	}
 });
 

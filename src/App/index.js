@@ -11,6 +11,19 @@ import Projects from '../Projects';
 import Resume from '../Resume';
 import Theme from './Theme';
 
+// Necessary for Router props to be passed to Header
+const ContentWrapper = Component => {
+	const Content = props => (
+		<div>
+			<Header match={props.match} />
+			<Component />
+			<Footer />
+		</div>
+	);
+	
+	return Content;
+};
+
 class App extends Component {
 	componentWillMount() {
 		// Remove default Browser margin
@@ -24,20 +37,16 @@ class App extends Component {
 			<MuiThemeProvider theme={Theme}>
 				<BrowserRouter>
 					<div className={classes.container}>
-						<Header />
-						
 						<section className={classes.content}>
 							<Switch>
-								<Route exact path='/' component={Home} />
-								<Route path='/about' component={About} />
-								<Route path='/photography' component={Photography} />
-								<Route path='/projects' component={Projects} />
-								<Route path='/resume' component={Resume} />
-								<Route component={NotFound} />
+								<Route exact path='/' component={ContentWrapper(Home)} />
+								<Route path='/about' component={ContentWrapper(About)} />
+								<Route path='/photography' component={ContentWrapper(Photography)} />
+								<Route path='/projects' component={ContentWrapper(Projects)} />
+								<Route path='/resume' component={ContentWrapper(Resume)} />
+								<Route component={ContentWrapper(NotFound)} />
 							</Switch>
 						</section>
-						
-						<Footer />
 					</div>
 				</BrowserRouter>
 			</MuiThemeProvider>
@@ -51,7 +60,6 @@ const styles = theme => ({
 		minHeight: '100vh'
 	},
 	content: {
-		padding: theme.spacing.unit * 2,
 		paddingBottom: theme.spacing.unit * 11
 	}
 });

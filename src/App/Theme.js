@@ -20,6 +20,9 @@ const theme = createMuiTheme({
 			main: '#CEC0A8',
 			dark: '#CEC0A8',
 			contrastText: '#fff'
+		},
+		gray: {
+			700: '#494F5C'
 		}
 	},
 	typography: {
