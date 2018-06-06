@@ -32,6 +32,11 @@ const theme = createMuiTheme({
 		},
 		display1: {
 			fontFamily: `'Old Standard TT', serif`
+		},
+		body1: {
+			fontFamily: `'Old Standard TT', serif`,
+			fontSize: '1rem',
+			paddingBottom: '1.5rem'
 		}
 	}
 });

@@ -1,7 +1,23 @@
 import React from 'react';
+import { withStyles } from '@material-ui/core/styles';
+import resume from './assets/resume.pdf';
 
 const Resume = props => (
-	<div>This is the resume</div>
+	<div>
+		<object data={resume}
+		        type='application/pdf'
+		        className={props.classes.resume}
+		>
+			<a href={resume}>CD_Resume.pdf</a>
+		</object>
+	</div>
 );
 
-export default Resume;
+const styles = {
+	resume: {
+		width: '100%',
+		height: '100vh'
+	}
+};
+
+export default withStyles(styles)(Resume);
