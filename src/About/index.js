@@ -4,6 +4,7 @@ import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import profile from '../assets/profile.jpg';
+import SocialMedia from '../SocialMedia';
 
 class About extends React.Component {
 	componentWillMount() {
@@ -19,10 +20,10 @@ class About extends React.Component {
 		
 		return (
 			<Grid container
-			      spacing={32}
+			      spacing={40}
 			      className={classes.content}
 			>
-				<Grid item xs={3}>
+				<Grid item xs={12} sm={5} md={3}>
 					<img src={profile}
 					     alt='Headshot'
 					     className={classes.profile}
@@ -45,9 +46,16 @@ class About extends React.Component {
 					>
 						408.761.2013
 					</Typography>
+					
+					<Typography variant='caption'
+					            color='secondary'
+					            align='center'
+		            >
+						<SocialMedia />
+					</Typography>
 				</Grid>
 				
-				<Grid item xs={9}>
+				<Grid item xs={12} sm={7} md={9}>
 					<Typography variant='body1'
 					            color='inherit'
 					>
@@ -77,12 +85,13 @@ class About extends React.Component {
 const styles = theme => ({
 	content: {
 		padding: theme.spacing.unit * 2,
+		paddingTop: theme.spacing.unit * 4,
 		color: theme.palette.primary.contrastText
 	},
 	profile: {
-		border: `${theme.spacing.unit / 2}px solid ${theme.palette.secondary.main}`,
-		width: '100%',
-		// margin: theme.spacing.unit * 2
+		boxSizing: 'border-box',
+		border: `${theme.spacing.unit * 2}px solid ${theme.palette.secondary.main}`,
+		width: '100%'
 	},
 	background : {
 		backgroundImage: `url("${background}")`,

@@ -1,61 +1,84 @@
 import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import Filter from '../Filter';
+import Gallery from './Gallery';
+import Keys from '../temp';
 
 class Photography extends React.Component {
 	constructor(props) {
 		super(props);
 		
 		const Contentful = require('contentful');
-		this.client = Contentful.createClient({
-		});
+		this.client = Contentful.createClient(Keys);
 		
 		this.state = {
 			albums: [],
-			currentAlbum: ''
+			currentAlbum: '',
+			photos: []
 		};
-		this.displayPhotos = this.displayPhotos.bind(this);
+		this.setPhotos = this.setPhotos.bind(this);
+		this.changeFilter = this.changeFilter.bind(this);
 	}
 	
 	componentDidMount() {
 		this.client.getEntries({ content_type: 'photos' }).then(res => {
-			this.setState({
-				albums: res.items,
-				currentAlbum: res.items[0].fields.album
-			});
-			
-			// res.items[0].fields.photos.forEach(photo => {
-			// 	console.log(photo);
-			// });
+			const albums = res.items;
+			const currentAlbum = res.items[0].fields.album;
+			const photos = this.setPhotos(currentAlbum);
+			this.setState({ albums, currentAlbum, photos });
+			this.setPhotos(currentAlbum);
 		});
 	}
 	
-	displayPhotos() {
+	changeFilter(value) {
+		this.setState({ currentAlbum: value, photos: false });
+		this.setPhotos(value);
+	}
+	
+	setPhotos(matchAlbum) {
 		let currentAlbum = this.state.albums.find(album => {
-			return album && album.fields && album.fields.album === this.state.currentAlbum
+			return album && album.fields && album.fields.album === matchAlbum
 		});
+		let photos = currentAlbum && currentAlbum.fields && currentAlbum.fields.photos;
 		
-		console.log(currentAlbum)
+		if(Array.isArray(photos)) {
+			photos = photos.map(photo => ({
+				title: photo.fields.title,
+				url: photo.fields.file.url,
+				width: photo.fields.file.details.image.width,
+				height: photo.fields.file.details.image.height
+			}));
+			
+			this.setState({ photos });
+		}
 	}
 	
 	render() {
-		console.log(this.state.albums);
+		const { classes } = this.props;
 		
 		return (
-			<div>
-				<Filter list={this.state.albums.map(album => album.fields.album)}
-				        currentItem={this.state.currentAlbum}
-				        onChange={value => this.setState({ currentAlbum: value })}
-				/>
+			<div className={classes.content}>
+				<div className={classes.filter}>
+					<Filter list={this.state.albums.map(album => album.fields.album)}
+					        currentItem={this.state.currentAlbum}
+					        onChange={this.changeFilter}
+					/>
+				</div>
 				
-				{this.displayPhotos()}
+				<Gallery photos={this.state.photos} />
 			</div>
 		);
 	}
 }
 
-const styles = {
-
-};
+const styles = theme => ({
+	filter: {
+		position: 'sticky',
+		zIndex: theme.zIndex.appBar + 1
+	},
+	content: {
+		padding: `0 ${theme.spacing.unit * 2}px`
+	}
+});
 
 export default withStyles(styles)(Photography);

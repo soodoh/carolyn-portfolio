@@ -1,11 +1,7 @@
 import React from 'react';
 import Typography from '@material-ui/core/Typography';
-import IconButton from '@material-ui/core/IconButton';
-import Instagram from 'mdi-material-ui/Instagram';
-import LinkedIn from 'mdi-material-ui/LinkedinBox';
 import { withStyles } from '@material-ui/core/styles';
-
-// TODO add links to icon buttons
+import SocialMedia from '../SocialMedia';
 
 const Footer = props => {
 	const { classes } = props;
@@ -25,14 +21,7 @@ const Footer = props => {
 					</Typography>
 				</div>
 				
-				<div>
-					<IconButton color='inherit'>
-						<Instagram />
-					</IconButton>
-					<IconButton color='inherit'>
-						<LinkedIn />
-					</IconButton>
-				</div>
+				<SocialMedia />
 			</section>
 		</footer>
 	);
@@ -40,14 +29,14 @@ const Footer = props => {
 
 const styles = theme => ({
 	footer: {
-		width: '100vw',
+		width: '100%',
 		height: theme.spacing.unit * 11,
 		position: 'absolute',
-		bottom: 0,
-		display: 'flex'
+		bottom: 0
 	},
 	content: {
 		display: 'flex',
+		height: '100%',
 		flex: 1,
 		justifyContent: 'space-between',
 		alignItems: 'center',

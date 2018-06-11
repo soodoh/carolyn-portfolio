@@ -1,23 +1,40 @@
 import React from 'react';
 import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core/styles';
+import Hidden from '@material-ui/core/Hidden';
+import Select from '@material-ui/core/Select';
+import MenuItem from '@material-ui/core/MenuItem';
 
 const Filter = props => {
 	const { list, currentItem, onChange, classes } = props;
 	
 	return (
-		<div className={classes.bar}>
-			{list.map((item, index) => (
-				<Typography key={index}
-				            onClick={() => onChange(item)}
-				            variant='subheading'
-				            color='primary'
-				            className={item === currentItem ?
-					            `${classes.selected} ${classes.filter}` : classes.filter}
+		<div>
+			<Hidden only='xs'>
+				<div className={classes.bar}>
+					{list.map((item, index) => (
+						<Typography key={index}
+						            onClick={() => onChange(item)}
+						            variant='subheading'
+						            color='primary'
+						            className={item === currentItem ?
+							            `${classes.selected} ${classes.filter}` : classes.filter}
+						>
+							{item}
+						</Typography>
+					))}
+				</div>
+			</Hidden>
+			
+			<Hidden smUp>
+				<Select value={currentItem}
+				        onChange={event => onChange(event.target.value)}
 				>
-					{item}
-				</Typography>
-			))}
+					{list.map((item, index) => (
+						<MenuItem value={item} key={index}>{item}</MenuItem>
+					))}
+				</Select>
+			</Hidden>
 		</div>
 	);
 }
@@ -25,8 +42,9 @@ const Filter = props => {
 const styles = theme => ({
 	bar: {
 		display: 'flex',
-		padding: `0 ${theme.spacing.unit * 2}px`,
+		padding: 0,
 		marginTop: '-5px',
+		width: '100%'
 	},
 	filter: {
 		boxSizing: 'border-box',

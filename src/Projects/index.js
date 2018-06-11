@@ -1,14 +1,14 @@
 import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import Filter from '../Filter';
+import Keys from '../temp';
 
 class Projects extends React.Component {
 	constructor(props) {
 		super(props);
 		
 		const Contentful = require('contentful');
-		this.client = Contentful.createClient({
-		});
+		this.client = Contentful.createClient(Keys);
 		
 		this.state = {
 			projects: [],
@@ -39,8 +39,10 @@ class Projects extends React.Component {
 	}
 	
 	render() {
+		const { classes } = this.props;
+		
 		return (
-			<section>
+			<section className={classes.container}>
 				<Filter list={this.getCategories()}
 				        currentItem={this.state.filter}
 				        onChange={value => this.setState({ filter: value })}
@@ -50,8 +52,10 @@ class Projects extends React.Component {
 	}
 }
 
-const styles = {
-
-};
+const styles = theme => ({
+	container: {
+		padding: `0 ${theme.spacing.unit * 2}px`
+	}
+});
 
 export default withStyles(styles)(Projects);

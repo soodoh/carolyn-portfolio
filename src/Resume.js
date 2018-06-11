@@ -13,11 +13,11 @@ const Resume = props => (
 	</div>
 );
 
-const styles = {
+const styles = theme => ({
 	resume: {
 		width: '100%',
-		height: '100vh'
+		height: `calc(100vh - ${theme.spacing.unit * 20}px)`
 	}
-};
+});
 
 export default withStyles(styles)(Resume);
