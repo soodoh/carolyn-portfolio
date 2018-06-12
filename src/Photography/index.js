@@ -44,9 +44,7 @@ class Photography extends React.Component {
 		if(Array.isArray(photos)) {
 			photos = photos.map(photo => ({
 				title: photo.fields.title,
-				url: photo.fields.file.url,
-				width: photo.fields.file.details.image.width,
-				height: photo.fields.file.details.image.height
+				url: photo.fields.file.url
 			}));
 			
 			this.setState({ photos });
@@ -57,27 +55,26 @@ class Photography extends React.Component {
 		const { classes } = this.props;
 		
 		return (
-			<div className={classes.content}>
-				<div className={classes.filter}>
-					<Filter list={this.state.albums.map(album => album.fields.album)}
-					        currentItem={this.state.currentAlbum}
-					        onChange={this.changeFilter}
-					/>
-				</div>
+			<div className={classes.container}>
+				<Filter list={this.state.albums.map(album => album.fields.album)}
+				        currentItem={this.state.currentAlbum}
+				        onChange={this.changeFilter}
+				/>
 				
-				<Gallery photos={this.state.photos} />
+				<Gallery photos={this.state.photos}
+				         className={classes.content}
+				/>
 			</div>
 		);
 	}
 }
 
 const styles = theme => ({
-	filter: {
-		position: 'sticky',
-		zIndex: theme.zIndex.appBar + 1
+	container: {
+		padding: `0 ${theme.spacing.unit * 2}px`
 	},
 	content: {
-		padding: `0 ${theme.spacing.unit * 2}px`
+		paddingTop: theme.spacing.unit * 5 // Filter bar's height
 	}
 });
 

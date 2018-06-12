@@ -56,7 +56,7 @@ const styles = theme => ({
 	buttonGroup: {
 		display: 'flex',
 		justifyContent: 'space-between',
-		width: '40vw'
+		width: '30rem'
 	},
 	button: {
 		border: `1px solid ${theme.palette.secondary.main}`,
@@ -71,7 +71,15 @@ const styles = theme => ({
 		marginBottom: theme.spacing.unit * 2
 	},
 	title: {
-		fontSize: '5vw'
+		fontSize: '3.5rem'
+	},
+	[`@media (max-width:${theme.breakpoints.values.sm}px)`]: {
+		title: {
+			fontSize: '2rem'
+		},
+		buttonGroup: {
+			width: '85vw'
+		}
 	}
 });
 

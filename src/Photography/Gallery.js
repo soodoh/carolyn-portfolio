@@ -20,10 +20,10 @@ class Gallery extends React.Component {
 	}
 	
 	render() {
-		const { classes, photos } = this.props;
+		const { classes, photos, ...other } = this.props;
 		
 		return (
-			<Masonry>
+			<Masonry {...other}>
 				<Dialog open={this.state.photoActive}
 				        onClose={() => this.setState({ photoActive: false })}
 				        maxWidth='md'
@@ -32,7 +32,7 @@ class Gallery extends React.Component {
 					{this.state.currentPhoto ?
 						<img src={`${this.state.currentPhoto.url}?fm=jpg&fl=progressive`}
 						     alt={this.state.currentPhoto.title}
-						     className={this.state.currentPhoto.width > this.state.currentPhoto.height ? classes.landscape: classes.portrait}
+						     className={classes.largePhoto}
 						/>
 						: <Loading />}
 				</Dialog>
@@ -63,13 +63,9 @@ const styles = theme => ({
 		padding: 0,
 		margin: 0
 	},
-	portrait: {
+	largePhoto: {
 		height: '90vh',
 		width: 'auto'
-	},
-	landscape: {
-		width: '100%',
-		height: 'auto'
 	},
 	// Breakpoints
 	[`@media (min-width: ${theme.breakpoints.values.xs}px)`]: {

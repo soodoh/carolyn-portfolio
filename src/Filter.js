@@ -9,7 +9,7 @@ const Filter = props => {
 	const { list, currentItem, onChange, classes } = props;
 	
 	return (
-		<div>
+		<div className={classes.container}>
 			<Hidden only='xs'>
 				<div className={classes.bar}>
 					{list.map((item, index) => (
@@ -17,8 +17,7 @@ const Filter = props => {
 						            onClick={() => onChange(item)}
 						            variant='subheading'
 						            color='primary'
-						            className={item === currentItem ?
-							            `${classes.selected} ${classes.filter}` : classes.filter}
+						            className={item === currentItem ? classes.selected : classes.filter}
 						>
 							{item}
 						</Typography>
@@ -40,20 +39,25 @@ const Filter = props => {
 }
 
 const styles = theme => ({
+	container: {
+		position: 'fixed',
+		zIndex: theme.zIndex.appBar + 1,
+		width: '100%',
+		height: theme.spacing.unit * 5,
+		backgroundColor: theme.palette.common.white
+	},
 	bar: {
 		display: 'flex',
 		padding: 0,
-		marginTop: '-5px',
 		width: '100%'
 	},
 	filter: {
-		boxSizing: 'border-box',
 		padding: `10px ${theme.spacing.unit * 4}px`,
-		cursor: 'pointer',
-		zIndex: theme.zIndex.appBar + 1
+		cursor: 'pointer'
 	},
 	selected: {
-		paddingTop: '5px',
+		padding: `10px ${theme.spacing.unit * 4}px`,
+		marginTop: '-5px',
 		borderTop: `5px solid ${theme.palette.secondary.main}`
 	}
 });

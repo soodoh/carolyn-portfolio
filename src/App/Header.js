@@ -132,12 +132,12 @@ const styles = theme => ({
 		textDecoration: 'none'
 	},
 	appBar: {
-		transition: `background-color ${theme.transitions.duration.standard}ms ${theme.transitions.easing.easeInOut}`
+		transition: `background-color ${theme.transitions.duration.standard}ms ${theme.transitions.easing.easeInOut}`,
+		boxShadow: 'none'
 	},
 	transparent: {
 		transition: `background-color ${theme.transitions.duration.standard}ms ${theme.transitions.easing.easeInOut}`,
-		backgroundColor: 'transparent',
-		boxShadow: 'none'
+		backgroundColor: 'transparent'
 	},
 	name: {
 		fontSize: '2rem',

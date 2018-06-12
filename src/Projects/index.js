@@ -47,6 +47,10 @@ class Projects extends React.Component {
 				        currentItem={this.state.filter}
 				        onChange={value => this.setState({ filter: value })}
 				/>
+				
+				<div className={classes.content}>
+					Test
+				</div>
 			</section>
 		);
 	}
@@ -55,6 +59,9 @@ class Projects extends React.Component {
 const styles = theme => ({
 	container: {
 		padding: `0 ${theme.spacing.unit * 2}px`
+	},
+	content: {
+		paddingTop: theme.spacing.unit * 5 // Filter bar's height
 	}
 });
 
