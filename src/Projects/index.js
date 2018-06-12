@@ -1,6 +1,7 @@
 import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import Filter from '../Filter';
+import ViewProjects from './ViewProjects';
 import Keys from '../temp';
 
 class Projects extends React.Component {
@@ -15,6 +16,7 @@ class Projects extends React.Component {
 			filter: 'All'
 		};
 		this.getCategories = this.getCategories.bind(this);
+		this.filteredProjects = this.filteredProjects.bind(this);
 	}
 	
 	componentDidMount() {
@@ -38,6 +40,18 @@ class Projects extends React.Component {
 		return categories;
 	}
 	
+	filteredProjects() {
+		let currentProjects = this.state.projects.filter(project => project.fields.coverImage);
+		
+		if(this.state.filter !== 'All') {
+			currentProjects = currentProjects.filter(project => {
+				return project.fields.projectType.match(new RegExp(this.state.filter, 'i'));
+			});
+		}
+		
+		return currentProjects;
+	}
+	
 	render() {
 		const { classes } = this.props;
 		
@@ -49,7 +63,7 @@ class Projects extends React.Component {
 				/>
 				
 				<div className={classes.content}>
-					Test
+					<ViewProjects data={this.filteredProjects()} />
 				</div>
 			</section>
 		);
