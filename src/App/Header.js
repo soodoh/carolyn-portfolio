@@ -38,7 +38,9 @@ class Header extends React.Component {
 	}
 	
 	handleScroll() {
-		if(window.innerHeight < window.scrollY)
+		const breakpoint = window.innerHeight - 60;
+		
+		if(breakpoint < window.scrollY)
 			this.setState({ isTransparent: false, hideBrand: false });
 		else
 			this.setState({ isTransparent: true, hideBrand: true });
@@ -137,7 +139,8 @@ const styles = theme => ({
 	},
 	transparent: {
 		transition: `background-color ${theme.transitions.duration.standard}ms ${theme.transitions.easing.easeInOut}`,
-		backgroundColor: 'transparent'
+		backgroundColor: 'transparent',
+		boxShadow: 'none'
 	},
 	name: {
 		fontSize: '2rem',

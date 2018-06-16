@@ -2,7 +2,7 @@ import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import Filter from '../Filter';
 import Gallery from './Gallery';
-import Keys from '../temp';
+import Keys from '../keys';
 
 class Photography extends React.Component {
 	constructor(props) {
@@ -61,9 +61,7 @@ class Photography extends React.Component {
 				        onChange={this.changeFilter}
 				/>
 				
-				<Gallery photos={this.state.photos}
-				         className={classes.content}
-				/>
+				<Gallery photos={this.state.photos}	/>
 			</div>
 		);
 	}
@@ -71,10 +69,8 @@ class Photography extends React.Component {
 
 const styles = theme => ({
 	container: {
+		position: 'relative',
 		padding: `0 ${theme.spacing.unit * 2}px`
-	},
-	content: {
-		paddingTop: theme.spacing.unit * 5 // Filter bar's height
 	}
 });
 

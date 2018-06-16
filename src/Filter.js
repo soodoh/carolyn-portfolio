@@ -40,11 +40,20 @@ const Filter = props => {
 
 const styles = theme => ({
 	container: {
-		position: 'fixed',
+		position: 'sticky',
 		zIndex: theme.zIndex.appBar + 1,
 		width: '100%',
 		height: theme.spacing.unit * 5,
-		backgroundColor: theme.palette.common.white
+		backgroundColor: theme.palette.common.white,
+		top: theme.mixins.toolbar.minHeight,
+		
+		// Copied from the height of theme's Toolbar
+		'@media (min-width:0px) and (orientation: landscape)': {
+			top: theme.mixins.toolbar['@media (min-width:0px) and (orientation: landscape)'].minHeight
+		},
+		'@media (min-width:600px)': {
+			top: theme.mixins.toolbar['@media (min-width:600px)'].minHeight
+		}
 	},
 	bar: {
 		display: 'flex',

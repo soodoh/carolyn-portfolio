@@ -2,7 +2,7 @@ import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import Filter from '../Filter';
 import ViewProjects from './ViewProjects';
-import Keys from '../temp';
+import Keys from '../keys';
 
 class Projects extends React.Component {
 	constructor(props) {
@@ -62,7 +62,7 @@ class Projects extends React.Component {
 				        onChange={value => this.setState({ filter: value })}
 				/>
 				
-				<div className={classes.content}>
+				<div>
 					<ViewProjects data={this.filteredProjects()} />
 				</div>
 			</section>
@@ -73,9 +73,6 @@ class Projects extends React.Component {
 const styles = theme => ({
 	container: {
 		padding: `0 ${theme.spacing.unit * 2}px`
-	},
-	content: {
-		paddingTop: theme.spacing.unit * 5 // Filter bar's height
 	}
 });
 

@@ -1,9 +1,14 @@
 import React from 'react';
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
 import Typography from '@material-ui/core/Typography';
+import ReactMarkdown from 'react-markdown';
 import { withStyles } from '@material-ui/core/styles';
+import Slide from '@material-ui/core/Slide'
+
+function Transition(props) {
+	return <Slide direction='down' {...props} />;
+}
 
 class ModalBase extends React.Component {
 	constructor(props) {
@@ -30,9 +35,28 @@ class ModalBase extends React.Component {
 				
 				<Dialog open={this.state.projectActive}
 				        onClose={this.toggle}
+				        fullWidth
+				        TransitionComponent={Transition}
 				>
-					<DialogTitle>Test</DialogTitle>
-					<DialogContent>Test</DialogContent>
+					<DialogContent>
+						<Typography variant='display1' color='primary' align='center'>
+							{data.fields.title}
+						</Typography>
+						<Typography variant='title' color='primary' align='center'>
+							{data.fields.role}
+						</Typography>
+						
+						{data.fields.link ?
+							<iframe src={data.fields.link}
+							        title={data.fields.title}
+							        width='100%'
+							        height='auto'
+							 />
+							: null
+						}
+						
+						<ReactMarkdown source={data.fields.description} className={classes.markdown} />
+					</DialogContent>
 				</Dialog>
 			</div>
 		);
@@ -45,6 +69,17 @@ const styles = theme => ({
 		width: `calc(100% - ${theme.spacing.unit * 4}px)`,
 		cursor: 'pointer',
 		verticalAlign: 'top' // Removes bottom gutter for Masonry
+	},
+	markdown: {
+		fontFamily: theme.typography.fontFamily,
+		color: theme.palette.primary.main,
+		'& img': {
+			width: '100%'
+		}
+	},
+	link: {
+		width: '100%',
+		height: 'auto'
 	},
 	// Breakpoints
 	[`@media (min-width: ${theme.breakpoints.values.xs}px)`]: {

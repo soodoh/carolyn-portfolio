@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import { withStyles } from '@material-ui/core/styles';
@@ -25,16 +26,23 @@ const Home = props => {
 				</Typography>
 				
 				<div className={classes.buttonGroup}>
-					<Button variant='raised' color='secondary' className={classes.button}>
-						View Photography
-					</Button>
-					<Button variant='raised' color='secondary' className={classes.button}>
-						View Projects
-					</Button>
+					<Link to='/photography' className={classes.link}>
+						<Button variant='outlined' color='secondary' className={classes.button}>
+							View Photography
+						</Button>
+					</Link>
+					
+					<Link to='/projects' className={classes.link}>
+						<Button variant='outlined' color='secondary' className={classes.button}>
+							View Projects
+						</Button>
+					</Link>
 				</div>
 			</section>
 			
-			<Projects />
+			<section>
+				<Projects />
+			</section>
 		</div>
 		
 	);
@@ -59,12 +67,10 @@ const styles = theme => ({
 		width: '30rem'
 	},
 	button: {
-		border: `1px solid ${theme.palette.secondary.main}`,
-		backgroundColor: 'transparent',
-		
-		'&:focus': {
-			backgroundColor: 'transparent'
-		}
+		border: `1px solid ${theme.palette.secondary.main}`
+	},
+	link: {
+		textDecoration: 'none'
 	},
 	logo: {
 		height: '15rem',
