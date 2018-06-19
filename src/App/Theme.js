@@ -35,7 +35,7 @@ const theme = createMuiTheme({
 		},
 		body1: {
 			fontFamily: `'Old Standard TT', serif`,
-			fontSize: '1rem',
+			fontSize: '1.2rem',
 			paddingBottom: '1.5rem'
 		}
 	}

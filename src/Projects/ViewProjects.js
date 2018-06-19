@@ -4,7 +4,6 @@ import ProjectModal from './ProjectModal';
 
 const Projects = props => {
 	const { data } = props;
-	console.log(data);
 	
 	return (
 		<div>

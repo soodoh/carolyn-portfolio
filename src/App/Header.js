@@ -8,7 +8,7 @@ import MenuIcon from 'mdi-material-ui/Menu';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import Button from '@material-ui/core/Button';
-import logo from '../assets/logo.png';
+import logo from '../assets/logo.svg';
 import { withStyles } from '@material-ui/core/styles';
 
 class Header extends React.Component {

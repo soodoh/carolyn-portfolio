@@ -41,7 +41,7 @@ class Projects extends React.Component {
 	}
 	
 	filteredProjects() {
-		let currentProjects = this.state.projects.filter(project => project.fields.coverImage);
+		let currentProjects = this.state.projects;
 		
 		if(this.state.filter !== 'All') {
 			currentProjects = currentProjects.filter(project => {

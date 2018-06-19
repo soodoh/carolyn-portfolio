@@ -4,7 +4,7 @@ import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import { withStyles } from '@material-ui/core/styles';
 import background from './assets/background.jpg';
-import logo from './assets/logo.png';
+import logo from './assets/logo.svg';
 import Projects from './Projects';
 
 const Home = props => {

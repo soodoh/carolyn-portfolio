@@ -44,7 +44,8 @@ class Photography extends React.Component {
 		if(Array.isArray(photos)) {
 			photos = photos.map(photo => ({
 				title: photo.fields.title,
-				url: photo.fields.file.url
+				url: photo.fields.file.url,
+				isPortrait: photo.fields.file.details.width < photo.fields.file.details.height
 			}));
 			
 			this.setState({ photos });
