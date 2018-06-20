@@ -1,5 +1,6 @@
 import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
+import Loading from './Loading';
 import Keys from "./keys";
 
 class Resume extends React.Component {
@@ -8,17 +9,23 @@ class Resume extends React.Component {
 		
 		const Contentful = require('contentful');
 		this.client = Contentful.createClient(Keys);
-		this.state = {};
+		this.state = { loading: true };
 	}
 	
 	componentDidMount() {
 		this.client.getEntries({ content_type: 'about' }).then(res => {
-			this.setState({ resume: res.items[0].fields.resume.fields.file.url });
+			this.setState({
+				resume: res.items[0].fields.resume.fields.file.url,
+				loading: false
+			});
 		});
 	}
 	
 	render() {
 		const { classes } = this.props;
+		
+		if(this.state.loading)
+			return <Loading />;
 		
 		return (
 			<div>

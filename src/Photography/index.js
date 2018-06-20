@@ -2,6 +2,7 @@ import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import Filter from '../Filter';
 import Gallery from './Gallery';
+import Loading from '../Loading';
 import Keys from '../keys';
 
 class Photography extends React.Component {
@@ -14,9 +15,11 @@ class Photography extends React.Component {
 		this.state = {
 			albums: [],
 			currentAlbum: '',
-			photos: []
+			photos: [],
+			loading: true
 		};
-		this.setPhotos = this.setPhotos.bind(this);
+		this.getPhotos = this.getPhotos.bind(this);
+		this.formatPhotos = this.formatPhotos.bind(this);
 		this.changeFilter = this.changeFilter.bind(this);
 	}
 	
@@ -24,23 +27,24 @@ class Photography extends React.Component {
 		this.client.getEntries({ content_type: 'photos' }).then(res => {
 			const albums = res.items;
 			const currentAlbum = res.items[0].fields.album;
-			const photos = this.setPhotos(currentAlbum);
-			this.setState({ albums, currentAlbum, photos });
-			this.setPhotos(currentAlbum);
+			
+			this.setState({
+				albums,
+				currentAlbum,
+				photos: this.formatPhotos(albums[0].fields.photos),
+				loading: false
+			});
 		});
 	}
 	
 	changeFilter(value) {
-		this.setState({ currentAlbum: value, photos: false });
-		this.setPhotos(value);
+		this.setState({
+			currentAlbum: value,
+			photos: this.getPhotos(value)
+		});
 	}
 	
-	setPhotos(matchAlbum) {
-		let currentAlbum = this.state.albums.find(album => {
-			return album && album.fields && album.fields.album === matchAlbum
-		});
-		let photos = currentAlbum && currentAlbum.fields && currentAlbum.fields.photos;
-		
+	formatPhotos(photos) {
 		if(Array.isArray(photos)) {
 			photos = photos.map(photo => ({
 				title: photo.fields.title,
@@ -48,13 +52,26 @@ class Photography extends React.Component {
 				isPortrait: photo.fields.file.details.image.width < photo.fields.file.details.image.height
 			}));
 			
-			this.setState({ photos });
+			return photos;
 		}
+		return [];
+	}
+	
+	getPhotos(matchAlbum) {
+		let currentAlbum = this.state.albums.find(album => {
+			return album && album.fields && album.fields.album === matchAlbum
+		});
+		let photos = currentAlbum && currentAlbum.fields.photos;
+		
+		return this.formatPhotos(photos);
 	}
 	
 	render() {
 		const { classes } = this.props;
 		
+		if(this.state.loading)
+			return <Loading />;
+			
 		return (
 			<div className={classes.container}>
 				<Filter list={this.state.albums.map(album => album.fields.album)}

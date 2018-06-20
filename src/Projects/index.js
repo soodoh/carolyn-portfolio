@@ -2,6 +2,7 @@ import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import Filter from '../Filter';
 import ViewProjects from './ViewProjects';
+import Loading from '../Loading';
 import Keys from '../keys';
 
 class Projects extends React.Component {
@@ -13,7 +14,8 @@ class Projects extends React.Component {
 		
 		this.state = {
 			projects: [],
-			filter: 'All'
+			filter: 'All',
+			loading: true
 		};
 		this.getCategories = this.getCategories.bind(this);
 		this.filteredProjects = this.filteredProjects.bind(this);
@@ -21,7 +23,10 @@ class Projects extends React.Component {
 	
 	componentDidMount() {
 		this.client.getEntries({ content_type: 'project' }).then(res => {
-			this.setState({ projects: res.items });
+			this.setState({
+				projects: res.items,
+				loading: false
+			});
 		});
 	}
 	
@@ -53,6 +58,9 @@ class Projects extends React.Component {
 	
 	render() {
 		const { classes } = this.props;
+		
+		if(this.state.loading)
+			return <Loading />;
 		
 		return (
 			<section className={classes.container}>

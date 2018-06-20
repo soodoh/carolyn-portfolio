@@ -5,6 +5,7 @@ import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import SocialMedia from './SocialMedia';
 import ReactMarkdown from 'react-markdown';
+import Loading from './Loading';
 import Keys from "./keys";
 
 class About extends React.Component {
@@ -13,7 +14,7 @@ class About extends React.Component {
 		
 		const Contentful = require('contentful');
 		this.client = Contentful.createClient(Keys);
-		this.state = {};
+		this.state = { loading: true };
 	}
 	
 	componentWillMount() {
@@ -26,12 +27,18 @@ class About extends React.Component {
 	
 	componentDidMount() {
 		this.client.getEntries({ content_type: 'about' }).then(res => {
-			this.setState({ data: res.items[0] });
+			this.setState({
+				data: res.items[0],
+				loading: false
+			});
 		});
 	}
 	
 	render() {
 		const { classes } = this.props;
+		
+		if(this.state.loading)
+			return <Loading color='secondary' />;
 		
 		return (
 			<div className={classes.container}>
