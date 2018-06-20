@@ -1,5 +1,9 @@
 {
  "name": "Carolyn DiLoreto Portfolio",
+ "background_color": "#494F5C",
+ "theme_color": "#CEC0A8",
+ "short_name": "CD Portfolio",
+ "display": "fullscreen",
  "icons": [
   {
    "src": "\/android-icon-36x36.png",

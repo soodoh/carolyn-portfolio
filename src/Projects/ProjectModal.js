@@ -34,8 +34,7 @@ class ModalBase extends React.Component {
 	}
 	
 	toggleLabel() {
-		this.setState({ labelActive: window.innerWidth < 600 || !this.state.labelActive });
-		console.log(this.state.labelActive);
+		this.setState({ labelActive: !this.state.labelActive });
 	}
 	
 	render() {

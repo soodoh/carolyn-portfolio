@@ -27,13 +27,21 @@ const Home = props => {
 				
 				<div className={classes.buttonGroup}>
 					<Link to='/photography' className={classes.link}>
-						<Button variant='outlined' color='secondary' className={classes.button}>
+						<Button variant='outlined'
+						        color='secondary'
+						        className={classes.button}
+						        aria-label='Photography'
+						>
 							View Photography
 						</Button>
 					</Link>
 					
 					<Link to='/projects' className={classes.link}>
-						<Button variant='outlined' color='secondary' className={classes.button}>
+						<Button variant='outlined'
+						        color='secondary'
+						        className={classes.button}
+						        aria-label='Projects'
+						>
 							View Projects
 						</Button>
 					</Link>

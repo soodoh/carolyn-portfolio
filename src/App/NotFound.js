@@ -1,8 +1,9 @@
 import React from 'react';
 import Typography from '@material-ui/core/Typography';
+import { withStyles } from '@material-ui/core/styles';
 
 const NotFound = props => (
-	<div>
+	<div className={props.classes.container}>
 		<Typography variant='display1' gutterBottom>
 			404: Page Not Found
 		</Typography>
@@ -12,4 +13,10 @@ const NotFound = props => (
 	</div>
 );
 
-export default NotFound;
+const styles = theme => ({
+	container: {
+		padding: theme.spacing.unit * 2
+	}
+});
+
+export default withStyles(styles)(NotFound);
