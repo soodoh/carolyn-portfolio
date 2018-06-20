@@ -21,7 +21,7 @@ class Gallery extends React.Component {
 	
 	render() {
 		const { classes, photos, ...other } = this.props;
-		
+
 		return (
 			<Masonry {...other}>
 				<Dialog open={this.state.photoActive}

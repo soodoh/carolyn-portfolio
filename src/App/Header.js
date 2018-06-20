@@ -80,7 +80,7 @@ class Header extends React.Component {
 						</div>
 					}
 					
-					<Hidden only='xs'>
+					<Hidden smDown>
 						{NavLinks.map((link, index) => (
 							<NavLink to={link.path}
 							         key={index}
@@ -91,7 +91,7 @@ class Header extends React.Component {
 							</NavLink>
 						))}
 					</Hidden>
-					<Hidden smUp>
+					<Hidden mdUp>
 						<Button variant='fab' mini
 						        aria-owns={this.state.menuAnchor ? 'Navigation' : null}
 						        aria-haspopup="true"

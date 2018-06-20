@@ -28,10 +28,9 @@ class Projects extends React.Component {
 	getCategories() {
 		let categories = [];
 		this.state.projects.forEach(project => {
-			project.fields.projectType.split(/\s/g).forEach(type => {
-				let formatType = type.charAt(0).toUpperCase() + type.slice(1).toLowerCase();
-				if(!categories.includes(formatType))
-					categories.push(formatType);
+			project.fields.projectType.forEach(type => {
+				if(!categories.includes(type))
+					categories.push(type);
 			});
 		});
 		categories = categories.sort((a, b) => a > b);
@@ -45,7 +44,7 @@ class Projects extends React.Component {
 		
 		if(this.state.filter !== 'All') {
 			currentProjects = currentProjects.filter(project => {
-				return project.fields.projectType.match(new RegExp(this.state.filter, 'i'));
+				return project.fields.projectType.includes(this.state.filter);
 			});
 		}
 		

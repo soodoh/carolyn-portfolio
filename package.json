@@ -6,6 +6,7 @@
   "dependencies": {
     "@material-ui/core": "^1.1.0",
     "contentful": "^6.1.1",
+    "detect-it": "^3.0.5",
     "mdi-material-ui": "^5.1.0",
     "react": "^16.4.0",
     "react-dom": "^16.4.0",
