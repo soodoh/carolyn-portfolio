@@ -72,10 +72,16 @@ const styles = theme => ({
 	buttonGroup: {
 		display: 'flex',
 		justifyContent: 'space-between',
-		width: '30rem'
+		width: '28rem'
 	},
 	button: {
-		border: `1px solid ${theme.palette.secondary.main}`
+		border: `1px solid ${theme.palette.secondary.main}`,
+		
+		'&:hover': {
+			transition: theme.transitions.easing,
+			color: theme.palette.common.black,
+			backgroundColor: theme.palette.secondary.main
+		}
 	},
 	link: {
 		textDecoration: 'none'

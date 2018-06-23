@@ -67,16 +67,11 @@ class About extends React.Component {
 							{this.state.data && this.state.data.fields.phoneNumber}
 						</Typography>
 						
-						<Typography variant='caption'
-						            color='secondary'
-						            align='center'
-						>
-							<SocialMedia />
-						</Typography>
+						<SocialMedia color='secondary' align='center' />
 					</Grid>
 					
-					<Grid item xs={12} sm={7} md={9} className={classes.content}>
-						<ReactMarkdown>
+					<Grid item xs={12} sm={7} md={9}>
+						<ReactMarkdown className={classes.content}>
 							{this.state.data && this.state.data.fields.bio}
 						</ReactMarkdown>
 					</Grid>
@@ -94,6 +89,10 @@ const styles = theme => ({
 		...theme.typography.body1,
 		padding: theme.spacing.unit * 2,
 		color: theme.palette.primary.contrastText,
+		
+		'& a': {
+			color: theme.palette.primary.contrastText
+		}
 	},
 	profile: {
 		boxSizing: 'border-box',

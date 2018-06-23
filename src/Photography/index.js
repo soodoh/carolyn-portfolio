@@ -25,8 +25,8 @@ class Photography extends React.Component {
 	
 	componentDidMount() {
 		this.client.getEntries({ content_type: 'photos' }).then(res => {
-			const albums = res.items;
-			const currentAlbum = res.items[0].fields.album;
+			const albums = res.items.sort((a, b) => a.fields.album > b.fields.album);
+			const currentAlbum = albums[0].fields.album;
 			
 			this.setState({
 				albums,

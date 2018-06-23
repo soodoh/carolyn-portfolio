@@ -30,7 +30,7 @@ class Gallery extends React.Component {
 				        TransitionComponent={Transition}
 				>
 					{this.state.currentPhoto ?
-						<img src={`${this.state.currentPhoto.url}?fm=jpg&?fl=progressive`}
+						<img src={`${this.state.currentPhoto.url}?fm=jpg&fl=progressive`}
 						     alt={this.state.currentPhoto.title}
 						     className={this.state.currentPhoto.isPortrait ? classes.portrait : classes.landscape}
 						/>

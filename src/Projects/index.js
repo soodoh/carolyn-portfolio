@@ -22,7 +22,10 @@ class Projects extends React.Component {
 	}
 	
 	componentDidMount() {
-		this.client.getEntries({ content_type: 'project' }).then(res => {
+		this.client.getEntries({
+			content_type: 'project',
+			order: 'fields.order'
+		}).then(res => {
 			this.setState({
 				projects: res.items,
 				loading: false
