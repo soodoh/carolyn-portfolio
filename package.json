@@ -10,6 +10,7 @@
     "mdi-material-ui": "^5.1.0",
     "react": "^16.4.0",
     "react-dom": "^16.4.0",
+    "react-inlinesvg": "^0.8.1",
     "react-markdown": "^3.3.2",
     "react-masonry-component": "^6.2.1",
     "react-router-dom": "^4.2.2",

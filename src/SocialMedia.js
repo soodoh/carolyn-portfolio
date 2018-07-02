@@ -1,33 +1,54 @@
 import React from 'react';
-import { withStyles } from '@material-ui/core/styles';
+import { withStyles, withTheme } from '@material-ui/core/styles';
 import IconButton from '@material-ui/core/IconButton';
-import Instagram from 'mdi-material-ui/Instagram';
-import LinkedIn from 'mdi-material-ui/LinkedinBox';
+import SVG from 'react-inlinesvg';
+import Keys from './keys';
 
-const SocialMedia = props => (
-	<div className={props.classes.container}>
-		<a href='https://www.instagram.com/carodilophotography/' className={props.classes.link}>
-			<IconButton color={props.color || 'inherit'}>
-				<Instagram />
-			</IconButton>
-		</a>
+class SocialMedia extends React.Component {
+	constructor(props) {
+		super(props);
 		
-		<a href='https://www.linkedin.com/in/cdiloreto/' className={props.classes.link}>
-			<IconButton color={props.color || 'inherit'}>
-				<LinkedIn />
-			</IconButton>
-		</a>
-	</div>
-);
+		const Contentful = require('contentful');
+		this.client = Contentful.createClient(Keys);
+		this.state = { icons: [] };
+	}
+	
+	componentDidMount() {
+		this.client.getEntries({ content_type: 'socialMedia' }).then(res => {
+			this.setState({
+				icons: res.items
+			});
+		});
+	}
+	
+	render() {
+		const { classes, theme, color } = this.props;
+		const colorCode = color ? theme.palette[color].main : theme.palette.gray[700];
+		
+		return (
+			<div className={classes.container}>
+				{this.state.icons.map((icon, index) => (
+					<a href={icon.fields.link}
+					   style={{ color: 'inherit' }}
+					   key={index}
+					>
+						<IconButton color={color || 'inherit'}>
+							<SVG src={icon.fields.icon.fields.file.url}
+							     style={{ fill: colorCode }}
+							/>
+						</IconButton>
+					</a>
+				))}
+			</div>
+		);
+	}
+}
 
 const styles = {
 	container: {
 		display: 'flex',
 		justifyContent: 'center'
-	},
-	link: {
-		color: 'inherit'
 	}
 };
 
-export default withStyles(styles)(SocialMedia);
+export default withTheme()(withStyles(styles)(SocialMedia));

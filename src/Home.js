@@ -76,6 +76,7 @@ const styles = theme => ({
 	},
 	button: {
 		border: `1px solid ${theme.palette.secondary.main}`,
+		textTransform: 'none',
 		
 		'&:hover': {
 			transition: theme.transitions.easing,
