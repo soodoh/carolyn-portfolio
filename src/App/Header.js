@@ -105,6 +105,7 @@ class Header extends React.Component {
 						<Menu id='Navigation'
 						      anchorEl={this.state.menuAnchor}
 						      open={!!this.state.menuAnchor}
+						      onEnter={() => document.activeElement.blur()}
 						      onClose={() => this.setState({ menuAnchor: null })}
 						>
 							{NavLinks.map((link, index) => (
