@@ -1,13 +1,7 @@
 import React from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import Masonry from 'react-masonry-component';
-import Dialog from '@material-ui/core/Dialog';
-import Slide from '@material-ui/core/Slide';
-import Loading from '../Loading';
-
-const Transition = props => (
-	<Slide direction='up' {...props} />
-);
+import Lightbox from 'react-images';
 
 class Gallery extends React.Component {
 	constructor(props) {
@@ -15,7 +9,7 @@ class Gallery extends React.Component {
 		
 		this.state = {
 			photoActive: false,
-			currentPhoto: ''
+			currentPhoto: 0
 		};
 	}
 	
@@ -24,25 +18,22 @@ class Gallery extends React.Component {
 
 		return (
 			<Masonry {...other}>
-				<Dialog open={this.state.photoActive}
-				        maxWidth='md'
-				        onClose={() => this.setState({ photoActive: false })}
-				        TransitionComponent={Transition}
-				>
-					{this.state.currentPhoto ?
-						<img src={`${this.state.currentPhoto.url}?fm=jpg&fl=progressive`}
-						     alt={this.state.currentPhoto.title}
-						     className={this.state.currentPhoto.isPortrait ? classes.portrait : classes.landscape}
-						/>
-						: <Loading />}
-				</Dialog>
+				<Lightbox
+					images={photos.map(photo => ({ src: photo.url }))}
+					isOpen={this.state.photoActive}
+					backdropClosesModal
+					currentImage={this.state.currentPhoto}
+					onClickPrev={() => this.setState({ currentPhoto: this.state.currentPhoto - 1 })}
+					onClickNext={() => this.setState({ currentPhoto: this.state.currentPhoto + 1 })}
+					onClose={() => this.setState({ photoActive: false })}
+				/>
 				
 				{Array.isArray(photos) && photos.map((photo, index) => (
 					<div className={classes.photoContainer} key={index}>
 						<img src={`${photo.url}?w=400`}
 						     alt={photo.title}
 						     className={classes.photo}
-						     onClick={() => this.setState({ photoActive: true, currentPhoto: photo })}
+						     onClick={() => this.setState({ photoActive: true, currentPhoto: index })}
 						/>
 					</div>
 				))}
@@ -62,14 +53,6 @@ const styles = theme => ({
 		height: 'auto',
 		padding: 0,
 		margin: 0
-	},
-	portrait: {
-		height: '90vh',
-		width: 'auto'
-	},
-	landscape: {
-		height: 'auto',
-		width: '100%'
 	},
 	// Breakpoints
 	[`@media (min-width: ${theme.breakpoints.values.xs}px)`]: {
