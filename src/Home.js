@@ -58,7 +58,7 @@ const Home = props => {
 
 const styles = theme => ({
 	home: {
-		height: '100vh',
+		height: `calc(100vh + 5px)`,
 		width: '100%',
 		backgroundImage: `url("${background}")`,
 		backgroundPosition: 'center',

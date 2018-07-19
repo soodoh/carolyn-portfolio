@@ -36,6 +36,7 @@ const styles = theme => ({
 	},
 	content: {
 		display: 'flex',
+		flexWrap: 'wrap',
 		height: '100%',
 		flex: 1,
 		justifyContent: 'space-between',
