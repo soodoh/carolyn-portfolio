@@ -19,9 +19,9 @@ const Projects = (props) => {
 };
 
 Projects.propTypes = {
-  data: PropTypes.shape({
-    fields: PropTypes.object.isRequired,
-  }).isRequired,
+  data: PropTypes.arrayOf(
+    PropTypes.object,
+  ).isRequired,
 };
 
 export default Projects;
