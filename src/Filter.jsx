@@ -20,7 +20,7 @@ const Filter = (props) => {
             <Typography
               key={`${uid(item)}-title`}
               onClick={() => onChange(item)}
-              variant="subheading"
+              variant="subtitle1"
               color="primary"
               className={item === currentItem ? classes.selected : classes.filter}
             >

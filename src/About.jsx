@@ -55,21 +55,21 @@ class About extends React.Component {
               className={classes.profile}
             />
             <Typography
-              variant="caption"
+              variant="body2"
               color="secondary"
               align="center"
             >
               {data && data.fields.location}
             </Typography>
             <Typography
-              variant="caption"
+              variant="body2"
               color="secondary"
               align="center"
             >
               {data && data.fields.email}
             </Typography>
             <Typography
-              variant="caption"
+              variant="body2"
               color="secondary"
               align="center"
             >

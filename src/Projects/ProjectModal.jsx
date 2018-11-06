@@ -71,10 +71,10 @@ class ModalBase extends React.Component {
         >
           <DialogContent>
             <div className={classes.title}>
-              <Typography variant="display1" color="primary" align="center">
+              <Typography variant="h4" color="primary" align="center">
                 {data.fields.title}
               </Typography>
-              <Typography variant="title" color="primary" align="center" gutterBottom>
+              <Typography variant="h6" color="primary" align="center" gutterBottom>
                 {data.fields.role}
               </Typography>
             </div>
@@ -120,7 +120,7 @@ const styles = theme => ({
   },
   photoContainer: {
     position: 'relative',
-    margin: theme.spacing.unit * 2,
+    margin: theme.spacing.unit * 4,
     cursor: 'pointer',
     overflow: 'hidden',
   },
@@ -154,6 +154,11 @@ const styles = theme => ({
   // Breakpoints
   [`@media (min-width: ${theme.breakpoints.values.xs}px)`]: {
     projectContainer: {
+      width: '100%',
+    },
+  },
+  [`@media (min-width: ${theme.breakpoints.values.sm}px)`]: {
+    projectContainer: {
       width: '50%',
     },
   },
@@ -162,7 +167,7 @@ const styles = theme => ({
       width: '33.33%',
     },
   },
-  [`@media (min-width: ${theme.breakpoints.values.lg}px)`]: {
+  [`@media (min-width: ${theme.breakpoints.values.xl}px)`]: {
     projectContainer: {
       width: '25%',
     },

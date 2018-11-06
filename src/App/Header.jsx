@@ -70,7 +70,7 @@ class Header extends React.Component {
                 </NavLink>
                 <Hidden only="xs">
                   <Typography
-                    variant="title"
+                    variant="h2"
                     color="inherit"
                     className={classes.name}
                   >
@@ -89,7 +89,7 @@ class Header extends React.Component {
                 className={classes.link}
                 activeClassName={classes.active}
               >
-                <Typography variant="subheading" color="inherit">{link.label}</Typography>
+                <Typography variant="subtitle1" color="inherit">{link.label}</Typography>
               </NavLink>
             ))}
           </Hidden>
@@ -120,7 +120,7 @@ class Header extends React.Component {
                   className={classes.menuLink}
                 >
                   <MenuItem onClick={() => this.setState({ menuAnchor: null })}>
-                    <Typography variant="subheading" color="inherit">{link.label}</Typography>
+                    <Typography variant="subtitle1" color="inherit">{link.label}</Typography>
                   </MenuItem>
                 </NavLink>
               ))}

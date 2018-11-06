@@ -8,10 +8,10 @@ const NotFound = (props) => {
 
   return (
     <div className={classes.container}>
-      <Typography variant="display1" gutterBottom>
+      <Typography variant="h3" gutterBottom>
         404: Page Not Found
       </Typography>
-      <Typography variant="title">
+      <Typography variant="h6">
         Please check your URL, or select something from the nav bar
       </Typography>
     </div>

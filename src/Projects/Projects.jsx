@@ -43,6 +43,7 @@ class Projects extends React.Component {
         if (!categories.includes(type)) { categories.push(type); }
       });
     });
+    console.log(categories)
     categories = categories.sort((a, b) => a > b);
     categories.unshift('All');
 

@@ -11,15 +11,15 @@ const Footer = (props) => {
     <footer className={classes.footer}>
       <section className={classes.content}>
         <div>
-          <Typography variant="caption" color="inherit">
+          <Typography variant="body2" color="inherit">
             Copyright &copy;
             {` ${new Date().getFullYear()} `}
             Carolyn DiLoreto
           </Typography>
-          <Typography variant="caption" color="inherit">
+          <Typography variant="body2" color="inherit">
             Designed by Carolyn DiLoreto
           </Typography>
-          <Typography variant="caption" color="inherit">
+          <Typography variant="body2" color="inherit">
             Developed by Paul DiLoreto
           </Typography>
         </div>

@@ -26,11 +26,21 @@ const theme = createMuiTheme({
     },
   },
   typography: {
+    useNextVariants: true,
     fontFamily: '\'Karla\', sans-serif',
-    title: {
+    h2: {
       fontFamily: '\'Old Standard TT\', serif',
     },
-    display1: {
+    h3: {
+      fontFamily: '\'Old Standard TT\', serif',
+    },
+    h4: {
+      fontFamily: '\'Old Standard TT\', serif',
+    },
+    h5: {
+      fontFamily: '\'Old Standard TT\', serif',
+    },
+    h6: {
       fontFamily: '\'Old Standard TT\', serif',
     },
     body1: {
