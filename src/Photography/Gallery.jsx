@@ -33,15 +33,17 @@ class Gallery extends React.Component {
         {Array.isArray(photos) && photos.map((photo, index) => (
           <div
             key={uid(photo)}
-            className={classes.photoContainer}
+            className={classes.projectContainer}
           >
-            <img
-              src={`${photo.url}?w=400`}
-              alt={photo.title}
-              role="presentation"
-              className={classes.photo}
-              onClick={() => this.setState({ photoActive: true, currentPhoto: index })}
-            />
+            <div className={classes.photoContainer}>
+              <img
+                src={`${photo.url}?w=400`}
+                alt={photo.title}
+                role="presentation"
+                className={classes.photo}
+                onClick={() => this.setState({ photoActive: true, currentPhoto: index })}
+              />
+            </div>
           </div>
         ))}
       </Masonry>
@@ -57,30 +59,35 @@ Gallery.propTypes = {
 };
 
 const styles = theme => ({
-  photo: {
-    padding: theme.spacing.unit * 2,
-    width: `calc(100% - ${theme.spacing.unit * 4}px)`,
-    cursor: 'pointer',
-    verticalAlign: 'top', // Removes bottom gutter for Masonry
-  },
   photoContainer: {
+    position: 'relative',
+    margin: theme.spacing.unit * 4,
+    cursor: 'pointer',
+    overflow: 'hidden',
+  },
+  photo: {
+    width: '100%',
     height: 'auto',
-    padding: 0,
-    margin: 0,
+    verticalAlign: 'top', // Removes bottom gutter for Masonry
   },
   // Breakpoints
   [`@media (min-width: ${theme.breakpoints.values.xs}px)`]: {
-    photoContainer: {
+    projectContainer: {
+      width: '100%',
+    },
+  },
+  [`@media (min-width: ${theme.breakpoints.values.sm}px)`]: {
+    projectContainer: {
       width: '50%',
     },
   },
   [`@media (min-width: ${theme.breakpoints.values.md}px)`]: {
-    photoContainer: {
+    projectContainer: {
       width: '33.33%',
     },
   },
-  [`@media (min-width: ${theme.breakpoints.values.lg}px)`]: {
-    photoContainer: {
+  [`@media (min-width: ${theme.breakpoints.values.xl}px)`]: {
+    projectContainer: {
       width: '25%',
     },
   },

@@ -60,7 +60,7 @@ class Photography extends React.Component {
     ));
     const photos = currentAlbum && currentAlbum.fields.photos;
 
-    return this.formatPhotos(photos);
+    return formatPhotos(photos);
   }
 
   changeFilter(value) {
