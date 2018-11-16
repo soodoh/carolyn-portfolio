@@ -120,7 +120,7 @@ const styles = theme => ({
   },
   photoContainer: {
     position: 'relative',
-    margin: theme.spacing.unit * 4,
+    margin: theme.spacing.unit * 5,
     cursor: 'pointer',
     overflow: 'hidden',
   },
