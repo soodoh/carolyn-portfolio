@@ -1,2 +1,2 @@
-# carolyn-portfolio
-Serverless Portfolio for a UI/UX designer. Powered with React, Contentful and AWS
+# sarabeth-portfolio
+Serverless Portfolio for an Opera Singer, powered by Gatsby + React, Contentful and Netlify + AWS Lambda.
