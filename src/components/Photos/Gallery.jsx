@@ -47,7 +47,7 @@ class Gallery extends React.Component {
               tabIndex={0}
               onClick={() => this.setState({ photoActive: true, currentPhoto: index })}
               onKeyPress={(event) => {
-                if (event.keyCode === 13) {
+                if (event.charCode === 13) {
                   this.setState({ photoActive: true, currentPhoto: index });
                 }
               }}
