@@ -24,8 +24,8 @@ class Gallery extends React.Component {
       <Masonry {...other}>
         <Lightbox
           images={photos.map(photo => ({
-            src: photo.fullSize.srcWebp,
-            srcSet: photo.fullSize.srcSetWebp,
+            src: photo.fullSize.src,
+            srcSet: photo.fullSize.srcSet,
             alt: photo.title,
           }))}
           isOpen={photoActive}

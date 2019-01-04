@@ -94,8 +94,7 @@ export default () => (
                   ...GatsbyContentfulFluid_withWebp
                 }
                 fullSize: fluid(maxWidth: 1920) {
-                  srcWebp
-                  srcSetWebp
+                  ...GatsbyContentfulFluid_withWebp
                 }
               }
             }
