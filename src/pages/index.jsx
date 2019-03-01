@@ -5,7 +5,7 @@ import Img from 'gatsby-image';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import { withStyles } from '@material-ui/core/styles';
-import Metadata from '../components/Layout/Metadata';
+import Metadata from '../components/common/Metadata';
 import logo from '../../static/logo.svg';
 import Projects from '../components/Projects/Projects';
 
@@ -43,27 +43,27 @@ const HomeCore = (props) => {
         </Typography>
 
         <div className={classes.buttonGroup}>
-          <Link to="/photography" className={classes.link}>
-            <Button
-              variant="outlined"
-              color="secondary"
-              className={classes.button}
-              aria-label="Photography"
-            >
-              View Photography
-            </Button>
-          </Link>
+          <Button
+            component={Link}
+            to="photography"
+            variant="outlined"
+            color="secondary"
+            className={classes.button}
+            aria-label="Photography"
+          >
+            View Photography
+          </Button>
 
-          <Link to="/projects" className={classes.link}>
-            <Button
-              variant="outlined"
-              color="secondary"
-              className={classes.button}
-              aria-label="Projects"
-            >
-              View Projects
-            </Button>
-          </Link>
+          <Button
+            component={Link}
+            to="projects"
+            variant="outlined"
+            color="secondary"
+            className={classes.button}
+            aria-label="Projects"
+          >
+            View Projects
+          </Button>
         </div>
       </section>
 
@@ -114,16 +114,12 @@ const styles = theme => ({
   },
   button: {
     border: `1px solid ${theme.palette.secondary.main}`,
-    textTransform: 'none',
 
     '&:hover': {
       transition: theme.transitions.easing,
       color: theme.palette.common.black,
       backgroundColor: theme.palette.secondary.main,
     },
-  },
-  link: {
-    textDecoration: 'none',
   },
   logo: {
     height: '15rem',

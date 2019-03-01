@@ -43,6 +43,14 @@ const rawTheme = {
       paddingBottom: '1.5rem',
     },
   },
+  overrides: {
+    MuiButton: {
+      root: {
+        borderRadius: 0,
+        textTransform: 'none',
+      },
+    },
+  },
 };
 
 module.exports = rawTheme;

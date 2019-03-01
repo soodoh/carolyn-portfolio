@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core/styles';
-import Metadata from '../components/Layout/Metadata';
+import Metadata from '../components/common/Metadata';
 
 const NotFound = (props) => {
   const { classes } = props;

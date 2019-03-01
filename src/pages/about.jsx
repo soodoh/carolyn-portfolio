@@ -5,9 +5,9 @@ import Img from 'gatsby-image';
 import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
-import Metadata from '../components/Layout/Metadata';
+import Metadata from '../components/common/Metadata';
 import SocialMedia from '../components/common/SocialMedia';
-import Background from '../components/Layout/Background';
+import Background from '../components/common/Background';
 
 const AboutCore = (props) => {
   const { classes, data } = props;

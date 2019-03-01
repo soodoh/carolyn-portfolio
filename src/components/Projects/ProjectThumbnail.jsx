@@ -1,35 +1,21 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Img from 'gatsby-image';
-import Player from 'react-player';
-import Dialog from '@material-ui/core/Dialog';
-import DialogContent from '@material-ui/core/DialogContent';
+import { navigate } from 'gatsby';
 import GridListTileBar from '@material-ui/core/GridListTileBar';
-import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core/styles';
-import Slide from '@material-ui/core/Slide';
 import Zoom from '@material-ui/core/Zoom';
 import detectIt from 'detect-it';
+import slugify from 'slugify';
 
-function Transition(props) {
-  return <Slide direction="down" {...props} />;
-}
-
-class ModalCore extends React.Component {
+class ProjectThumbnail extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      projectActive: false,
       labelActive: detectIt.deviceType === 'touchOnly' || false,
     };
-    this.toggleProject = this.toggleProject.bind(this);
     this.toggleLabel = this.toggleLabel.bind(this);
-  }
-
-  toggleProject() {
-    const { projectActive } = this.state;
-    this.setState({ projectActive: !projectActive });
   }
 
   toggleLabel() {
@@ -39,14 +25,19 @@ class ModalCore extends React.Component {
 
   render() {
     const { classes, data } = this.props;
-    const { labelActive, projectActive } = this.state;
+    const { labelActive } = this.state;
+    const slug = slugify(data.title, {
+      replacement: '-',
+      remove: /[^\w\s]/g,
+      lower: true,
+    });
 
     return (
       <div className={classes.projectContainer}>
         <div
           className={classes.photoContainer}
           role="presentation"
-          onClick={this.toggleProject}
+          onClick={() => navigate(`projects/${slug}`)}
           onMouseEnter={() => this.setState({ labelActive: true })}
           onMouseLeave={() => this.setState({ labelActive: false })}
         >
@@ -63,50 +54,12 @@ class ModalCore extends React.Component {
             />
           </Zoom>
         </div>
-
-        <Dialog
-          open={projectActive}
-          onClose={this.toggleProject}
-          fullWidth
-          TransitionComponent={Transition}
-        >
-          <DialogContent>
-            <div className={classes.title}>
-              <Typography variant="h4" color="primary" align="center">
-                {data.title}
-              </Typography>
-              <Typography variant="h6" color="primary" align="center" gutterBottom>
-                {data.role}
-              </Typography>
-            </div>
-
-            {data.link
-              && (
-                <div className={classes.videoContainer}>
-                  <Player
-                    url={data.link}
-                    className={classes.video}
-                    controls
-                    width="100%"
-                    height="100%"
-                  />
-                </div>
-              )
-            }
-
-            <div
-              className={classes.markdown}
-              // eslint-disable-next-line react/no-danger
-              dangerouslySetInnerHTML={{ __html: data.description.childMarkdownRemark.html }}
-            />
-          </DialogContent>
-        </Dialog>
       </div>
     );
   }
 }
 
-ModalCore.propTypes = {
+ProjectThumbnail.propTypes = {
   classes: PropTypes.shape({
     photoContainer: PropTypes.string,
     photo: PropTypes.string,
@@ -115,9 +68,6 @@ ModalCore.propTypes = {
 };
 
 const styles = theme => ({
-  title: {
-    marginBottom: theme.spacing.unit * 3,
-  },
   photoContainer: {
     position: 'relative',
     margin: theme.spacing.unit * 5,
@@ -129,25 +79,9 @@ const styles = theme => ({
     height: 'auto',
     verticalAlign: 'top', // Removes bottom gutter for Masonry
   },
-  markdown: {
-    fontFamily: theme.typography.fontFamily,
-    color: theme.palette.primary.main,
-    '& img': {
-      width: '100%',
-    },
-  },
   link: {
     width: '100%',
     height: 'auto',
-  },
-  videoContainer: {
-    position: 'relative',
-    paddingTop: '56.25%', // Player ratio: 100 / (1280 / 720)
-  },
-  video: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
   },
   // Breakpoints
   [`@media (min-width: ${theme.breakpoints.values.xs}px)`]: {
@@ -172,4 +106,4 @@ const styles = theme => ({
   },
 });
 
-export default withStyles(styles)(ModalCore);
+export default withStyles(styles)(ProjectThumbnail);

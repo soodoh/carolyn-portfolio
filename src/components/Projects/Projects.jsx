@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { StaticQuery, graphql } from 'gatsby';
 import { withStyles } from '@material-ui/core/styles';
-import Metadata from '../Layout/Metadata';
+import Metadata from '../common/Metadata';
 import Filters from '../common/Filters';
 import ProjectsContainer from './ProjectsContainer';
 
