@@ -1,22 +1,20 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Player from 'react-player';
-import { Link } from 'gatsby';
 import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
-import Button from '@material-ui/core/Button';
 
 const VideoProject = (props) => {
   const { classes, data } = props;
 
   return (
-    <Grid container>
+    <Grid container className={classes.container}>
       <Grid item xs={12} className={classes.title}>
-        <Typography variant="h4" align="center" gutterBottom>
+        <Typography variant="h2" align="center">
           {data.title}
         </Typography>
-        <Typography variant="h6" align="center" gutterBottom>
+        <Typography variant="subtitle1" className={classes.role} align="center" gutterBottom>
           {data.role}
         </Typography>
       </Grid>
@@ -40,17 +38,6 @@ const VideoProject = (props) => {
         // eslint-disable-next-line react/no-danger
         dangerouslySetInnerHTML={{ __html: data.description.childMarkdownRemark.html }}
       />
-
-      <Grid item xs={12} className={classes.buttonGroup}>
-        <Button
-          component={Link}
-          to="projects"
-          variant="contained"
-          color="secondary"
-        >
-          View More Work
-        </Button>
-      </Grid>
     </Grid>
   );
 };
@@ -67,8 +54,17 @@ VideoProject.propTypes = {
 };
 
 const styles = theme => ({
+  container: {
+    padding: '0',
+    [`@media (min-width: ${theme.breakpoints.values.xs}px)`]: {
+      padding: '0 10vw',
+    },
+  },
   title: {
     marginBottom: theme.spacing.unit * 2,
+  },
+  role: {
+    fontWeight: 'bold',
   },
   videoContainer: {
     marginBottom: theme.spacing.unit * 4,
@@ -89,10 +85,6 @@ const styles = theme => ({
       width: '100%',
     },
     marginBottom: theme.spacing.unit * 6,
-  },
-  buttonGroup: {
-    display: 'flex',
-    justifyContent: 'center',
   },
 });
 

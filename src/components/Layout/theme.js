@@ -22,6 +22,9 @@ const rawTheme = {
   typography: {
     useNextVariants: true,
     fontFamily: '\'Karla\', sans-serif',
+    h1: {
+      fontFamily: '\'Old Standard TT\', serif',
+    },
     h2: {
       fontFamily: '\'Old Standard TT\', serif',
     },

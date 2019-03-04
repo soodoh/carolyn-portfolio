@@ -10,6 +10,7 @@ exports.createPages = async ({ graphql, actions }) => {
           node {
             id
             title
+            role
             projectType
             link
             description {
