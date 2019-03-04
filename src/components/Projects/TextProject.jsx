@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import Img from 'gatsby-image';
 import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
+import Hidden from '@material-ui/core/Hidden';
 import Typography from '@material-ui/core/Typography';
 
 const TextProject = (props) => {
@@ -10,17 +11,26 @@ const TextProject = (props) => {
 
   return (
     <Grid container>
+      <Hidden smUp>
+        <Grid item xs={12} md={6} className={classes.coverImage}>
+          <Img fluid={data.coverImage.fluid} />
+        </Grid>
+      </Hidden>
+
       <Grid item xs={12} md={6} className={classes.title}>
-        <Typography variant="h2" gutterBottom>
+        <Typography variant="h2">
           {data.title}
         </Typography>
-        <Typography variant="subtitle1" className={classes.role} gutterBottom>
+        <Typography variant="subtitle1" className={classes.role}>
           {data.role}
         </Typography>
       </Grid>
-      <Grid item xs={12} md={6}>
-        <Img fluid={data.coverImage.fluid} />
-      </Grid>
+
+      <Hidden only="xs">
+        <Grid item xs={12} md={6}>
+          <Img fluid={data.coverImage.fluid} />
+        </Grid>
+      </Hidden>
 
       <Grid item xs={12}>
         <div
@@ -51,6 +61,9 @@ const styles = theme => ({
   backArrow: {
     marginRight: theme.spacing.unit,
   },
+  coverImage: {
+    marginBottom: theme.spacing.unit * 2,
+  },
   title: {
     display: 'flex',
     flexDirection: 'column',
@@ -66,7 +79,7 @@ const styles = theme => ({
     alignItems: 'center',
     fontFamily: theme.typography.fontFamily,
     color: theme.palette.primary.main,
-    '& strong': {
+    '& h1, h2, h3': {
       ...theme.typography.h4,
     },
     '& img': {
