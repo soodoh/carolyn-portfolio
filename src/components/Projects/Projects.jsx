@@ -102,7 +102,7 @@ export default () => (
   <StaticQuery
     query={graphql`
       query ProjectsQuery {
-        allContentfulProject {
+        allContentfulProject (sort: {fields: order, order: ASC}) {
           edges {
             node {
               id

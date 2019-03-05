@@ -76,18 +76,22 @@ const styles = theme => ({
   projectContent: {
     display: 'flex',
     flexDirection: 'column',
-    alignItems: 'center',
     fontFamily: theme.typography.fontFamily,
     color: theme.palette.primary.main,
     '& h1, h2, h3': {
       ...theme.typography.h4,
+      display: 'flex',
+      justifyContent: 'center',
+    },
+    '& p': {
+      textAlign: 'center',
     },
     '& img': {
       width: '100%',
     },
-    padding: '0',
+    padding: `${theme.spacing.unit * 6}px 0`,
     [`@media (min-width: ${theme.breakpoints.values.xs}px)`]: {
-      padding: '0 10vw',
+      padding: `${theme.spacing.unit * 6}px 10vw`,
     },
   },
 });

@@ -68,7 +68,6 @@ const styles = theme => ({
   bottomButton: {
     display: 'flex',
     justifyContent: 'center',
-    paddingTop: theme.spacing.unit * 4,
   },
 });
 
