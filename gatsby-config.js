@@ -1,6 +1,5 @@
-// TODO probably move dotenv to devdependency as this only is run on build
+// eslint-disable-next-line import/no-extraneous-dependencies
 const dotenv = require('dotenv');
-const theme = require('./src/components/Layout/theme');
 
 // Load environment variables from project
 dotenv.config();
@@ -13,7 +12,12 @@ if (!spaceId || !accessToken) {
   );
 }
 
+const siteUrl = 'https://carolyndiloreto.com';
+
 module.exports = {
+  siteMetadata: {
+    siteUrl,
+  },
   plugins: [
     'gatsby-plugin-eslint',
     'gatsby-plugin-layout',
@@ -24,6 +28,23 @@ module.exports = {
     'gatsby-plugin-react-helmet',
     'gatsby-plugin-remove-serviceworker',
     // 'gatsby-plugin-offline',
+    'gatsby-plugin-sitemap',
+    {
+      resolve: 'gatsby-plugin-google-analytics',
+      options: {
+        trackingId: 'UA-141361857-2',
+        head: true,
+        anonymize: true,
+      },
+    },
+    {
+      resolve: 'gatsby-plugin-robots-txt',
+      options: {
+        host: siteUrl,
+        sitemap: `${siteUrl}/sitemap.xml`,
+        policy: [{ userAgent: '*', allow: '/' }],
+      },
+    },
     {
       resolve: 'gatsby-plugin-web-font-loader',
       options: {
@@ -33,17 +54,13 @@ module.exports = {
       },
     },
     {
-      resolve: '@wapps/gatsby-plugin-material-ui',
-      options: { theme },
-    },
-    {
       resolve: 'gatsby-plugin-manifest',
       options: {
-        name: 'Sarabeth Belon Portfolio',
-        short_name: 'SB Portfolio',
+        name: 'Carolyn DiLoreto Portfolio',
+        short_name: 'CD Portfolio',
         start_url: '/',
-        background_color: '#1A1A1A',
-        theme_color: '#C66470',
+        background_color: '#494F5C',
+        theme_color: '#CEC0A8',
         // Enables "Add to Homescreen" prompt and disables browser UI (including back button)
         // see https://developers.google.com/web/fundamentals/web-app-manifest/#display
         display: 'standalone',
