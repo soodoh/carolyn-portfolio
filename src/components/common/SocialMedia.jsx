@@ -3,13 +3,20 @@ import PropTypes from 'prop-types';
 import { uid } from 'react-uid';
 import { StaticQuery, graphql } from 'gatsby';
 import SVG from 'react-inlinesvg';
-import { withStyles, withTheme } from '@material-ui/core/styles';
+import { makeStyles, useTheme } from '@material-ui/styles';
 import IconButton from '@material-ui/core/IconButton';
 
-const SocialMediaCore = (props) => {
-  const {
-    classes, theme, color, icons,
-  } = props;
+const useStyles = makeStyles({
+  container: {
+    display: 'flex',
+    justifyContent: 'center',
+  },
+});
+
+const SocialMedia = (props) => {
+  const { color, icons } = props;
+  const classes = useStyles();
+  const theme = useTheme();
   const colorCode = color ? theme.palette[color].main : theme.palette.gray[700];
 
   return (
@@ -35,30 +42,15 @@ const SocialMediaCore = (props) => {
   );
 };
 
-SocialMediaCore.propTypes = {
-  classes: PropTypes.shape({
-    container: PropTypes.string,
-  }).isRequired,
-  theme: PropTypes.shape({
-    palette: PropTypes.object.isRequired,
-  }).isRequired,
+SocialMedia.propTypes = {
   icons: PropTypes.arrayOf(
     PropTypes.object,
   ).isRequired,
   color: PropTypes.string,
 };
-SocialMediaCore.defaultProps = {
+SocialMedia.defaultProps = {
   color: '',
 };
-
-const styles = {
-  container: {
-    display: 'flex',
-    justifyContent: 'center',
-  },
-};
-
-const SocialMedia = withTheme()(withStyles(styles)(SocialMediaCore));
 
 export default props => (
   <StaticQuery

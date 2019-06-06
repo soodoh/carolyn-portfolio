@@ -1,14 +1,31 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'gatsby';
-import { withStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/styles';
 import Button from '@material-ui/core/Button';
 import ArrowBack from '@material-ui/icons/ArrowBack';
 import VideoProject from '../components/Projects/VideoProject';
 import TextProject from '../components/Projects/TextProject';
 
+const useStyles = makeStyles(theme => ({
+  topButton: {
+    marginBottom: theme.spacing(4),
+  },
+  container: {
+    padding: theme.spacing(6, 2),
+    [theme.breakpoints.up('xs')]: {
+      padding: `${theme.spacing(6)}px 10vw`,
+    },
+  },
+  bottomButton: {
+    display: 'flex',
+    justifyContent: 'center',
+  },
+}));
+
 const Project = (props) => {
-  const { classes, pageContext } = props;
+  const { pageContext } = props;
+  const classes = useStyles();
 
   return (
     <div className={classes.container}>
@@ -45,7 +62,6 @@ const Project = (props) => {
 };
 
 Project.propTypes = {
-  classes: PropTypes.shape({}).isRequired,
   pageContext: PropTypes.shape({
     title: PropTypes.string,
     role: PropTypes.string,
@@ -55,20 +71,4 @@ Project.propTypes = {
   }).isRequired,
 };
 
-const styles = theme => ({
-  topButton: {
-    marginBottom: theme.spacing.unit * 4,
-  },
-  container: {
-    padding: `${theme.spacing.unit * 6}px ${theme.spacing.unit * 2}px`,
-    [`@media (min-width: ${theme.breakpoints.values.xs}px)`]: {
-      padding: `${theme.spacing.unit * 6}px 10vw`,
-    },
-  },
-  bottomButton: {
-    display: 'flex',
-    justifyContent: 'center',
-  },
-});
-
-export default withStyles(styles)(Project);
+export default Project;

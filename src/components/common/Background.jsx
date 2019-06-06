@@ -1,27 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Img from 'gatsby-image';
-import { withStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/styles';
 
-const BackgroundCore = (props) => {
-  const { classes, sizes } = props;
-
-  return (
-    <div className={classes.container}>
-      <Img
-        fluid={sizes}
-        className={classes.background}
-        alt="Background Image"
-      />
-    </div>
-  );
-};
-BackgroundCore.propTypes = {
-  classes: PropTypes.shape({}).isRequired,
-  sizes: PropTypes.shape({}).isRequired,
-};
-
-const backgroundStyles = {
+const useStyles = makeStyles({
   container: {
     position: 'fixed',
     top: 0,
@@ -34,7 +16,24 @@ const backgroundStyles = {
     width: '100%',
     height: '100%',
   },
+});
+
+const Background = (props) => {
+  const classes = useStyles();
+  const { sizes } = props;
+
+  return (
+    <div className={classes.container}>
+      <Img
+        fluid={sizes}
+        className={classes.background}
+        alt="Background Image"
+      />
+    </div>
+  );
 };
-const Background = withStyles(backgroundStyles)(BackgroundCore);
+Background.propTypes = {
+  sizes: PropTypes.shape({}).isRequired,
+};
 
 export default Background;

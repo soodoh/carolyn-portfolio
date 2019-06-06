@@ -1,102 +1,86 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { StaticQuery, graphql } from 'gatsby';
-import { withStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/styles';
 import Metadata from '../common/Metadata';
 import Filters from '../common/Filters';
 import ProjectsContainer from './ProjectsContainer';
 
-class ProjectsCore extends React.Component {
-  constructor(props) {
-    super(props);
+const useStyles = makeStyles(theme => ({
+  container: {
+    padding: theme.spacing(0, 2),
+  },
+}));
 
-    this.state = { filter: 'All' };
-    this.getCategories = this.getCategories.bind(this);
-    this.filteredProjects = this.filteredProjects.bind(this);
-  }
 
-  getCategories() {
-    const { projects } = this.props;
-    let categories = [];
-
-    projects.forEach((project) => {
-      project.projectType.forEach((type) => {
-        if (!categories.includes(type)) { categories.push(type); }
-      });
-    });
-
-    categories = categories.sort((a, b) => (
-      a.localeCompare(b)
+const getCategories = (projects) => {
+  const categories = projects.reduce((acc, project) => {
+    const typesToAdd = project.projectType.filter(type => (
+      !acc.includes(type)
     ));
-    categories.unshift('All');
+    return [...acc, ...typesToAdd];
+  }, []);
 
-    return categories;
+  return [
+    'All',
+    ...categories.sort((a, b) => (
+      a.localeCompare(b)
+    )),
+  ];
+};
+
+const filteredProjects = (projects, filter) => {
+  const currentProjects = projects;
+
+  if (filter !== 'All') {
+    return currentProjects.filter(project => (
+      project.projectType.includes(filter)
+    ));
   }
 
-  filteredProjects() {
-    const { projects } = this.props;
-    const { filter } = this.state;
-    let currentProjects = projects;
+  return currentProjects;
+};
 
-    if (filter !== 'All') {
-      currentProjects = currentProjects.filter(project => (
-        project.projectType.includes(filter)
-      ));
-    }
+const Projects = (props) => {
+  const classes = useStyles();
+  const [filter, setFilter] = useState('All');
+  const { projects, isComponent } = props;
+  const filterList = getCategories(projects);
+  const projectList = filteredProjects(projects, filter);
 
-    return currentProjects;
-  }
-
-  render() {
-    const { classes, isComponent } = this.props;
-    const { filter } = this.state;
-
-    return (
-      <React.Fragment>
-        {!isComponent
-          && (
-            <Metadata
-              title="CD Projects"
-              description="View Carolyn DiLoreto's past and current projects. From film editing to UX Engineering there are many skills showcased in this section of the portfolio."
-            />
-          )
-        }
-
-        <section className={classes.container}>
-          <Filters
-            list={this.getCategories()}
-            currentItem={filter}
-            onChange={value => this.setState({ filter: value })}
+  return (
+    <React.Fragment>
+      {!isComponent
+        && (
+          <Metadata
+            title="CD Projects"
+            description="View Carolyn DiLoreto's past and current projects. From film editing to UX Engineering there are many skills showcased in this section of the portfolio."
           />
+        )
+      }
 
-          <ProjectsContainer data={this.filteredProjects()} />
-        </section>
-      </React.Fragment>
-    );
-  }
-}
+      <section className={classes.container}>
+        <Filters
+          list={filterList}
+          currentItem={filter}
+          onChange={value => setFilter(value)}
+        />
 
-ProjectsCore.propTypes = {
-  classes: PropTypes.shape({
-    container: PropTypes.string,
-  }).isRequired,
+        <ProjectsContainer data={projectList} />
+      </section>
+    </React.Fragment>
+  );
+};
+
+Projects.propTypes = {
   projects: PropTypes.arrayOf(
     PropTypes.object,
   ).isRequired,
   isComponent: PropTypes.bool,
 };
-ProjectsCore.defaultProps = {
+Projects.defaultProps = {
   isComponent: false,
 };
-
-const styles = theme => ({
-  container: {
-    paddingLeft: `${theme.spacing.unit * 2}px`,
-    paddingRight: `${theme.spacing.unit * 2}px`,
-  },
-});
-
-const ProjectsWithStyles = withStyles(styles)(ProjectsCore);
 
 export default () => (
   <StaticQuery
@@ -128,7 +112,7 @@ export default () => (
       }
     `}
     render={data => (
-      <ProjectsWithStyles
+      <Projects
         projects={data.allContentfulProject.edges.map(item => (
           item.node
         ))}

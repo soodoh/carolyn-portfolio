@@ -1,13 +1,58 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Img from 'gatsby-image';
-import { withStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/styles';
 import Grid from '@material-ui/core/Grid';
 import Hidden from '@material-ui/core/Hidden';
 import Typography from '@material-ui/core/Typography';
 
+const useStyles = makeStyles(theme => ({
+  backButton: {
+    marginBottom: theme.spacing(2),
+  },
+  backArrow: {
+    marginRight: theme.spacing(1),
+  },
+  coverImage: {
+    marginBottom: theme.spacing(2),
+  },
+  title: {
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    marginBottom: theme.spacing(2),
+  },
+  role: {
+    fontWeight: 'bold',
+  },
+  projectContent: {
+    display: 'flex',
+    flexDirection: 'column',
+    fontFamily: theme.typography.fontFamily,
+    color: theme.palette.primary.main,
+    padding: theme.spacing(6, 0),
+
+    [theme.breakpoints.up('xs')]: {
+      padding: `${theme.spacing(6)}px 10vw`,
+    },
+
+    '& h1, h2, h3': {
+      ...theme.typography.h4,
+      display: 'flex',
+      justifyContent: 'center',
+    },
+    '& p': {
+      textAlign: 'center',
+    },
+    '& img': {
+      width: '100%',
+    },
+  },
+}));
+
 const TextProject = (props) => {
-  const { classes, data } = props;
+  const classes = useStyles();
+  const { data } = props;
 
   return (
     <Grid container>
@@ -44,7 +89,6 @@ const TextProject = (props) => {
 };
 
 TextProject.propTypes = {
-  classes: PropTypes.shape({}).isRequired,
   data: PropTypes.shape({
     title: PropTypes.string,
     role: PropTypes.string,
@@ -54,46 +98,4 @@ TextProject.propTypes = {
   }).isRequired,
 };
 
-const styles = theme => ({
-  backButton: {
-    marginBottom: theme.spacing.unit * 2,
-  },
-  backArrow: {
-    marginRight: theme.spacing.unit,
-  },
-  coverImage: {
-    marginBottom: theme.spacing.unit * 2,
-  },
-  title: {
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'center',
-    marginBottom: theme.spacing.unit * 2,
-  },
-  role: {
-    fontWeight: 'bold',
-  },
-  projectContent: {
-    display: 'flex',
-    flexDirection: 'column',
-    fontFamily: theme.typography.fontFamily,
-    color: theme.palette.primary.main,
-    '& h1, h2, h3': {
-      ...theme.typography.h4,
-      display: 'flex',
-      justifyContent: 'center',
-    },
-    '& p': {
-      textAlign: 'center',
-    },
-    '& img': {
-      width: '100%',
-    },
-    padding: `${theme.spacing.unit * 6}px 0`,
-    [`@media (min-width: ${theme.breakpoints.values.xs}px)`]: {
-      padding: `${theme.spacing.unit * 6}px 10vw`,
-    },
-  },
-});
-
-export default withStyles(styles)(TextProject);
+export default TextProject;

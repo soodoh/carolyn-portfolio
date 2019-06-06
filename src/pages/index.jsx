@@ -4,13 +4,69 @@ import { Link, StaticQuery, graphql } from 'gatsby';
 import Img from 'gatsby-image';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
-import { withStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/styles';
 import Metadata from '../components/common/Metadata';
 import logo from '../../static/logo.svg';
 import Projects from '../components/Projects/Projects';
 
-const HomeCore = (props) => {
-  const { classes, background } = props;
+const useStyles = makeStyles(theme => ({
+  backgroundContainer: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    width: '100%',
+    height: '100%',
+    zIndex: -99,
+  },
+  background: {
+    height: '100%',
+  },
+  home: {
+    height: '100vh',
+    color: theme.palette.primary.contrastText,
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  projectsContainer: {
+    marginTop: '-5px',
+    paddingTop: '5px',
+  },
+  buttonGroup: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    width: '28rem',
+  },
+  button: {
+    border: `1px solid ${theme.palette.secondary.main}`,
+
+    '&:hover': {
+      transition: theme.transitions.easing,
+      color: theme.palette.common.black,
+      backgroundColor: theme.palette.secondary.main,
+    },
+  },
+  logo: {
+    height: '15rem',
+    marginBottom: theme.spacing(2),
+  },
+  title: {
+    fontSize: '3.5rem',
+  },
+  [theme.breakpoints.down('sm')]: {
+    title: {
+      fontSize: '2rem',
+    },
+    buttonGroup: {
+      width: '85vw',
+    },
+  },
+}));
+
+const Home = (props) => {
+  const { background } = props;
+  const classes = useStyles();
 
   return (
     <React.Fragment>
@@ -75,70 +131,9 @@ const HomeCore = (props) => {
   );
 };
 
-HomeCore.propTypes = {
-  classes: PropTypes.shape({
-    home: PropTypes.string,
-    buttonGroup: PropTypes.string,
-  }).isRequired,
+Home.propTypes = {
   background: PropTypes.shape({}).isRequired,
 };
-
-const styles = theme => ({
-  backgroundContainer: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    width: '100%',
-    height: '100%',
-    zIndex: -99,
-  },
-  background: {
-    height: '100%',
-  },
-  home: {
-    height: '100vh',
-    color: theme.palette.primary.contrastText,
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  projectsContainer: {
-    marginTop: '-5px',
-    paddingTop: '5px',
-  },
-  buttonGroup: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    width: '28rem',
-  },
-  button: {
-    border: `1px solid ${theme.palette.secondary.main}`,
-
-    '&:hover': {
-      transition: theme.transitions.easing,
-      color: theme.palette.common.black,
-      backgroundColor: theme.palette.secondary.main,
-    },
-  },
-  logo: {
-    height: '15rem',
-    marginBottom: theme.spacing.unit * 2,
-  },
-  title: {
-    fontSize: '3.5rem',
-  },
-  [`@media (max-width:${theme.breakpoints.values.sm}px)`]: {
-    title: {
-      fontSize: '2rem',
-    },
-    buttonGroup: {
-      width: '85vw',
-    },
-  },
-});
-
-const HomeWithStyles = withStyles(styles)(HomeCore);
 
 export default () => (
   <StaticQuery
@@ -154,7 +149,7 @@ export default () => (
       }
     `}
     render={data => (
-      <HomeWithStyles background={data.contentfulAbout.background.fluid} />
+      <Home background={data.contentfulAbout.background.fluid} />
     )}
   />
 );

@@ -1,83 +1,58 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { StaticQuery, graphql } from 'gatsby';
-import { withStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/styles';
 import Metadata from '../components/common/Metadata';
 import Filters from '../components/common/Filters';
 import Gallery from '../components/Photos/Gallery';
 
-class PhotographyCore extends React.Component {
-  constructor(props) {
-    super(props);
+const useStyles = makeStyles(theme => ({
+  container: {
+    position: 'relative',
+    padding: theme.spacing(0, 2),
+  },
+}));
 
-    const currentAlbum = props.albums[0].album;
-    this.state = {
-      currentAlbum,
-      photos: this.getPhotos(currentAlbum),
-    };
-    this.getPhotos = this.getPhotos.bind(this);
-    this.changeFilter = this.changeFilter.bind(this);
-  }
 
-  getPhotos(matchAlbum) {
-    const { albums } = this.props;
-    const currentAlbum = albums.find(album => (
-      album.album === matchAlbum
-    ));
-    const { photos } = currentAlbum;
+const getPhotos = (albums, matchAlbum) => {
+  const currentAlbum = albums.find(album => (
+    album.album === matchAlbum
+  ));
+  const { photos } = currentAlbum;
 
-    return photos;
-  }
+  return photos;
+};
 
-  changeFilter(value) {
-    this.setState({
-      currentAlbum: value,
-      photos: this.getPhotos(value),
-    });
-  }
+const Photography = (props) => {
+  const classes = useStyles();
+  const { albums } = props;
+  const [currentAlbum, setAlbum] = useState(albums[0].album);
 
-  render() {
-    const { classes, albums } = this.props;
-    const { currentAlbum, photos } = this.state;
+  return (
+    <React.Fragment>
+      <Metadata
+        title="CD Photography"
+        description="Carolyn DiLoreto's photography portfolio consists of dance, scenery and headshots. She is available for hire as a professional photographer in Los Angeles, CA."
+      />
 
-    return (
-      <React.Fragment>
-        <Metadata
-          title="CD Photography"
-          description="Carolyn DiLoreto's photography portfolio consists of dance, scenery and headshots. She is available for hire as a professional photographer in Los Angeles, CA."
+      <div className={classes.container}>
+        <Filters
+          list={albums.map(album => album.album)}
+          currentItem={currentAlbum}
+          onChange={value => setAlbum(value)}
         />
 
-        <div className={classes.container}>
-          <Filters
-            list={albums.map(album => album.album)}
-            currentItem={currentAlbum}
-            onChange={this.changeFilter}
-          />
+        <Gallery photos={getPhotos(albums, currentAlbum)} />
+      </div>
+    </React.Fragment>
+  );
+};
 
-          <Gallery photos={photos} />
-        </div>
-      </React.Fragment>
-    );
-  }
-}
-
-PhotographyCore.propTypes = {
-  classes: PropTypes.shape({
-    container: PropTypes.string,
-  }).isRequired,
+Photography.propTypes = {
   albums: PropTypes.arrayOf(
     PropTypes.object,
   ).isRequired,
 };
-
-const styles = theme => ({
-  container: {
-    position: 'relative',
-    padding: `0 ${theme.spacing.unit * 2}px`,
-  },
-});
-
-const PhotographyWithStyles = withStyles(styles)(PhotographyCore);
 
 export default () => (
   <StaticQuery
@@ -103,7 +78,7 @@ export default () => (
       }
     `}
     render={data => (
-      <PhotographyWithStyles
+      <Photography
         albums={data.allContentfulPhotoAlbum.edges.map(item => (
           item.node
         ))}

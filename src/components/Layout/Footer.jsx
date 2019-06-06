@@ -1,16 +1,44 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import Typography from '@material-ui/core/Typography';
-import { withStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/styles';
 import SocialMedia from '../common/SocialMedia';
 
-const FooterCore = (props) => {
-  const { classes } = props;
+const useStyles = makeStyles(theme => ({
+  footer: {
+    flexShrink: 0,
+    width: '100%',
+    height: 'auto',
+    padding: theme.spacing(1, 0),
+  },
+  credits: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+  },
+  content: {
+    display: 'flex',
+    flexWrap: 'wrap',
+    height: '100%',
+    flex: 1,
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: theme.spacing(0, 2),
+    color: theme.palette.gray[700],
+
+    [theme.breakpoints.down('sm')]: {
+      flexDirection: 'column',
+      alignItems: 'center',
+    },
+  },
+}));
+
+const Footer = () => {
+  const classes = useStyles();
 
   return (
     <footer className={classes.footer}>
       <section className={classes.content}>
-        <div>
+        <div className={classes.credits}>
           <Typography variant="caption" color="inherit">
             Copyright &copy;
             {` ${new Date().getFullYear()} `}
@@ -30,35 +58,4 @@ const FooterCore = (props) => {
   );
 };
 
-FooterCore.propTypes = {
-  classes: PropTypes.shape({
-    footer: PropTypes.string,
-    content: PropTypes.string,
-  }).isRequired,
-};
-
-const styles = theme => ({
-  footer: {
-    flexShrink: 0,
-    width: '100%',
-    height: 'auto',
-    padding: `${theme.spacing.unit}px 0`,
-  },
-  content: {
-    display: 'flex',
-    flexWrap: 'wrap',
-    height: '100%',
-    flex: 1,
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: `0 ${theme.spacing.unit * 2}px`,
-    color: theme.palette.gray[700],
-
-    [`@media (max-width: ${theme.breakpoints.values.sm}px)`]: {
-      flexDirection: 'column',
-      alignItems: 'center',
-    },
-  },
-});
-
-export default withStyles(styles)(FooterCore);
+export default Footer;

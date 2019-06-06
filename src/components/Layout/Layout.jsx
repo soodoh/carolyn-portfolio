@@ -1,38 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Helmet } from 'react-helmet';
-import { withStyles, MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
+import { createMuiTheme } from '@material-ui/core/styles';
+import { makeStyles, ThemeProvider } from '@material-ui/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import theme from './theme';
 import Header from './Header';
 import Footer from './Footer';
 
-const Layout = ({ classes, children, location }) => (
-  <MuiThemeProvider theme={createMuiTheme(theme)}>
-    <CssBaseline />
-    <Helmet>
-      <html lang="en" />
-    </Helmet>
-
-    <div className={classes.container}>
-      <Header location={location} />
-      <div className={classes.content}>
-        {children}
-      </div>
-      <Footer />
-    </div>
-  </MuiThemeProvider>
-);
-
-Layout.propTypes = {
-  classes: PropTypes.shape({}).isRequired,
-  children: PropTypes.node.isRequired,
-  location: PropTypes.shape({
-    pathname: PropTypes.string.isRequired,
-  }).isRequired,
-};
-
-const styles = {
+const useStyles = makeStyles({
   container: {
     minHeight: '100vh',
     display: 'flex',
@@ -42,6 +18,34 @@ const styles = {
   content: {
     flexGrow: 1,
   },
+});
+
+const Layout = ({ children, location }) => {
+  const classes = useStyles();
+
+  return (
+    <ThemeProvider theme={createMuiTheme(theme)}>
+      <CssBaseline />
+      <Helmet>
+        <html lang="en" />
+      </Helmet>
+
+      <div className={classes.container}>
+        <Header location={location} />
+        <div className={classes.content}>
+          {children}
+        </div>
+        <Footer />
+      </div>
+    </ThemeProvider>
+  );
 };
 
-export default withStyles(styles)(Layout);
+Layout.propTypes = {
+  children: PropTypes.node.isRequired,
+  location: PropTypes.shape({
+    pathname: PropTypes.string.isRequired,
+  }).isRequired,
+};
+
+export default Layout;

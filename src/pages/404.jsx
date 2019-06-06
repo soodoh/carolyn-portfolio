@@ -1,11 +1,15 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import Typography from '@material-ui/core/Typography';
-import { withStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/styles';
 import Metadata from '../components/common/Metadata';
 
-const NotFound = (props) => {
-  const { classes } = props;
+const useStyles = makeStyles(theme => ({
+  container: {
+    padding: theme.spacing(2),
+  },
+}));
+const NotFound = () => {
+  const classes = useStyles();
 
   return (
     <React.Fragment>
@@ -26,16 +30,4 @@ const NotFound = (props) => {
   );
 };
 
-NotFound.propTypes = {
-  classes: PropTypes.shape({
-    container: PropTypes.string,
-  }).isRequired,
-};
-
-const styles = theme => ({
-  container: {
-    padding: theme.spacing.unit * 2,
-  },
-});
-
-export default withStyles(styles)(NotFound);
+export default NotFound;

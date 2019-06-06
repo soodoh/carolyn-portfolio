@@ -30,6 +30,9 @@ module.exports = {
     // 'gatsby-plugin-offline',
     'gatsby-plugin-sitemap',
     {
+      resolve: 'gatsby-plugin-material-ui',
+    },
+    {
       resolve: 'gatsby-plugin-google-analytics',
       options: {
         trackingId: 'UA-141361857-2',

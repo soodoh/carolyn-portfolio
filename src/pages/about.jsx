@@ -2,15 +2,36 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { StaticQuery, graphql } from 'gatsby';
 import Img from 'gatsby-image';
-import { withStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/styles';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import Metadata from '../components/common/Metadata';
 import SocialMedia from '../components/common/SocialMedia';
 import Background from '../components/common/Background';
 
-const AboutCore = (props) => {
-  const { classes, data } = props;
+const useStyles = makeStyles(theme => ({
+  container: {
+    paddingTop: theme.spacing(2),
+  },
+  content: {
+    ...theme.typography.body1,
+    padding: theme.spacing(2),
+    color: theme.palette.primary.contrastText,
+
+    '& a': {
+      color: theme.palette.primary.contrastText,
+    },
+  },
+  profile: {
+    boxSizing: 'border-box',
+    border: `${theme.spacing(2)}px solid ${theme.palette.secondary.main}`,
+    width: '100%',
+  },
+}));
+
+const About = (props) => {
+  const { data } = props;
+  const classes = useStyles();
 
   return (
     <React.Fragment>
@@ -67,35 +88,9 @@ const AboutCore = (props) => {
   );
 };
 
-AboutCore.propTypes = {
-  classes: PropTypes.shape({
-    container: PropTypes.string,
-    content: PropTypes.string,
-  }).isRequired,
+About.propTypes = {
   data: PropTypes.shape({}).isRequired,
 };
-
-const styles = theme => ({
-  container: {
-    paddingTop: theme.spacing.unit * 2,
-  },
-  content: {
-    ...theme.typography.body1,
-    padding: theme.spacing.unit * 2,
-    color: theme.palette.primary.contrastText,
-
-    '& a': {
-      color: theme.palette.primary.contrastText,
-    },
-  },
-  profile: {
-    boxSizing: 'border-box',
-    border: `${theme.spacing.unit * 2}px solid ${theme.palette.secondary.main}`,
-    width: '100%',
-  },
-});
-
-const About = withStyles(styles)(AboutCore);
 
 export default () => (
   <StaticQuery

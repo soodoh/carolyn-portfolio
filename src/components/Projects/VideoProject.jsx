@@ -1,12 +1,47 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Player from 'react-player';
-import { withStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/styles';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 
+const useStyles = makeStyles(theme => ({
+  container: {
+    padding: '0',
+    [theme.breakpoints.up('xs')]: {
+      padding: '0 10vw',
+    },
+  },
+  title: {
+    marginBottom: theme.spacing(2),
+  },
+  role: {
+    fontWeight: 'bold',
+  },
+  videoContainer: {
+    marginBottom: theme.spacing(4),
+  },
+  videoWrapper: {
+    position: 'relative',
+    paddingTop: '56.25%', // Player ratio: 100 / (1280 / 720)
+  },
+  video: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+  },
+  projectContent: {
+    fontFamily: theme.typography.fontFamily,
+    color: theme.palette.primary.main,
+    '& img': {
+      width: '100%',
+    },
+    marginBottom: theme.spacing(6),
+  },
+}));
 const VideoProject = (props) => {
-  const { classes, data } = props;
+  const classes = useStyles();
+  const { data } = props;
 
   return (
     <Grid container className={classes.container}>
@@ -43,7 +78,6 @@ const VideoProject = (props) => {
 };
 
 VideoProject.propTypes = {
-  classes: PropTypes.shape({}).isRequired,
   data: PropTypes.shape({
     title: PropTypes.string,
     role: PropTypes.string,
@@ -53,39 +87,4 @@ VideoProject.propTypes = {
   }).isRequired,
 };
 
-const styles = theme => ({
-  container: {
-    padding: '0',
-    [`@media (min-width: ${theme.breakpoints.values.xs}px)`]: {
-      padding: '0 10vw',
-    },
-  },
-  title: {
-    marginBottom: theme.spacing.unit * 2,
-  },
-  role: {
-    fontWeight: 'bold',
-  },
-  videoContainer: {
-    marginBottom: theme.spacing.unit * 4,
-  },
-  videoWrapper: {
-    position: 'relative',
-    paddingTop: '56.25%', // Player ratio: 100 / (1280 / 720)
-  },
-  video: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-  },
-  projectContent: {
-    fontFamily: theme.typography.fontFamily,
-    color: theme.palette.primary.main,
-    '& img': {
-      width: '100%',
-    },
-    marginBottom: theme.spacing.unit * 6,
-  },
-});
-
-export default withStyles(styles)(VideoProject);
+export default VideoProject;
