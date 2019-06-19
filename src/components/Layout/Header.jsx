@@ -4,7 +4,6 @@ import { Link, StaticQuery, graphql } from 'gatsby';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
-import Hidden from '@material-ui/core/Hidden';
 import MenuIcon from 'mdi-material-ui/Menu';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -33,6 +32,10 @@ const useStyles = makeStyles(theme => ({
     fontSize: '2rem',
     lineHeight: '1rem',
     paddingLeft: theme.spacing(4),
+
+    [theme.breakpoints.down('sm')]: {
+      display: 'none',
+    },
   },
   logo: {
     height: '3rem',
@@ -41,6 +44,10 @@ const useStyles = makeStyles(theme => ({
     color: theme.palette.primary.contrastText,
     textDecoration: 'none',
     paddingLeft: theme.spacing(4),
+
+    [theme.breakpoints.down('xs')]: {
+      display: 'none',
+    },
   },
   active: {
     color: theme.palette.secondary.main,
@@ -53,6 +60,9 @@ const useStyles = makeStyles(theme => ({
 
     '&:focus': {
       backgroundColor: 'transparent',
+    },
+    [theme.breakpoints.up('sm')]: {
+      display: 'none',
     },
   },
   menuLink: {
@@ -122,30 +132,72 @@ const Header = (props) => {
                   alt="CD Logo"
                 />
               </Link>
-              <Hidden only="xs">
-                <Typography
-                  variant="h2"
-                  color="inherit"
-                  className={classes.name}
-                >
+              <Typography
+                variant="h2"
+                color="inherit"
+                className={classes.name}
+              >
                   Carolyn DiLoreto
-                </Typography>
-              </Hidden>
+              </Typography>
             </div>
           )
         }
 
-        <Hidden smDown>
+        {NavLinks.map((link) => {
+          if (link.external) {
+            return (
+              <a
+                key={link.path}
+                href={link.path}
+                className={classes.link}
+                style={{ textDecoration: 'none' }}
+              >
+                <Typography variant="subtitle1" color="inherit">{link.label}</Typography>
+              </a>
+            );
+          }
+          return (
+            <Link
+              key={link.path}
+              to={link.path}
+              className={classes.link}
+              activeClassName={classes.active}
+            >
+              <Typography variant="subtitle1" color="inherit">{link.label}</Typography>
+            </Link>
+          );
+        })}
+
+        <Fab
+          size="small"
+          aria-owns={menuAnchor ? 'Navigation' : null}
+          aria-haspopup="true"
+          aria-label="Navigation Menu"
+          color="secondary"
+          classes={{ root: classes.navMenu }}
+          onClick={event => setAnchor(event.currentTarget)}
+        >
+          <MenuIcon />
+        </Fab>
+
+        <Menu
+          id="Navigation"
+          anchorEl={menuAnchor}
+          open={!!menuAnchor}
+          onEnter={() => document.activeElement.blur()}
+          onClose={() => setAnchor(null)}
+        >
           {NavLinks.map((link) => {
             if (link.external) {
               return (
                 <a
                   key={link.path}
                   href={link.path}
-                  className={classes.link}
                   style={{ textDecoration: 'none' }}
                 >
-                  <Typography variant="subtitle1" color="inherit">{link.label}</Typography>
+                  <MenuItem onClick={() => setAnchor(null)}>
+                    <Typography variant="subtitle1" color="inherit">{link.label}</Typography>
+                  </MenuItem>
                 </a>
               );
             }
@@ -153,62 +205,15 @@ const Header = (props) => {
               <Link
                 key={link.path}
                 to={link.path}
-                className={classes.link}
-                activeClassName={classes.active}
+                className={classes.menuLink}
               >
-                <Typography variant="subtitle1" color="inherit">{link.label}</Typography>
+                <MenuItem onClick={() => setAnchor(null)}>
+                  <Typography variant="subtitle1" color="inherit">{link.label}</Typography>
+                </MenuItem>
               </Link>
             );
           })}
-        </Hidden>
-        <Hidden mdUp>
-          <Fab
-            size="small"
-            aria-owns={menuAnchor ? 'Navigation' : null}
-            aria-haspopup="true"
-            aria-label="Navigation Menu"
-            color="secondary"
-            classes={{ root: classes.navMenu }}
-            onClick={event => setAnchor(event.currentTarget)}
-          >
-            <MenuIcon />
-          </Fab>
-
-          <Menu
-            id="Navigation"
-            anchorEl={menuAnchor}
-            open={!!menuAnchor}
-            onEnter={() => document.activeElement.blur()}
-            onClose={() => setAnchor(null)}
-          >
-            {NavLinks.map((link) => {
-              if (link.external) {
-                return (
-                  <a
-                    key={link.path}
-                    href={link.path}
-                    style={{ textDecoration: 'none' }}
-                  >
-                    <MenuItem onClick={() => setAnchor(null)}>
-                      <Typography variant="subtitle1" color="inherit">{link.label}</Typography>
-                    </MenuItem>
-                  </a>
-                );
-              }
-              return (
-                <Link
-                  key={link.path}
-                  to={link.path}
-                  className={classes.menuLink}
-                >
-                  <MenuItem onClick={() => setAnchor(null)}>
-                    <Typography variant="subtitle1" color="inherit">{link.label}</Typography>
-                  </MenuItem>
-                </Link>
-              );
-            })}
-          </Menu>
-        </Hidden>
+        </Menu>
       </Toolbar>
     </AppBar>
   );

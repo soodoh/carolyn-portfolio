@@ -2,25 +2,37 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Img from 'gatsby-image';
 import { makeStyles } from '@material-ui/styles';
-import Grid from '@material-ui/core/Grid';
-import Hidden from '@material-ui/core/Hidden';
 import Typography from '@material-ui/core/Typography';
 
 const useStyles = makeStyles(theme => ({
-  backButton: {
-    marginBottom: theme.spacing(2),
-  },
-  backArrow: {
-    marginRight: theme.spacing(1),
+  container: {
+    display: 'grid',
+    gridTemplateColumns: '50% 50%',
   },
   coverImage: {
     marginBottom: theme.spacing(2),
+
+    [theme.breakpoints.down('sm')]: {
+      gridRow: '1 / 2',
+      gridColumn: '1 / 3',
+    },
   },
   title: {
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
     marginBottom: theme.spacing(2),
+
+    [theme.breakpoints.down('sm')]: {
+      gridRow: '2 / 3',
+      gridColumn: '1 / 3',
+    },
+  },
+  backButton: {
+    marginBottom: theme.spacing(2),
+  },
+  backArrow: {
+    marginRight: theme.spacing(1),
   },
   role: {
     fontWeight: 'bold',
@@ -31,6 +43,7 @@ const useStyles = makeStyles(theme => ({
     fontFamily: theme.typography.fontFamily,
     color: theme.palette.primary.main,
     padding: theme.spacing(6, 0),
+    gridColumn: '1 / 3',
 
     [theme.breakpoints.up('xs')]: {
       padding: `${theme.spacing(6)}px 10vw`,
@@ -55,36 +68,24 @@ const TextProject = (props) => {
   const { data } = props;
 
   return (
-    <Grid container>
-      <Hidden smUp>
-        <Grid item xs={12} md={6} className={classes.coverImage}>
-          <Img fluid={data.coverImage.fluid} />
-        </Grid>
-      </Hidden>
-
-      <Grid item xs={12} md={6} className={classes.title}>
+    <div className={classes.container}>
+      <div className={classes.title}>
         <Typography variant="h2">
           {data.title}
         </Typography>
         <Typography variant="subtitle1" className={classes.role}>
           {data.role}
         </Typography>
-      </Grid>
+      </div>
 
-      <Hidden only="xs">
-        <Grid item xs={12} md={6}>
-          <Img fluid={data.coverImage.fluid} />
-        </Grid>
-      </Hidden>
+      <Img fluid={data.coverImage.fluid} className={classes.coverImage} />
 
-      <Grid item xs={12}>
-        <div
-          className={classes.projectContent}
-          // eslint-disable-next-line react/no-danger
-          dangerouslySetInnerHTML={{ __html: data.description.childMarkdownRemark.html }}
-        />
-      </Grid>
-    </Grid>
+      <div
+        className={classes.projectContent}
+        // eslint-disable-next-line react/no-danger
+        dangerouslySetInnerHTML={{ __html: data.description.childMarkdownRemark.html }}
+      />
+    </div>
   );
 };
 

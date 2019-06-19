@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { uid } from 'react-uid';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/styles';
-import Hidden from '@material-ui/core/Hidden';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 
@@ -28,10 +27,19 @@ const useStyles = makeStyles(theme => ({
     display: 'flex',
     padding: 0,
     width: '100%',
+
+    [theme.breakpoints.down('xs')]: {
+      display: 'none',
+    },
   },
   filter: {
     padding: `10px ${theme.spacing(4)}px`,
     cursor: 'pointer',
+  },
+  miniFilter: {
+    [theme.breakpoints.up('sm')]: {
+      display: 'none',
+    },
   },
   selected: {
     padding: `10px ${theme.spacing(4)}px`,
@@ -48,37 +56,34 @@ const Filters = (props) => {
 
   return (
     <div className={classes.container}>
-      <Hidden only="xs">
-        <div className={classes.bar}>
-          {list.map((item, index) => (
-            <Typography
-              key={uid(item, index)}
-              onClick={() => onChange(item)}
-              variant="subtitle1"
-              color="primary"
-              className={item === currentItem ? classes.selected : classes.filter}
-            >
-              {item}
-            </Typography>
-          ))}
-        </div>
-      </Hidden>
+      <div className={classes.bar}>
+        {list.map((item, index) => (
+          <Typography
+            key={uid(item, index)}
+            onClick={() => onChange(item)}
+            variant="subtitle1"
+            color="primary"
+            className={item === currentItem ? classes.selected : classes.filter}
+          >
+            {item}
+          </Typography>
+        ))}
+      </div>
 
-      <Hidden smUp>
-        <Select
-          value={currentItem}
-          onChange={event => onChange(event.target.value)}
-        >
-          {list.map((item, index) => (
-            <MenuItem
-              key={uid(item, list.length + index)}
-              value={item}
-            >
-              {item}
-            </MenuItem>
-          ))}
-        </Select>
-      </Hidden>
+      <Select
+        value={currentItem}
+        onChange={event => onChange(event.target.value)}
+        className={classes.miniFilter}
+      >
+        {list.map((item, index) => (
+          <MenuItem
+            key={uid(item, list.length + index)}
+            value={item}
+          >
+            {item}
+          </MenuItem>
+        ))}
+      </Select>
     </div>
   );
 };
