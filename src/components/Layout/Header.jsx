@@ -4,12 +4,9 @@ import { Link, StaticQuery, graphql } from 'gatsby';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
-import MenuIcon from 'mdi-material-ui/Menu';
-import Menu from '@material-ui/core/Menu';
-import MenuItem from '@material-ui/core/MenuItem';
-import Fab from '@material-ui/core/Fab';
 import { makeStyles } from '@material-ui/styles';
 import logo from '../../../static/logo.svg';
+import MiniNavigation from './MiniNavigation';
 
 const useStyles = makeStyles(theme => ({
   brand: {
@@ -59,22 +56,6 @@ const useStyles = makeStyles(theme => ({
     color: theme.palette.secondary.main,
     fontWeight: 'bold',
   },
-  navMenu: {
-    backgroundColor: 'transparent',
-    border: `1px solid ${theme.palette.secondary.main}`,
-    borderRadius: '2px',
-
-    '&:focus': {
-      backgroundColor: 'transparent',
-    },
-    [theme.breakpoints.up('sm')]: {
-      display: 'none',
-    },
-  },
-  menuLink: {
-    color: theme.palette.primary.main,
-    textDecoration: 'none',
-  },
 }));
 
 const Header = (props) => {
@@ -82,7 +63,6 @@ const Header = (props) => {
   const { resume, location } = props;
   const [isTransparent, setTransparent] = useState(location.pathname === '/' || location.pathname.match(/about/gi));
   const [showBrand, setBrand] = useState(location.pathname !== '/');
-  const [menuAnchor, setAnchor] = useState(null);
 
   const handleScroll = () => {
     const breakpoint = window.innerHeight - 60;
@@ -114,7 +94,7 @@ const Header = (props) => {
     };
   }, [location]);
 
-  const NavLinks = [
+  const links = [
     { label: 'About.', path: '/about' },
     { label: 'Projects.', path: '/projects' },
     { label: 'Photography.', path: '/photography' },
@@ -144,7 +124,7 @@ const Header = (props) => {
           </Typography>
         </div>
 
-        {NavLinks.map((link) => {
+        {links.map((link) => {
           if (link.external) {
             return (
               <a
@@ -169,52 +149,7 @@ const Header = (props) => {
           );
         })}
 
-        <Fab
-          size="small"
-          aria-owns={menuAnchor ? 'Navigation' : null}
-          aria-haspopup="true"
-          aria-label="Navigation Menu"
-          color="secondary"
-          classes={{ root: classes.navMenu }}
-          onClick={event => setAnchor(event.currentTarget)}
-        >
-          <MenuIcon />
-        </Fab>
-
-        <Menu
-          id="Navigation"
-          anchorEl={menuAnchor}
-          open={!!menuAnchor}
-          onEnter={() => document.activeElement.blur()}
-          onClose={() => setAnchor(null)}
-        >
-          {NavLinks.map((link) => {
-            if (link.external) {
-              return (
-                <a
-                  key={link.path}
-                  href={link.path}
-                  style={{ textDecoration: 'none' }}
-                >
-                  <MenuItem onClick={() => setAnchor(null)}>
-                    <Typography variant="subtitle1" color="inherit">{link.label}</Typography>
-                  </MenuItem>
-                </a>
-              );
-            }
-            return (
-              <Link
-                key={link.path}
-                to={link.path}
-                className={classes.menuLink}
-              >
-                <MenuItem onClick={() => setAnchor(null)}>
-                  <Typography variant="subtitle1" color="inherit">{link.label}</Typography>
-                </MenuItem>
-              </Link>
-            );
-          })}
-        </Menu>
+        <MiniNavigation links={links} />
       </Toolbar>
     </AppBar>
   );
