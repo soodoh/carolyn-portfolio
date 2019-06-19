@@ -105,7 +105,7 @@ MiniNavigation.propTypes = {
     PropTypes.shape({
       label: PropTypes.string.isRequired,
       path: PropTypes.string.isRequired,
-      external: PropTypes.string,
+      external: PropTypes.bool,
     }),
   ).isRequired,
 };
