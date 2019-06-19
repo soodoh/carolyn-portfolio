@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Player from 'react-player';
 import { makeStyles } from '@material-ui/styles';
-import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 
 const useStyles = makeStyles(theme => ({
@@ -19,11 +18,9 @@ const useStyles = makeStyles(theme => ({
     fontWeight: 'bold',
   },
   videoContainer: {
-    marginBottom: theme.spacing(4),
-  },
-  videoWrapper: {
     position: 'relative',
     paddingTop: '56.25%', // Player ratio: 100 / (1280 / 720)
+    marginBottom: theme.spacing(5),
   },
   video: {
     position: 'absolute',
@@ -44,36 +41,32 @@ const VideoProject = (props) => {
   const { data } = props;
 
   return (
-    <Grid container className={classes.container}>
-      <Grid item xs={12} className={classes.title}>
+    <div className={classes.container}>
+      <div className={classes.title}>
         <Typography variant="h2" align="center">
           {data.title}
         </Typography>
         <Typography variant="subtitle1" className={classes.role} align="center" gutterBottom>
           {data.role}
         </Typography>
-      </Grid>
+      </div>
 
-      <Grid item xs={12} className={classes.videoContainer}>
-        <div className={classes.videoWrapper}>
-          <Player
-            url={data.link}
-            className={classes.video}
-            controls
-            width="100%"
-            height="100%"
-          />
-        </div>
-      </Grid>
+      <div className={classes.videoContainer}>
+        <Player
+          url={data.link}
+          className={classes.video}
+          controls
+          width="100%"
+          height="100%"
+        />
+      </div>
 
-      <Grid
-        item
-        xs={12}
+      <div
         className={classes.projectContent}
         // eslint-disable-next-line react/no-danger
         dangerouslySetInnerHTML={{ __html: data.description.childMarkdownRemark.html }}
       />
-    </Grid>
+    </div>
   );
 };
 

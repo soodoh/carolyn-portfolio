@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { StaticQuery, graphql } from 'gatsby';
 import Img from 'gatsby-image';
 import { makeStyles } from '@material-ui/styles';
-import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import Metadata from '../components/common/Metadata';
 import SocialMedia from '../components/common/SocialMedia';
@@ -12,6 +11,15 @@ import Background from '../components/common/Background';
 const useStyles = makeStyles(theme => ({
   container: {
     paddingTop: theme.spacing(2),
+    display: 'grid',
+    gridTemplateColumns: '25% 75%',
+
+    [theme.breakpoints.down('sm')]: {
+      gridTemplateColumns: '40% 60%',
+    },
+    [theme.breakpoints.down('xs')]: {
+      gridTemplateColumns: '100%',
+    },
   },
   content: {
     ...theme.typography.body1,
@@ -43,28 +51,27 @@ const About = (props) => {
       <div className={classes.container}>
         <Background sizes={data.background.fluid} />
 
-        <Grid container>
-          <Grid item xs={12} sm={5} md={3} className={classes.content}>
-            <Img
-              fluid={data.profilePicture.fluid}
-              alt="Headshot"
-              className={classes.profile}
-            />
-            <Typography
-              variant="body2"
-              color="secondary"
-              align="center"
-            >
-              {data.location}
-            </Typography>
-            <Typography
-              variant="body2"
-              color="secondary"
-              align="center"
-            >
-              {data.email}
-            </Typography>
-            {/* <Typography
+        <div className={classes.content}>
+          <Img
+            fluid={data.profilePicture.fluid}
+            alt="Headshot"
+            className={classes.profile}
+          />
+          <Typography
+            variant="body2"
+            color="secondary"
+            align="center"
+          >
+            {data.location}
+          </Typography>
+          <Typography
+            variant="body2"
+            color="secondary"
+            align="center"
+          >
+            {data.email}
+          </Typography>
+          {/* <Typography
               variant="body2"
               color="secondary"
               align="center"
@@ -72,17 +79,14 @@ const About = (props) => {
               {data.phoneNumber}
             </Typography> */}
 
-            <SocialMedia color="secondary" align="center" />
-          </Grid>
+          <SocialMedia color="secondary" align="center" />
+        </div>
 
-          <Grid item xs={12} sm={7} md={9}>
-            <div
-              className={classes.content}
+        <div
+          className={classes.content}
               // eslint-disable-next-line react/no-danger
-              dangerouslySetInnerHTML={{ __html: data.bio.childMarkdownRemark.html }}
-            />
-          </Grid>
-        </Grid>
+          dangerouslySetInnerHTML={{ __html: data.bio.childMarkdownRemark.html }}
+        />
       </div>
     </React.Fragment>
   );
