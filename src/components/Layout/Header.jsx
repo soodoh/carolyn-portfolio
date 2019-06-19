@@ -149,7 +149,10 @@ const Header = (props) => {
           );
         })}
 
-        <MiniNavigation links={links} />
+        <MiniNavigation
+          location={location}
+          links={links}
+        />
       </Toolbar>
     </AppBar>
   );
