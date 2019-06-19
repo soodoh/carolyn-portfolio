@@ -27,7 +27,7 @@ const CustomMasonry = (props) => {
   const theme = useTheme();
   const breakpoints = {
     default: 4,
-    [theme.breakpoints.values.lg]: 3,
+    [theme.breakpoints.values.xl]: 3,
     [theme.breakpoints.values.md]: 2,
     [theme.breakpoints.values.sm]: 1,
   };
