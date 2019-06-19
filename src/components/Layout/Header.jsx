@@ -18,6 +18,12 @@ const useStyles = makeStyles(theme => ({
     alignItems: 'center',
     color: theme.palette.primary.contrastText,
     textDecoration: 'none',
+    opacity: 1,
+    transition: `opacity ${theme.transitions.duration.standard}ms ${theme.transitions.easing.easeInOut}`,
+  },
+  hideBrand: {
+    opacity: 0,
+    transition: `opacity ${theme.transitions.duration.standard}ms ${theme.transitions.easing.easeInOut}`,
   },
   appBar: {
     transition: `background-color ${theme.transitions.duration.standard}ms ${theme.transitions.easing.easeInOut}`,
@@ -121,27 +127,22 @@ const Header = (props) => {
       className={isTransparent ? classes.transparent : classes.appBar}
     >
       <Toolbar>
-        {!showBrand
-          ? <div className={classes.brand} />
-          : (
-            <div className={classes.brand}>
-              <Link to="/">
-                <img
-                  className={classes.logo}
-                  src={logo}
-                  alt="CD Logo"
-                />
-              </Link>
-              <Typography
-                variant="h2"
-                color="inherit"
-                className={classes.name}
-              >
-                  Carolyn DiLoreto
-              </Typography>
-            </div>
-          )
-        }
+        <div className={`${classes.brand} ${!showBrand && classes.hideBrand}`}>
+          <Link to="/">
+            <img
+              className={classes.logo}
+              src={logo}
+              alt="CD Logo"
+            />
+          </Link>
+          <Typography
+            variant="h2"
+            color="inherit"
+            className={classes.name}
+          >
+            Carolyn DiLoreto
+          </Typography>
+        </div>
 
         {NavLinks.map((link) => {
           if (link.external) {
