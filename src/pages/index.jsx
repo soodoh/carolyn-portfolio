@@ -15,7 +15,7 @@ const useStyles = makeStyles(theme => ({
     top: 0,
     left: 0,
     width: '100%',
-    height: '100%',
+    height: '100vh',
     zIndex: -99,
   },
   background: {
@@ -127,7 +127,6 @@ const Home = (props) => {
         <Projects isComponent />
       </section>
     </React.Fragment>
-
   );
 };
 

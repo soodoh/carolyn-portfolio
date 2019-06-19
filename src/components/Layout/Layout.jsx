@@ -7,6 +7,7 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import theme from './theme';
 import Header from './Header';
 import Footer from './Footer';
+import PageTransition from './PageTransition';
 
 const useStyles = makeStyles({
   container: {
@@ -32,9 +33,13 @@ const Layout = ({ children, location }) => {
 
       <div className={classes.container}>
         <Header location={location} />
+
         <div className={classes.content}>
-          {children}
+          <PageTransition location={location}>
+            {children}
+          </PageTransition>
         </div>
+
         <Footer />
       </div>
     </ThemeProvider>
