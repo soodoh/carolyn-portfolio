@@ -2,10 +2,10 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'gatsby';
 import { makeStyles } from '@material-ui/styles';
-import MenuIcon from 'mdi-material-ui/Menu';
+import MenuIcon from '@material-ui/icons/Menu';
 import Fab from '@material-ui/core/Fab';
 import IconButton from '@material-ui/core/IconButton';
-import ArrowRight from 'mdi-material-ui/ChevronRight';
+import ArrowRight from '@material-ui/icons/ChevronRight';
 import Drawer from '@material-ui/core/Drawer';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -36,10 +36,6 @@ const useStyles = makeStyles(theme => ({
     justifyContent: 'flex-start',
     padding: theme.spacing(0.5),
   },
-  drawer: {
-    // backgroundColor: theme.palette.secondary.main,
-    // color: theme.palette.primary.main,
-  },
 }));
 
 const MiniNavigation = (props) => {
@@ -61,7 +57,6 @@ const MiniNavigation = (props) => {
       <Drawer
         anchor="right"
         open={isActive}
-        classes={{ paper: classes.drawer }}
         onClose={() => setActive(false)}
       >
         <div className={classes.drawerTop}>

@@ -55,12 +55,12 @@ ProjectThumbnail.propTypes = {
   data: PropTypes.shape({
     coverImage: PropTypes.shape({
       fluid: PropTypes.object.isRequired,
-      title: PropTypes.string.isRequired,
-    }).isRequired,
-    summary: PropTypes.shape({
-      summary: PropTypes.string.isRequired,
+      title: PropTypes.string,
     }).isRequired,
     title: PropTypes.string.isRequired,
+    summary: PropTypes.shape({
+      summary: PropTypes.string.isRequired,
+    }),
   }).isRequired,
 };
 
