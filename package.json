@@ -50,9 +50,7 @@
     "gatsby-plugin-web-font-loader": "^1.0.4",
     "gatsby-source-contentful": "^2.1.8",
     "gatsby-transformer-remark": "^2.6.1",
-    "gatsby-transformer-sharp": "^2.2.1",
-    "husky": "^2.7.0",
-    "lint-staged": "^8.2.1"
+    "gatsby-transformer-sharp": "^2.2.1"
   },
   "homepage": "https://carolyndiloreto.com",
   "keywords": [
@@ -68,13 +66,6 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/paulmichaelxd/carolyn-portfolio.git"
-  },
-  "lint-staged": {
-    "*.{js,jsx}": [
-      "eslint",
-      "git add",
-      "jest --bail --findRelatedTests"
-    ]
   },
   "scripts": {
     "dev": "gatsby develop",
