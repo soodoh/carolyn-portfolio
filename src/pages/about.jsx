@@ -93,7 +93,21 @@ const About = (props) => {
 };
 
 About.propTypes = {
-  data: PropTypes.shape({}).isRequired,
+  data: PropTypes.shape({
+    background: PropTypes.shape({
+      fluid: PropTypes.object.isRequired,
+    }).isRequired,
+    profilePicture: PropTypes.shape({
+      fluid: PropTypes.object.isRequired,
+    }).isRequired,
+    bio: PropTypes.shape({
+      childMarkdownRemark: PropTypes.shape({
+        html: PropTypes.string.isRequired,
+      }).isRequired,
+    }).isRequired,
+    location: PropTypes.string.isRequired,
+    email: PropTypes.string.isRequired,
+  }).isRequired,
 };
 
 export default () => (

@@ -52,7 +52,16 @@ const ProjectThumbnail = (props) => {
 };
 
 ProjectThumbnail.propTypes = {
-  data: PropTypes.shape({}).isRequired,
+  data: PropTypes.shape({
+    coverImage: PropTypes.shape({
+      fluid: PropTypes.object.isRequired,
+      title: PropTypes.string.isRequired,
+    }).isRequired,
+    summary: PropTypes.shape({
+      summary: PropTypes.string.isRequired,
+    }).isRequired,
+    title: PropTypes.string.isRequired,
+  }).isRequired,
 };
 
 export default ProjectThumbnail;
