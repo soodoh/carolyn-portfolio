@@ -21,7 +21,7 @@ const SocialMedia = (props) => {
 
   return (
     <div className={classes.container}>
-      {icons.map(icon => (
+      {icons.map((icon) => (
         <a
           key={uid(icon)}
           href={icon.link}
@@ -52,9 +52,12 @@ SocialMedia.defaultProps = {
   color: '',
 };
 
-export default props => (
-  <StaticQuery
-    query={graphql`
+const SocialMediaWithData = (props) => {
+  const { color } = props;
+
+  return (
+    <StaticQuery
+      query={graphql`
       query SocialMediaQuery {
         allContentfulSocialMedia{
           edges{
@@ -73,13 +76,23 @@ export default props => (
         }
       }
     `}
-    render={data => (
-      <SocialMedia
-        {...props}
-        icons={
-          data.allContentfulSocialMedia.edges.map(item => item.node)
+      render={(data) => (
+        <SocialMedia
+          color={color}
+          icons={
+          data.allContentfulSocialMedia.edges.map((item) => item.node)
         }
-      />
-    )}
-  />
-);
+        />
+      )}
+    />
+  );
+};
+
+SocialMediaWithData.propTypes = {
+  color: PropTypes.string,
+};
+SocialMediaWithData.defaultProps = {
+  color: '',
+};
+
+export default SocialMediaWithData;

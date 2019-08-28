@@ -20,9 +20,9 @@ const Gallery = (props) => {
   const [currentPhoto, setPhoto] = useState(0);
 
   return (
-    <React.Fragment>
+    <>
       <Lightbox
-        images={photos.map(photo => ({
+        images={photos.map((photo) => ({
           src: photo.fullSize.src,
           srcSet: photo.fullSize.srcSet,
           alt: photo.title,
@@ -61,7 +61,7 @@ const Gallery = (props) => {
           </div>
         ))}
       </Masonry>
-    </React.Fragment>
+    </>
   );
 };
 

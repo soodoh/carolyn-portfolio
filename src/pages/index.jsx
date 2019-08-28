@@ -9,7 +9,7 @@ import Metadata from '../components/common/Metadata';
 import logo from '../../static/logo.svg';
 import Projects from '../components/Projects/Projects';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   backgroundContainer: {
     position: 'absolute',
     top: 0,
@@ -69,7 +69,7 @@ const Home = (props) => {
   const classes = useStyles();
 
   return (
-    <React.Fragment>
+    <>
       <Metadata
         title="CD Portfolio"
         description="Carolyn DiLoreto is a multi-media visual artist, dancer and USC alumnus. In this portfolio, view photo galleries, read about past projects, or even read her bio."
@@ -126,7 +126,7 @@ const Home = (props) => {
       <section className={classes.projectsContainer}>
         <Projects isComponent />
       </section>
-    </React.Fragment>
+    </>
   );
 };
 
@@ -147,7 +147,7 @@ export default () => (
         }
       }
     `}
-    render={data => (
+    render={(data) => (
       <Home background={data.contentfulAbout.background.fluid} />
     )}
   />

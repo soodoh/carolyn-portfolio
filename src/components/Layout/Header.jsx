@@ -8,7 +8,7 @@ import { makeStyles } from '@material-ui/styles';
 import logo from '../../../static/logo.svg';
 import MiniNavigation from './MiniNavigation';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   brand: {
     display: 'flex',
     flex: 1,
@@ -181,7 +181,7 @@ const HeaderWithData = (props) => {
           }
         }
       `}
-      render={data => (
+      render={(data) => (
         <Header
           location={location}
           resume={data.contentfulAbout.resume.file.url}

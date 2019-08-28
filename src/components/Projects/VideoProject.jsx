@@ -4,7 +4,7 @@ import Player from 'react-player';
 import { makeStyles } from '@material-ui/styles';
 import Typography from '@material-ui/core/Typography';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   container: {
     padding: '0',
     [theme.breakpoints.up('xs')]: {

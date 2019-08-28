@@ -8,7 +8,7 @@ import Metadata from '../components/common/Metadata';
 import SocialMedia from '../components/common/SocialMedia';
 import Background from '../components/common/Background';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   container: {
     paddingTop: theme.spacing(2),
     display: 'grid',
@@ -42,7 +42,7 @@ const About = (props) => {
   const classes = useStyles();
 
   return (
-    <React.Fragment>
+    <>
       <Metadata
         title="About Carolyn"
         description="Carolyn DiLoreto is a multi-media visual artist, dancer, and USC alumnus, with a Media Arts + Practice major and a double minor in Dance and Computer Programming."
@@ -88,7 +88,7 @@ const About = (props) => {
           dangerouslySetInnerHTML={{ __html: data.bio.childMarkdownRemark.html }}
         />
       </div>
-    </React.Fragment>
+    </>
   );
 };
 
@@ -135,7 +135,7 @@ export default () => (
         }
       }
     `}
-    render={data => (
+    render={(data) => (
       <About
         data={data.contentfulAbout}
       />

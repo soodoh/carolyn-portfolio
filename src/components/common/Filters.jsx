@@ -6,7 +6,7 @@ import { makeStyles } from '@material-ui/styles';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   container: {
     position: 'sticky',
     zIndex: theme.zIndex.appBar + 1,
@@ -72,7 +72,7 @@ const Filters = (props) => {
 
       <Select
         value={currentItem}
-        onChange={event => onChange(event.target.value)}
+        onChange={(event) => onChange(event.target.value)}
         className={classes.miniFilter}
       >
         {list.map((item, index) => (

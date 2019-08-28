@@ -4,7 +4,7 @@ import { makeStyles, useTheme } from '@material-ui/styles';
 import Masonry from 'react-masonry-css';
 import { uid } from 'react-uid';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   masonryContainer: {
     display: 'flex',
     padding: theme.spacing(0, 4),
@@ -39,7 +39,7 @@ const CustomMasonry = (props) => {
       columnClassName={classes.column}
     >
       {Array.isArray(children)
-        ? children.map(child => (
+        ? children.map((child) => (
           <div className={classes.item} key={uid(child)}>
             {child}
           </div>
@@ -48,8 +48,7 @@ const CustomMasonry = (props) => {
           <div className={classes.item}>
             {children}
           </div>
-        )
-      }
+        )}
     </Masonry>
   );
 };

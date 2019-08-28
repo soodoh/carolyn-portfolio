@@ -3,7 +3,7 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/styles';
 import Metadata from '../components/common/Metadata';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   container: {
     padding: theme.spacing(2),
   },
@@ -12,7 +12,7 @@ const NotFound = () => {
   const classes = useStyles();
 
   return (
-    <React.Fragment>
+    <>
       <Metadata
         title="CD: Page Not Found"
         robots="noindex, nofollow"
@@ -26,7 +26,7 @@ const NotFound = () => {
         Please check your URL, or select something from the nav bar
         </Typography>
       </div>
-    </React.Fragment>
+    </>
   );
 };
 

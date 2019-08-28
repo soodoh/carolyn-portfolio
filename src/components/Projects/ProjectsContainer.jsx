@@ -9,7 +9,7 @@ const Projects = (props) => {
 
   return (
     <Masonry>
-      {data.map(project => (
+      {data.map((project) => (
         <ProjectThumbnail
           key={uid(project)}
           data={project}

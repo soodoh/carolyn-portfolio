@@ -6,7 +6,7 @@ import Metadata from '../common/Metadata';
 import Filters from '../common/Filters';
 import ProjectsContainer from './ProjectsContainer';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   container: {
     padding: theme.spacing(0, 2),
   },
@@ -15,7 +15,7 @@ const useStyles = makeStyles(theme => ({
 
 const getCategories = (projects) => {
   const categories = projects.reduce((acc, project) => {
-    const typesToAdd = project.projectType.filter(type => (
+    const typesToAdd = project.projectType.filter((type) => (
       !acc.includes(type)
     ));
     return [...acc, ...typesToAdd];
@@ -33,7 +33,7 @@ const filteredProjects = (projects, filter) => {
   const currentProjects = projects;
 
   if (filter !== 'All') {
-    return currentProjects.filter(project => (
+    return currentProjects.filter((project) => (
       project.projectType.includes(filter)
     ));
   }
@@ -49,26 +49,25 @@ const Projects = (props) => {
   const projectList = filteredProjects(projects, filter);
 
   return (
-    <React.Fragment>
+    <>
       {!isComponent
         && (
           <Metadata
             title="CD Projects"
             description="View Carolyn DiLoreto's past and current projects. From film editing to UX Engineering there are many skills showcased in this section of the portfolio."
           />
-        )
-      }
+        )}
 
       <section className={classes.container}>
         <Filters
           list={filterList}
           currentItem={filter}
-          onChange={value => setFilter(value)}
+          onChange={(value) => setFilter(value)}
         />
 
         <ProjectsContainer data={projectList} />
       </section>
-    </React.Fragment>
+    </>
   );
 };
 
@@ -111,9 +110,9 @@ export default () => (
         }
       }
     `}
-    render={data => (
+    render={(data) => (
       <Projects
-        projects={data.allContentfulProject.edges.map(item => (
+        projects={data.allContentfulProject.edges.map((item) => (
           item.node
         ))}
       />

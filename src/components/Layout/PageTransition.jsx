@@ -34,7 +34,7 @@ const PageTransition = (props) => {
           exit: transitionDelay,
         }}
       >
-        {status => (
+        {(status) => (
           <div
             style={{
               ...getTransitionStyles[status],

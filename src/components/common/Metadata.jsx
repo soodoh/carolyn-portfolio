@@ -13,8 +13,7 @@ const Metadata = (props) => {
       <meta name="google-site-verification" content="mZWTxlscBqxebm-E7NiMf8dG-G2qbqKKODr0BoCUobQ" />
 
       {description
-        && <meta name="description" content={description} />
-      }
+        && <meta name="description" content={description} />}
 
       <meta name="robots" content={robots} />
     </Helmet>

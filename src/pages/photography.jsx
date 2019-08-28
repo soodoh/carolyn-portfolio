@@ -6,7 +6,7 @@ import Metadata from '../components/common/Metadata';
 import Filters from '../components/common/Filters';
 import Gallery from '../components/Photos/Gallery';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   container: {
     position: 'relative',
     padding: theme.spacing(0, 2),
@@ -15,7 +15,7 @@ const useStyles = makeStyles(theme => ({
 
 
 const getPhotos = (albums, matchAlbum) => {
-  const currentAlbum = albums.find(album => (
+  const currentAlbum = albums.find((album) => (
     album.album === matchAlbum
   ));
   const { photos } = currentAlbum;
@@ -29,7 +29,7 @@ const Photography = (props) => {
   const [currentAlbum, setAlbum] = useState(albums[0].album);
 
   return (
-    <React.Fragment>
+    <>
       <Metadata
         title="CD Photography"
         description="Carolyn DiLoreto's photography portfolio consists of dance, scenery and headshots. She is available for hire as a professional photographer in Los Angeles, CA."
@@ -37,14 +37,14 @@ const Photography = (props) => {
 
       <div className={classes.container}>
         <Filters
-          list={albums.map(album => album.album)}
+          list={albums.map((album) => album.album)}
           currentItem={currentAlbum}
-          onChange={value => setAlbum(value)}
+          onChange={(value) => setAlbum(value)}
         />
 
         <Gallery photos={getPhotos(albums, currentAlbum)} />
       </div>
-    </React.Fragment>
+    </>
   );
 };
 
@@ -77,9 +77,9 @@ export default () => (
         }
       }
     `}
-    render={data => (
+    render={(data) => (
       <Photography
-        albums={data.allContentfulPhotoAlbum.edges.map(item => (
+        albums={data.allContentfulPhotoAlbum.edges.map((item) => (
           item.node
         ))}
       />

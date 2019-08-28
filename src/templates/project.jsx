@@ -7,7 +7,7 @@ import ArrowBack from '@material-ui/icons/ArrowBack';
 import VideoProject from '../components/Projects/VideoProject';
 import TextProject from '../components/Projects/TextProject';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   topButton: {
     marginBottom: theme.spacing(4),
   },
@@ -44,8 +44,7 @@ const Project = (props) => {
 
       {pageContext.link
         ? <VideoProject data={pageContext} />
-        : <TextProject data={pageContext} />
-      }
+        : <TextProject data={pageContext} />}
 
       <div className={classes.bottomButton}>
         <Button
