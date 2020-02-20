@@ -20,10 +20,10 @@ const NotFound = () => {
 
       <div className={classes.container}>
         <Typography variant="h3" gutterBottom>
-        404: Page Not Found
+          404: Page Not Found
         </Typography>
         <Typography variant="h6">
-        Please check your URL, or select something from the nav bar
+          Please check your URL, or select something from the nav bar
         </Typography>
       </div>
     </>
