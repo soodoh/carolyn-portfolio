@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Helmet } from 'react-helmet';
-import { createMuiTheme } from '@material-ui/core/styles';
 import { makeStyles, ThemeProvider } from '@material-ui/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import theme from './theme';
@@ -25,7 +24,7 @@ const Layout = ({ children, location }) => {
   const classes = useStyles();
 
   return (
-    <ThemeProvider theme={createMuiTheme(theme)}>
+    <ThemeProvider theme={theme}>
       <CssBaseline />
       <Helmet>
         <html lang="en" />

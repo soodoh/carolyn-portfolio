@@ -11,6 +11,7 @@ exports.createPages = async ({ graphql, actions }) => {
             id
             title
             role
+            password
             projectType
             link
             description {

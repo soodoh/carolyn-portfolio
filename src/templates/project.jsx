@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'gatsby';
 import { makeStyles } from '@material-ui/styles';
@@ -6,6 +6,7 @@ import Button from '@material-ui/core/Button';
 import ArrowBack from '@material-ui/icons/ArrowBack';
 import VideoProject from '../components/Projects/VideoProject';
 import TextProject from '../components/Projects/TextProject';
+import PasswordPrompt from '../components/Projects/PasswordPrompt';
 
 const useStyles = makeStyles((theme) => ({
   topButton: {
@@ -25,8 +26,17 @@ const useStyles = makeStyles((theme) => ({
 
 const Project = (props) => {
   const { pageContext } = props;
+  const [canView, setCanView] = useState(!pageContext.password);
   const classes = useStyles();
 
+  if (!canView) {
+    return (
+      <PasswordPrompt
+        password={pageContext.password}
+        onSuccess={() => setCanView(true)}
+      />
+    );
+  }
   return (
     <div className={classes.container}>
       <div className={classes.topButton}>
@@ -35,9 +45,8 @@ const Project = (props) => {
           to="/projects"
           variant="outlined"
           color="secondary"
-          className={classes.backButton}
         >
-          <ArrowBack className={classes.backArrow} />
+          <ArrowBack />
           Go Back
         </Button>
       </div>
@@ -62,6 +71,7 @@ const Project = (props) => {
 
 Project.propTypes = {
   pageContext: PropTypes.shape({
+    password: PropTypes.string,
     title: PropTypes.string,
     role: PropTypes.string,
     link: PropTypes.string,
