@@ -32,7 +32,7 @@ const Project = (props) => {
       <div className={classes.topButton}>
         <Button
           component={Link}
-          to="projects"
+          to="/projects"
           variant="outlined"
           color="secondary"
           className={classes.backButton}
@@ -49,7 +49,7 @@ const Project = (props) => {
       <div className={classes.bottomButton}>
         <Button
           component={Link}
-          to="projects"
+          to="/projects"
           variant="contained"
           color="secondary"
         >

@@ -101,7 +101,7 @@ const Home = (props) => {
         <div className={classes.buttonGroup}>
           <Button
             component={Link}
-            to="photography"
+            to="/photography"
             variant="outlined"
             color="secondary"
             className={classes.button}
@@ -112,7 +112,7 @@ const Home = (props) => {
 
           <Button
             component={Link}
-            to="projects"
+            to="/projects"
             variant="outlined"
             color="secondary"
             className={classes.button}

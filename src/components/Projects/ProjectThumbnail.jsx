@@ -31,7 +31,7 @@ const ProjectThumbnail = (props) => {
     <div
       className={classes.photoContainer}
       role="presentation"
-      onClick={() => navigate(`projects/${slug}`)}
+      onClick={() => navigate(`/projects/${slug}`)}
       onMouseEnter={() => setLabel(true)}
       onMouseLeave={() => setLabel(false)}
     >
