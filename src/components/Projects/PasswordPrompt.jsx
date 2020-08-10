@@ -27,6 +27,10 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: 'column',
     alignItems: 'center',
     width: '25rem',
+
+    [theme.breakpoints.down('xs')]: {
+      width: '100%',
+    },
   },
   password: {
     backgroundColor: theme.palette.secondary.contrastText,
@@ -72,10 +76,10 @@ const PasswordPrompt = (props) => {
         </Link>
 
         <section className={classes.content}>
-          <Typography variant="h4">
+          <Typography align="center" variant="h4">
             Password Protected
           </Typography>
-          <Typography variant="h6">
+          <Typography align="center" variant="h6">
             Please enter a password to continue.
           </Typography>
           <form onSubmit={submitPassword} className={classes.form}>
