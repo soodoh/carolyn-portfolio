@@ -44,7 +44,15 @@ const SocialMedia = (props) => {
 
 SocialMedia.propTypes = {
   icons: PropTypes.arrayOf(
-    PropTypes.object,
+    PropTypes.shape({
+      title: PropTypes.string,
+      link: PropTypes.string,
+      icon: PropTypes.shape({
+        file: PropTypes.shape({
+          url: PropTypes.string,
+        }),
+      }),
+    }),
   ).isRequired,
   color: PropTypes.string,
 };

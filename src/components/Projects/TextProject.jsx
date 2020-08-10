@@ -94,8 +94,14 @@ TextProject.propTypes = {
     title: PropTypes.string,
     role: PropTypes.string,
     link: PropTypes.string,
-    description: PropTypes.object,
-    coverImage: PropTypes.object,
+    description: PropTypes.shape({
+      childMarkdownRemark: PropTypes.shape({
+        html: PropTypes.string,
+      }),
+    }),
+    coverImage: PropTypes.shape({
+      fluid: PropTypes.shape({}),
+    }),
   }).isRequired,
 };
 

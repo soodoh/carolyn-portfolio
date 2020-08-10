@@ -67,7 +67,10 @@ const Gallery = (props) => {
 
 Gallery.propTypes = {
   photos: PropTypes.arrayOf(
-    PropTypes.object,
+    PropTypes.shape({
+      thumbnail: PropTypes.shape({}),
+      title: PropTypes.string,
+    }),
   ).isRequired,
 };
 

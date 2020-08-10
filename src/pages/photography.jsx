@@ -13,7 +13,6 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-
 const getPhotos = (albums, matchAlbum) => {
   const currentAlbum = albums.find((album) => (
     album.album === matchAlbum
@@ -50,7 +49,9 @@ const Photography = (props) => {
 
 Photography.propTypes = {
   albums: PropTypes.arrayOf(
-    PropTypes.object,
+    PropTypes.shape({
+      album: PropTypes.string,
+    }),
   ).isRequired,
 };
 

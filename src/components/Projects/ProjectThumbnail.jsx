@@ -54,7 +54,7 @@ const ProjectThumbnail = (props) => {
 ProjectThumbnail.propTypes = {
   data: PropTypes.shape({
     coverImage: PropTypes.shape({
-      fluid: PropTypes.object.isRequired,
+      fluid: PropTypes.shape({}),
       title: PropTypes.string,
     }).isRequired,
     title: PropTypes.string.isRequired,

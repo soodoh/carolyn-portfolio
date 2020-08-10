@@ -95,10 +95,10 @@ const About = (props) => {
 About.propTypes = {
   data: PropTypes.shape({
     background: PropTypes.shape({
-      fluid: PropTypes.object.isRequired,
+      fluid: PropTypes.shape({}),
     }).isRequired,
     profilePicture: PropTypes.shape({
-      fluid: PropTypes.object.isRequired,
+      fluid: PropTypes.shape({}),
     }).isRequired,
     bio: PropTypes.shape({
       childMarkdownRemark: PropTypes.shape({

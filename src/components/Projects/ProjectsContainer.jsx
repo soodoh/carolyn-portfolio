@@ -21,7 +21,7 @@ const Projects = (props) => {
 
 Projects.propTypes = {
   data: PropTypes.arrayOf(
-    PropTypes.object,
+    PropTypes.shape({}),
   ).isRequired,
 };
 

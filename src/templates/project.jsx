@@ -65,8 +65,8 @@ Project.propTypes = {
     title: PropTypes.string,
     role: PropTypes.string,
     link: PropTypes.string,
-    description: PropTypes.object,
-    coverImage: PropTypes.object,
+    description: PropTypes.shape({}),
+    coverImage: PropTypes.shape({}),
   }).isRequired,
 };
 

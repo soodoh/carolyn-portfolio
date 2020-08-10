@@ -12,7 +12,6 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-
 const getCategories = (projects) => {
   const categories = projects.reduce((acc, project) => {
     const typesToAdd = project.projectType.filter((type) => (
@@ -73,7 +72,7 @@ const Projects = (props) => {
 
 Projects.propTypes = {
   projects: PropTypes.arrayOf(
-    PropTypes.object,
+    PropTypes.shape({}),
   ).isRequired,
   isComponent: PropTypes.bool,
 };
