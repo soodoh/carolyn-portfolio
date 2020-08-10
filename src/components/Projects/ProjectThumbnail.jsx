@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import Img from 'gatsby-image';
-import { navigate } from 'gatsby';
+import { Link } from 'gatsby';
 import GridListTileBar from '@material-ui/core/GridListTileBar';
 import { makeStyles } from '@material-ui/styles';
 import Zoom from '@material-ui/core/Zoom';
@@ -30,23 +30,25 @@ const ProjectThumbnail = (props) => {
   return (
     <div
       className={classes.photoContainer}
-      role="presentation"
-      onClick={() => navigate(`/projects/${slug}`)}
       onMouseEnter={() => setLabel(true)}
       onMouseLeave={() => setLabel(false)}
     >
-      <Img
-        fluid={data.coverImage.fluid}
-        alt={data.coverImage.title}
-        className={classes.photo}
-      />
-      <Zoom in={detectIt.deviceType === 'touchOnly' || labelActive}>
-        <GridListTileBar
-          title={data.title}
-          subtitle={data.summary && data.summary.summary}
-          className={classes.label}
+      <Link
+        to={`/projects/${slug}`}
+      >
+        <Img
+          fluid={data.coverImage.fluid}
+          alt={data.coverImage.title}
+          className={classes.photo}
         />
-      </Zoom>
+        <Zoom in={detectIt.deviceType === 'touchOnly' || labelActive}>
+          <GridListTileBar
+            title={data.title}
+            subtitle={data.summary && data.summary.summary}
+            className={classes.label}
+          />
+        </Zoom>
+      </Link>
     </div>
   );
 };
