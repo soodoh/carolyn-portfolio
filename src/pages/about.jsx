@@ -25,6 +25,7 @@ const useStyles = makeStyles((theme) => ({
     ...theme.typography.body1,
     padding: theme.spacing(2),
     color: theme.palette.primary.contrastText,
+    marginBottom: '1.5rem',
 
     '& a': {
       color: theme.palette.primary.contrastText,

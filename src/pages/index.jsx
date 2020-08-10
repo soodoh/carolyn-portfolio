@@ -90,7 +90,7 @@ const Home = (props) => {
           className={classes.logo}
         />
         <Typography
-          variant="h6"
+          variant="h3"
           color="inherit"
           className={classes.title}
           gutterBottom

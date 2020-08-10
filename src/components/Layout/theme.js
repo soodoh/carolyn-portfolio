@@ -38,12 +38,16 @@ const rawTheme = {
       fontFamily: '\'Old Standard TT\', serif',
     },
     h6: {
-      fontFamily: '\'Old Standard TT\', serif',
+      fontFamily: '\'Karla\', sans-serif',
+      fontSize: '1.5rem',
     },
     body1: {
       fontFamily: '\'Old Standard TT\', serif',
       fontSize: '1.2rem',
-      paddingBottom: '1.5rem',
+    },
+    body2: {
+      fontFamily: '\'Karla\', sans-serif',
+      fontSize: '1.2rem',
     },
   },
   overrides: {

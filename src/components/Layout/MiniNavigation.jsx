@@ -29,7 +29,7 @@ const useStyles = makeStyles((theme) => ({
   },
   listText: {
     fontFamily: theme.typography.fontFamily,
-    fontSize: '1rem',
+    padding: '1rem 0',
   },
   drawerTop: {
     display: 'flex',

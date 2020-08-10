@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import Player from 'react-player';
 import { makeStyles } from '@material-ui/styles';
 import Typography from '@material-ui/core/Typography';
+import ProjectDescription from './ProjectDescription';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -27,15 +28,8 @@ const useStyles = makeStyles((theme) => ({
     top: 0,
     left: 0,
   },
-  projectContent: {
-    fontFamily: theme.typography.fontFamily,
-    color: theme.palette.primary.main,
-    '& img': {
-      width: '100%',
-    },
-    marginBottom: theme.spacing(6),
-  },
 }));
+
 const VideoProject = (props) => {
   const classes = useStyles();
   const { data } = props;
@@ -46,7 +40,7 @@ const VideoProject = (props) => {
         <Typography variant="h2" align="center">
           {data.title}
         </Typography>
-        <Typography variant="subtitle1" className={classes.role} align="center" gutterBottom>
+        <Typography variant="h6" className={classes.role} align="center" gutterBottom>
           {data.role}
         </Typography>
       </div>
@@ -61,11 +55,7 @@ const VideoProject = (props) => {
         />
       </div>
 
-      <div
-        className={classes.projectContent}
-        // eslint-disable-next-line react/no-danger
-        dangerouslySetInnerHTML={{ __html: data.description.childMarkdownRemark.html }}
-      />
+      <ProjectDescription markdown={data.description.childMarkdownRemark.html} />
     </div>
   );
 };
