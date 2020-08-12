@@ -10,10 +10,6 @@ const useStyles = makeStyles((theme) => ({
     color: theme.palette.primary.main,
     padding: theme.spacing(6, 0),
 
-    [theme.breakpoints.up('xs')]: {
-      padding: `${theme.spacing(6)}px 10vw`,
-    },
-
     '& h1, h2, h3': {
       ...theme.typography.h4,
       display: 'flex',

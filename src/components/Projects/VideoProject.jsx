@@ -6,12 +6,6 @@ import Typography from '@material-ui/core/Typography';
 import ProjectDescription from './ProjectDescription';
 
 const useStyles = makeStyles((theme) => ({
-  container: {
-    padding: '0',
-    [theme.breakpoints.up('xs')]: {
-      padding: '0 10vw',
-    },
-  },
   title: {
     marginBottom: theme.spacing(2),
   },
@@ -28,6 +22,11 @@ const useStyles = makeStyles((theme) => ({
     top: 0,
     left: 0,
   },
+  pageContent: {
+    [theme.breakpoints.up('sm')]: {
+      margin: '0 10vw',
+    },
+  },
 }));
 
 const VideoProject = (props) => {
@@ -35,7 +34,7 @@ const VideoProject = (props) => {
   const { data } = props;
 
   return (
-    <div className={classes.container}>
+    <div>
       <div className={classes.title}>
         <Typography variant="h2" align="center">
           {data.title}
@@ -45,17 +44,19 @@ const VideoProject = (props) => {
         </Typography>
       </div>
 
-      <div className={classes.videoContainer}>
-        <Player
-          url={data.link}
-          className={classes.video}
-          controls
-          width="100%"
-          height="100%"
-        />
-      </div>
+      <div className={classes.pageContent}>
+        <div className={classes.videoContainer}>
+          <Player
+            url={data.link}
+            className={classes.video}
+            controls
+            width="100%"
+            height="100%"
+          />
+        </div>
 
-      <ProjectDescription markdown={data.description.childMarkdownRemark.html} />
+        <ProjectDescription markdown={data.description.childMarkdownRemark.html} />
+      </div>
     </div>
   );
 };

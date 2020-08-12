@@ -31,8 +31,11 @@ const useStyles = makeStyles((theme) => ({
       gridColumn: '1 / 3',
     },
   },
-  description: {
+  pageContent: {
     gridColumn: '1 / 3',
+    [theme.breakpoints.up('sm')]: {
+      margin: '0 10vw',
+    },
   },
   backButton: {
     marginBottom: theme.spacing(2),
@@ -62,7 +65,7 @@ const TextProject = (props) => {
 
       <Img fluid={data.coverImage.fluid} className={classes.coverImage} />
 
-      <div className={classes.description}>
+      <div className={classes.pageContent}>
         <ProjectDescription markdown={data.description.childMarkdownRemark.html} />
       </div>
     </div>
