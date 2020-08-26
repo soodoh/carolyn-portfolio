@@ -1,5 +1,4 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React, { ReactElement, ReactChildren } from 'react';
 import { Helmet } from 'react-helmet';
 import { makeStyles, ThemeProvider } from '@material-ui/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -20,7 +19,12 @@ const useStyles = makeStyles({
   },
 });
 
-const Layout = ({ children, location }) => {
+interface LayoutProps {
+  location: { pathname: string };
+  children: ReactChildren;
+}
+
+const Layout = (props: LayoutProps): ReactElement => {
   const classes = useStyles();
 
   return (
@@ -31,23 +35,16 @@ const Layout = ({ children, location }) => {
       </Helmet>
 
       <div className={classes.container}>
-        <Header location={location} />
+        <Header location={props.location} />
 
         <div className={classes.content}>
-          <PageTransition location={location}>{children}</PageTransition>
+          <PageTransition location={location}>{props.children}</PageTransition>
         </div>
 
         <Footer />
       </div>
     </ThemeProvider>
   );
-};
-
-Layout.propTypes = {
-  children: PropTypes.node.isRequired,
-  location: PropTypes.shape({
-    pathname: PropTypes.string.isRequired,
-  }).isRequired,
 };
 
 export default Layout;

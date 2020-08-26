@@ -1,5 +1,4 @@
-import React, { useState } from 'react';
-import PropTypes from 'prop-types';
+import React, { ReactElement, useState } from 'react';
 import { Link } from 'gatsby';
 import { makeStyles } from '@material-ui/styles';
 import MenuIcon from '@material-ui/icons/Menu';
@@ -38,7 +37,16 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const MiniNavigation = props => {
+interface NavigationProps {
+  location: { pathname: string };
+  links: {
+    label: string;
+    path: string;
+    external?: boolean;
+  }[];
+}
+
+const MiniNavigation = (props: NavigationProps): ReactElement => {
   const { location, links } = props;
   const classes = useStyles();
   const [isActive, setActive] = useState(false);
@@ -76,19 +84,6 @@ const MiniNavigation = props => {
       </Drawer>
     </>
   );
-};
-
-MiniNavigation.propTypes = {
-  location: PropTypes.shape({
-    pathname: PropTypes.string.isRequired,
-  }).isRequired,
-  links: PropTypes.arrayOf(
-    PropTypes.shape({
-      label: PropTypes.string.isRequired,
-      path: PropTypes.string.isRequired,
-      external: PropTypes.bool,
-    }),
-  ).isRequired,
 };
 
 export default MiniNavigation;

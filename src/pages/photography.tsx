@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
-import PropTypes from 'prop-types';
+import React, { ReactElement, useState } from 'react';
 import { StaticQuery, graphql } from 'gatsby';
 import { makeStyles } from '@material-ui/styles';
 import Metadata from '../components/common/Metadata';
 import Filters from '../components/common/Filters';
 import Gallery from '../components/Photos/Gallery';
+import { PhotoAlbum } from '../types';
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -13,14 +13,17 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const getPhotos = (albums, matchAlbum) => {
+const getPhotos = (albums: PhotoAlbum[], matchAlbum: string) => {
   const currentAlbum = albums.find(album => album.album === matchAlbum);
   const { photos } = currentAlbum;
-
   return photos;
 };
 
-const Photography = props => {
+interface PhotographyProps {
+  albums: PhotoAlbum[];
+}
+
+const Photography = (props: PhotographyProps): ReactElement => {
   const classes = useStyles();
   const { albums } = props;
   const [currentAlbum, setAlbum] = useState(albums[0].album);
@@ -41,23 +44,17 @@ const Photography = props => {
   );
 };
 
-Photography.propTypes = {
-  albums: PropTypes.arrayOf(
-    PropTypes.shape({
-      album: PropTypes.string,
-    }),
-  ).isRequired,
-};
-
-export default () => (
+const PhotographyWithData = (): ReactElement => (
   <StaticQuery
     query={graphql`
       query PhotographyQuery {
         allContentfulPhotoAlbum(sort: { fields: [order], order: ASC }) {
           edges {
             node {
+              id
               album
               photos {
+                id
                 title
                 description
                 thumbnail: fluid(maxWidth: 600) {
@@ -72,6 +69,7 @@ export default () => (
         }
       }
     `}
-    render={data => <Photography albums={data.allContentfulPhotoAlbum.edges.map(item => item.node)} />}
+    render={data => <Photography albums={data.allContentfulPhotoAlbum.edges.map((item: { node: PhotoAlbum }) => item.node)} />}
   />
 );
+export default PhotographyWithData;

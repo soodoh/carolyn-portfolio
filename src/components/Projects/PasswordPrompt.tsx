@@ -1,5 +1,4 @@
-import React, { useState } from 'react';
-import PropTypes from 'prop-types';
+import React, { ReactElement, useState } from 'react';
 import { Link } from 'gatsby';
 import { makeStyles } from '@material-ui/styles';
 import Typography from '@material-ui/core/Typography';
@@ -47,13 +46,18 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const PasswordPrompt = props => {
+interface PasswordProps {
+  password: string;
+  onSuccess: () => void;
+}
+
+const PasswordPrompt = (props: PasswordProps): ReactElement => {
   const { password, onSuccess } = props;
   const [passwordInput, setPasswordInput] = useState('');
   const [showError, setShowError] = useState(false);
   const classes = useStyles();
 
-  const submitPassword = event => {
+  const submitPassword = (event: any) => {
     event.preventDefault();
     if (passwordInput === password) {
       onSuccess();
@@ -97,11 +101,6 @@ const PasswordPrompt = props => {
       </DialogContent>
     </Dialog>
   );
-};
-
-PasswordPrompt.propTypes = {
-  password: PropTypes.string.isRequired,
-  onSuccess: PropTypes.func.isRequired,
 };
 
 export default PasswordPrompt;

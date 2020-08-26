@@ -1,7 +1,6 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React, { ReactElement } from 'react';
 import { Link, StaticQuery, graphql } from 'gatsby';
-import Img from 'gatsby-image';
+import Img, { FluidObject } from 'gatsby-image';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/styles';
@@ -64,7 +63,11 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const Home = props => {
+interface HomeProps {
+  background: FluidObject;
+}
+
+const Home = (props: HomeProps): ReactElement => {
   const { background } = props;
   const classes = useStyles();
 
@@ -110,11 +113,7 @@ const Home = props => {
   );
 };
 
-Home.propTypes = {
-  background: PropTypes.shape({}).isRequired,
-};
-
-export default () => (
+const HomeWithData = (): ReactElement => (
   <StaticQuery
     query={graphql`
       query HomeQuery {
@@ -130,3 +129,4 @@ export default () => (
     render={data => <Home background={data.contentfulAbout.background.fluid} />}
   />
 );
+export default HomeWithData;

@@ -1,5 +1,4 @@
-import React, { useState } from 'react';
-import PropTypes from 'prop-types';
+import React, { ReactElement, useState } from 'react';
 import Img from 'gatsby-image';
 import { Link } from 'gatsby';
 import GridListTileBar from '@material-ui/core/GridListTileBar';
@@ -7,6 +6,7 @@ import { makeStyles } from '@material-ui/styles';
 import Zoom from '@material-ui/core/Zoom';
 import detectIt from 'detect-it';
 import slugify from 'slugify';
+import { Project } from '../../types';
 
 const useStyles = makeStyles({
   photoContainer: {
@@ -17,7 +17,11 @@ const useStyles = makeStyles({
   },
 });
 
-const ProjectThumbnail = props => {
+interface ThumbnailProps {
+  data: Project;
+}
+
+const ProjectThumbnail = (props: ThumbnailProps): ReactElement => {
   const classes = useStyles();
   const { data } = props;
   const slug = slugify(data.title, {
@@ -37,19 +41,6 @@ const ProjectThumbnail = props => {
       </Link>
     </div>
   );
-};
-
-ProjectThumbnail.propTypes = {
-  data: PropTypes.shape({
-    coverImage: PropTypes.shape({
-      fluid: PropTypes.shape({}),
-      title: PropTypes.string,
-    }).isRequired,
-    title: PropTypes.string.isRequired,
-    summary: PropTypes.shape({
-      summary: PropTypes.string.isRequired,
-    }),
-  }).isRequired,
 };
 
 export default ProjectThumbnail;

@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from 'react';
-import PropTypes from 'prop-types';
+import React, { ReactElement, useState, useEffect } from 'react';
 import { Link, StaticQuery, graphql } from 'gatsby';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -58,7 +57,12 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const Header = props => {
+interface HeaderProps {
+  resume: string;
+  location: { pathname: string };
+}
+
+const Header = (props: HeaderProps): ReactElement => {
   const classes = useStyles();
   const { resume, location } = props;
   const [isTransparent, setTransparent] = useState(location.pathname === '/' || location.pathname.match(/about/gi));
@@ -138,16 +142,10 @@ const Header = props => {
   );
 };
 
-Header.propTypes = {
-  location: PropTypes.shape({
-    pathname: PropTypes.string.isRequired,
-  }).isRequired,
-  resume: PropTypes.string.isRequired,
-};
-
-const HeaderWithData = props => {
-  const { location } = props;
-
+interface LocationProps {
+  location: { pathname: string };
+}
+const HeaderWithData = (props: LocationProps): ReactElement => {
   return (
     <StaticQuery
       query={graphql`
@@ -161,15 +159,9 @@ const HeaderWithData = props => {
           }
         }
       `}
-      render={data => <Header location={location} resume={data.contentfulAbout.resume.file.url} />}
+      render={data => <Header location={props.location} resume={data.contentfulAbout.resume.file.url} />}
     />
   );
-};
-
-HeaderWithData.propTypes = {
-  location: PropTypes.shape({
-    pathname: PropTypes.string.isRequired,
-  }).isRequired,
 };
 
 export default HeaderWithData;

@@ -1,12 +1,12 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React, { ReactElement } from 'react';
 import { StaticQuery, graphql } from 'gatsby';
-import Img from 'gatsby-image';
+import Img, { GatsbyImageFluidProps } from 'gatsby-image';
 import { makeStyles } from '@material-ui/styles';
 import Typography from '@material-ui/core/Typography';
 import Metadata from '../components/common/Metadata';
 import SocialMedia from '../components/common/SocialMedia';
 import Background from '../components/common/Background';
+import { Markdown } from '../types';
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -38,7 +38,17 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const About = props => {
+interface AboutProps {
+  data: {
+    location: string;
+    email: string;
+    background: GatsbyImageFluidProps;
+    bio: Markdown;
+    profilePicture: GatsbyImageFluidProps;
+  };
+}
+
+const About = (props: AboutProps): ReactElement => {
   const { data } = props;
   const classes = useStyles();
 
@@ -68,7 +78,7 @@ const About = props => {
               {data.phoneNumber}
             </Typography> */}
 
-          <SocialMedia color="secondary" align="center" />
+          <SocialMedia color="secondary" />
         </div>
 
         <div
@@ -81,25 +91,7 @@ const About = props => {
   );
 };
 
-About.propTypes = {
-  data: PropTypes.shape({
-    background: PropTypes.shape({
-      fluid: PropTypes.shape({}),
-    }).isRequired,
-    profilePicture: PropTypes.shape({
-      fluid: PropTypes.shape({}),
-    }).isRequired,
-    bio: PropTypes.shape({
-      childMarkdownRemark: PropTypes.shape({
-        html: PropTypes.string.isRequired,
-      }).isRequired,
-    }).isRequired,
-    location: PropTypes.string.isRequired,
-    email: PropTypes.string.isRequired,
-  }).isRequired,
-};
-
-export default () => (
+const AboutWithData = (): ReactElement => (
   <StaticQuery
     query={graphql`
       query AboutQuery {
@@ -127,3 +119,4 @@ export default () => (
     render={data => <About data={data.contentfulAbout} />}
   />
 );
+export default AboutWithData;

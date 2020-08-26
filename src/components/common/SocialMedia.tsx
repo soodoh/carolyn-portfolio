@@ -1,6 +1,4 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { uid } from 'react-uid';
+import React, { ReactElement } from 'react';
 import { StaticQuery, graphql } from 'gatsby';
 import SVG from 'react-inlinesvg';
 import { makeStyles, useTheme } from '@material-ui/styles';
@@ -13,7 +11,19 @@ const useStyles = makeStyles({
   },
 });
 
-const SocialMedia = props => {
+interface SocialMediaLink {
+  id: string;
+  title: string;
+  link: string;
+  icon: { file: { url: string } };
+}
+
+interface SocialMediaProps {
+  color: string;
+  icons: SocialMediaLink[];
+}
+
+const SocialMedia = (props: SocialMediaProps): ReactElement => {
   const { color, icons } = props;
   const classes = useStyles();
   const theme = useTheme();
@@ -22,7 +32,7 @@ const SocialMedia = props => {
   return (
     <div className={classes.container}>
       {icons.map(icon => (
-        <a key={uid(icon)} href={icon.link} style={{ color: 'inherit' }}>
+        <a key={icon.id} href={icon.link} style={{ color: 'inherit' }}>
           <IconButton color={color || 'inherit'} aria-label={icon.title}>
             <SVG src={icon.icon.file.url} style={{ fill: colorCode }} />
           </IconButton>
@@ -32,27 +42,7 @@ const SocialMedia = props => {
   );
 };
 
-SocialMedia.propTypes = {
-  icons: PropTypes.arrayOf(
-    PropTypes.shape({
-      title: PropTypes.string,
-      link: PropTypes.string,
-      icon: PropTypes.shape({
-        file: PropTypes.shape({
-          url: PropTypes.string,
-        }),
-      }),
-    }),
-  ).isRequired,
-  color: PropTypes.string,
-};
-SocialMedia.defaultProps = {
-  color: '',
-};
-
-const SocialMediaWithData = props => {
-  const { color } = props;
-
+const SocialMediaWithData = (props: { color: string }): ReactElement => {
   return (
     <StaticQuery
       query={graphql`
@@ -60,8 +50,8 @@ const SocialMediaWithData = props => {
           allContentfulSocialMedia {
             edges {
               node {
+                id
                 icon {
-                  id
                   file {
                     url
                     contentType
@@ -74,16 +64,11 @@ const SocialMediaWithData = props => {
           }
         }
       `}
-      render={data => <SocialMedia color={color} icons={data.allContentfulSocialMedia.edges.map(item => item.node)} />}
+      render={data => (
+        <SocialMedia color={props.color} icons={data.allContentfulSocialMedia.edges.map((item: { node: SocialMediaLink }) => item.node)} />
+      )}
     />
   );
-};
-
-SocialMediaWithData.propTypes = {
-  color: PropTypes.string,
-};
-SocialMediaWithData.defaultProps = {
-  color: '',
 };
 
 export default SocialMediaWithData;

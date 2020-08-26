@@ -1,6 +1,4 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { uid } from 'react-uid';
+import React, { ReactElement } from 'react';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/styles';
 import Select from '@material-ui/core/Select';
@@ -48,16 +46,22 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const Filters = props => {
+interface FiltersProps {
+  list: string[];
+  currentItem: string;
+  onChange: (item: string) => void;
+}
+
+const Filters = (props: FiltersProps): ReactElement => {
   const { list, currentItem, onChange } = props;
   const classes = useStyles();
 
   return (
     <div className={classes.container}>
       <div className={classes.bar}>
-        {list.map((item, index) => (
+        {list.map(item => (
           <Typography
-            key={uid(item, index)}
+            key={item}
             onClick={() => onChange(item)}
             variant="subtitle1"
             color="primary"
@@ -68,21 +72,15 @@ const Filters = props => {
         ))}
       </div>
 
-      <Select value={currentItem} onChange={event => onChange(event.target.value)} className={classes.miniFilter}>
-        {list.map((item, index) => (
-          <MenuItem key={uid(item, list.length + index)} value={item}>
+      <Select value={currentItem} onChange={(event: any) => onChange(event.target.value)} className={classes.miniFilter}>
+        {list.map(item => (
+          <MenuItem key={`filter-list-${item}`} value={item}>
             {item}
           </MenuItem>
         ))}
       </Select>
     </div>
   );
-};
-
-Filters.propTypes = {
-  list: PropTypes.arrayOf(PropTypes.string).isRequired,
-  currentItem: PropTypes.string.isRequired,
-  onChange: PropTypes.func.isRequired,
 };
 
 export default Filters;

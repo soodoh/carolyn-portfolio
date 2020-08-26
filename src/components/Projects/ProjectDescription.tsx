@@ -1,5 +1,4 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React, { ReactElement } from 'react';
 import { makeStyles } from '@material-ui/styles';
 
 const useStyles = makeStyles(theme => ({
@@ -26,7 +25,11 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const ProjectDescription = props => {
+interface ProjectDescriptionProps {
+  markdown: string;
+}
+
+const ProjectDescription = (props: ProjectDescriptionProps): ReactElement => {
   const { markdown } = props;
   const classes = useStyles();
 
@@ -37,10 +40,6 @@ const ProjectDescription = props => {
       dangerouslySetInnerHTML={{ __html: markdown }}
     />
   );
-};
-
-ProjectDescription.propTypes = {
-  markdown: PropTypes.string.isRequired,
 };
 
 export default ProjectDescription;

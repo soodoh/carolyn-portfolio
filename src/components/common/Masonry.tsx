@@ -1,8 +1,6 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React, { ReactElement } from 'react';
 import { makeStyles, useTheme } from '@material-ui/styles';
 import Masonry from 'react-masonry-css';
-import { uid } from 'react-uid';
 
 const useStyles = makeStyles(theme => ({
   masonryContainer: {
@@ -21,7 +19,11 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const CustomMasonry = props => {
+interface MasonryProps {
+  children: { id: string; element: ReactElement }[];
+}
+
+const CustomMasonry = (props: MasonryProps): ReactElement => {
   const { children } = props;
   const classes = useStyles();
   const theme = useTheme();
@@ -35,9 +37,9 @@ const CustomMasonry = props => {
   return (
     <Masonry breakpointCols={breakpoints} className={classes.masonryContainer} columnClassName={classes.column}>
       {Array.isArray(children) ? (
-        children.map(child => (
-          <div className={classes.item} key={uid(child)}>
-            {child}
+        children.map(({ id, element }) => (
+          <div className={classes.item} key={id}>
+            {element}
           </div>
         ))
       ) : (
@@ -45,10 +47,6 @@ const CustomMasonry = props => {
       )}
     </Masonry>
   );
-};
-
-CustomMasonry.propTypes = {
-  children: PropTypes.oneOfType([PropTypes.element, PropTypes.arrayOf(PropTypes.element)]).isRequired,
 };
 
 export default CustomMasonry;

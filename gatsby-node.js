@@ -49,7 +49,7 @@ exports.createPages = async ({ graphql, actions }) => {
 
     createPage({
       path: `projects/${slug}`,
-      component: path.resolve('src/templates/project.jsx'),
+      component: path.resolve('src/templates/project.tsx'),
       context: edge.node,
     });
   });

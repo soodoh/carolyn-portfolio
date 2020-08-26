@@ -1,10 +1,9 @@
-import React, { useState } from 'react';
-import PropTypes from 'prop-types';
+import React, { ReactElement, useState } from 'react';
 import Img from 'gatsby-image';
 import { makeStyles } from '@material-ui/styles';
-import { uid } from 'react-uid';
 import Lightbox from 'react-images';
 import Masonry from '../common/Masonry';
+import { Photo } from '../../types';
 
 const useStyles = makeStyles(() => ({
   photo: {
@@ -13,7 +12,11 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const Gallery = props => {
+interface GalleryProps {
+  photos: Photo[];
+}
+
+const Gallery = (props: GalleryProps): ReactElement => {
   const classes = useStyles();
   const { photos } = props;
   const [photoActive, setActive] = useState(false);
@@ -36,38 +39,32 @@ const Gallery = props => {
       />
 
       <Masonry>
-        {photos.map((photo, index) => (
-          <div
-            key={uid(photo, index)}
-            role="button"
-            aria-label={`Open Photo "${photo.title}"`}
-            tabIndex={0}
-            onClick={() => {
-              setPhoto(index);
-              setActive(true);
-            }}
-            onKeyPress={event => {
-              if (event.charCode === 13) {
+        {photos.map((photo, index) => ({
+          id: photo.id,
+          element: (
+            <div
+              key={photo.id}
+              role="button"
+              aria-label={`Open Photo "${photo.title}"`}
+              tabIndex={0}
+              onClick={() => {
                 setPhoto(index);
                 setActive(true);
-              }
-            }}
-          >
-            <Img fluid={photo.thumbnail} alt={photo.title} className={classes.photo} />
-          </div>
-        ))}
+              }}
+              onKeyPress={event => {
+                if (event.charCode === 13) {
+                  setPhoto(index);
+                  setActive(true);
+                }
+              }}
+            >
+              <Img fluid={photo.thumbnail} alt={photo.title} className={classes.photo} />
+            </div>
+          ),
+        }))}
       </Masonry>
     </>
   );
-};
-
-Gallery.propTypes = {
-  photos: PropTypes.arrayOf(
-    PropTypes.shape({
-      thumbnail: PropTypes.shape({}),
-      title: PropTypes.string,
-    }),
-  ).isRequired,
 };
 
 export default Gallery;

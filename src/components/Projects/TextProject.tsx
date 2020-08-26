@@ -1,9 +1,9 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React, { ReactElement } from 'react';
 import Img from 'gatsby-image';
 import { makeStyles } from '@material-ui/styles';
 import Typography from '@material-ui/core/Typography';
 import ProjectDescription from './ProjectDescription';
+import { Project } from '../../types';
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -48,7 +48,11 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const TextProject = props => {
+interface TextProjectProps {
+  data: Project;
+}
+
+const TextProject = (props: TextProjectProps): ReactElement => {
   const classes = useStyles();
   const { data } = props;
 
@@ -68,22 +72,6 @@ const TextProject = props => {
       </div>
     </div>
   );
-};
-
-TextProject.propTypes = {
-  data: PropTypes.shape({
-    title: PropTypes.string,
-    role: PropTypes.string,
-    link: PropTypes.string,
-    description: PropTypes.shape({
-      childMarkdownRemark: PropTypes.shape({
-        html: PropTypes.string,
-      }),
-    }),
-    coverImage: PropTypes.shape({
-      fluid: PropTypes.shape({}),
-    }),
-  }).isRequired,
 };
 
 export default TextProject;

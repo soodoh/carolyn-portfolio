@@ -1,5 +1,4 @@
-import React, { useState } from 'react';
-import PropTypes from 'prop-types';
+import React, { ReactElement, useState } from 'react';
 import { Link } from 'gatsby';
 import { makeStyles } from '@material-ui/styles';
 import Button from '@material-ui/core/Button';
@@ -7,6 +6,7 @@ import ArrowBack from '@material-ui/icons/ArrowBack';
 import VideoProject from '../components/Projects/VideoProject';
 import TextProject from '../components/Projects/TextProject';
 import PasswordPrompt from '../components/Projects/PasswordPrompt';
+import { Project } from '../types';
 
 const useStyles = makeStyles(theme => ({
   topButton: {
@@ -24,7 +24,11 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const Project = props => {
+interface ProjectProps {
+  pageContext: Project;
+}
+
+const ProjectPage = (props: ProjectProps): ReactElement => {
   const { pageContext } = props;
   const [canView, setCanView] = useState(!pageContext.password);
   const classes = useStyles();
@@ -52,15 +56,4 @@ const Project = props => {
   );
 };
 
-Project.propTypes = {
-  pageContext: PropTypes.shape({
-    password: PropTypes.string,
-    title: PropTypes.string,
-    role: PropTypes.string,
-    link: PropTypes.string,
-    description: PropTypes.shape({}),
-    coverImage: PropTypes.shape({}),
-  }).isRequired,
-};
-
-export default Project;
+export default ProjectPage;

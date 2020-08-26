@@ -1,9 +1,9 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React, { ReactElement } from 'react';
 import Player from 'react-player';
 import { makeStyles } from '@material-ui/styles';
 import Typography from '@material-ui/core/Typography';
 import ProjectDescription from './ProjectDescription';
+import { Project } from '../../types';
 
 const useStyles = makeStyles(theme => ({
   title: {
@@ -29,7 +29,11 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const VideoProject = props => {
+interface VideoProjectProps {
+  data: Project;
+}
+
+const VideoProject = (props: VideoProjectProps): ReactElement => {
   const classes = useStyles();
   const { data } = props;
 
@@ -53,20 +57,6 @@ const VideoProject = props => {
       </div>
     </div>
   );
-};
-
-VideoProject.propTypes = {
-  data: PropTypes.shape({
-    title: PropTypes.string,
-    role: PropTypes.string,
-    link: PropTypes.string,
-    description: PropTypes.shape({
-      childMarkdownRemark: PropTypes.shape({
-        html: PropTypes.string,
-      }),
-    }),
-    coverImage: PropTypes.shape({}),
-  }).isRequired,
 };
 
 export default VideoProject;

@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
-import PropTypes from 'prop-types';
+import React, { ReactElement, useState } from 'react';
 import { StaticQuery, graphql } from 'gatsby';
 import { makeStyles } from '@material-ui/styles';
 import Metadata from '../common/Metadata';
 import Filters from '../common/Filters';
 import ProjectsContainer from './ProjectsContainer';
+import { Project } from '../../types';
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -12,26 +12,28 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const getCategories = projects => {
+const getCategories = (projects: Project[]) => {
   const categories = projects.reduce((acc, project) => {
     const typesToAdd = project.projectType.filter(type => !acc.includes(type));
     return [...acc, ...typesToAdd];
   }, []);
-
   return ['All', ...categories.sort((a, b) => a.localeCompare(b))];
 };
 
-const filteredProjects = (projects, filter) => {
+const filteredProjects = (projects: Project[], filter: string) => {
   const currentProjects = projects;
-
   if (filter !== 'All') {
     return currentProjects.filter(project => project.projectType.includes(filter));
   }
-
   return currentProjects;
 };
 
-const Projects = props => {
+interface ProjectsProps {
+  projects: Project[];
+  isComponent?: boolean;
+}
+
+const Projects = (props: ProjectsProps): ReactElement => {
   const classes = useStyles();
   const [filter, setFilter] = useState('All');
   const { projects, isComponent } = props;
@@ -56,15 +58,7 @@ const Projects = props => {
   );
 };
 
-Projects.propTypes = {
-  projects: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
-  isComponent: PropTypes.bool,
-};
-Projects.defaultProps = {
-  isComponent: false,
-};
-
-export default () => (
+const ProjectsWithData = (): ReactElement => (
   <StaticQuery
     query={graphql`
       query ProjectsQuery {
@@ -93,6 +87,7 @@ export default () => (
         }
       }
     `}
-    render={data => <Projects projects={data.allContentfulProject.edges.map(item => item.node)} />}
+    render={data => <Projects projects={data.allContentfulProject.edges.map((item: { node: Project }) => item.node)} />}
   />
 );
+export default ProjectsWithData;
