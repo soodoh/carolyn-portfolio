@@ -3,7 +3,7 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/styles';
 import SocialMedia from '../common/SocialMedia';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   footer: {
     flexShrink: 0,
     width: '100%',

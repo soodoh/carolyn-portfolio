@@ -7,9 +7,7 @@ const spaceId = process.env.CONTENTFUL_SPACE_ID;
 const accessToken = process.env.CONTENTFUL_DELIVERY_TOKEN;
 
 if (!spaceId || !accessToken) {
-  throw new Error(
-    'Contentful spaceId and the delivery token need to be provided.',
-  );
+  throw new Error('Contentful spaceId and the delivery token need to be provided.');
 }
 
 const siteUrl = 'https://carolyndiloreto.com';
@@ -19,15 +17,13 @@ module.exports = {
     siteUrl,
   },
   plugins: [
-    // 'gatsby-plugin-eslint',
+    'gatsby-plugin-typescript',
     'gatsby-plugin-layout',
     'gatsby-plugin-remove-trailing-slashes',
     'gatsby-transformer-remark',
     'gatsby-transformer-sharp',
     'gatsby-plugin-sharp',
     'gatsby-plugin-react-helmet',
-    'gatsby-plugin-remove-serviceworker',
-    // 'gatsby-plugin-offline',
     'gatsby-plugin-sitemap',
     {
       resolve: 'gatsby-plugin-material-ui',

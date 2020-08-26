@@ -5,7 +5,7 @@ import { makeStyles } from '@material-ui/styles';
 import Typography from '@material-ui/core/Typography';
 import ProjectDescription from './ProjectDescription';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   title: {
     marginBottom: theme.spacing(2),
   },
@@ -29,7 +29,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const VideoProject = (props) => {
+const VideoProject = props => {
   const classes = useStyles();
   const { data } = props;
 
@@ -46,13 +46,7 @@ const VideoProject = (props) => {
 
       <div className={classes.pageContent}>
         <div className={classes.videoContainer}>
-          <Player
-            url={data.link}
-            className={classes.video}
-            controls
-            width="100%"
-            height="100%"
-          />
+          <Player url={data.link} className={classes.video} controls width="100%" height="100%" />
         </div>
 
         <ProjectDescription markdown={data.description.childMarkdownRemark.html} />

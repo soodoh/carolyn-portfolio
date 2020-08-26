@@ -17,7 +17,7 @@ const useStyles = makeStyles({
   },
 });
 
-const ProjectThumbnail = (props) => {
+const ProjectThumbnail = props => {
   const classes = useStyles();
   const { data } = props;
   const slug = slugify(data.title, {
@@ -28,25 +28,11 @@ const ProjectThumbnail = (props) => {
   const [labelActive, setLabel] = useState(detectIt.deviceType === 'touchOnly');
 
   return (
-    <div
-      className={classes.photoContainer}
-      onMouseEnter={() => setLabel(true)}
-      onMouseLeave={() => setLabel(false)}
-    >
-      <Link
-        to={`/projects/${slug}`}
-      >
-        <Img
-          fluid={data.coverImage.fluid}
-          alt={data.coverImage.title}
-          className={classes.photo}
-        />
+    <div className={classes.photoContainer} onMouseEnter={() => setLabel(true)} onMouseLeave={() => setLabel(false)}>
+      <Link to={`/projects/${slug}`}>
+        <Img fluid={data.coverImage.fluid} alt={data.coverImage.title} className={classes.photo} />
         <Zoom in={detectIt.deviceType === 'touchOnly' || labelActive}>
-          <GridListTileBar
-            title={data.title}
-            subtitle={data.summary && data.summary.summary}
-            className={classes.label}
-          />
+          <GridListTileBar title={data.title} subtitle={data.summary && data.summary.summary} className={classes.label} />
         </Zoom>
       </Link>
     </div>

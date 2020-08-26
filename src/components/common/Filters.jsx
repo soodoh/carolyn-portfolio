@@ -6,7 +6,7 @@ import { makeStyles } from '@material-ui/styles';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   container: {
     position: 'sticky',
     zIndex: theme.zIndex.appBar + 1,
@@ -48,10 +48,8 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Filters = (props) => {
-  const {
-    list, currentItem, onChange,
-  } = props;
+const Filters = props => {
+  const { list, currentItem, onChange } = props;
   const classes = useStyles();
 
   return (
@@ -70,16 +68,9 @@ const Filters = (props) => {
         ))}
       </div>
 
-      <Select
-        value={currentItem}
-        onChange={(event) => onChange(event.target.value)}
-        className={classes.miniFilter}
-      >
+      <Select value={currentItem} onChange={event => onChange(event.target.value)} className={classes.miniFilter}>
         {list.map((item, index) => (
-          <MenuItem
-            key={uid(item, list.length + index)}
-            value={item}
-          >
+          <MenuItem key={uid(item, list.length + index)} value={item}>
             {item}
           </MenuItem>
         ))}

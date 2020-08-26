@@ -13,7 +13,7 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const Gallery = (props) => {
+const Gallery = props => {
   const classes = useStyles();
   const { photos } = props;
   const [photoActive, setActive] = useState(false);
@@ -22,7 +22,7 @@ const Gallery = (props) => {
   return (
     <>
       <Lightbox
-        images={photos.map((photo) => ({
+        images={photos.map(photo => ({
           src: photo.fullSize.src,
           srcSet: photo.fullSize.srcSet,
           alt: photo.title,
@@ -46,18 +46,14 @@ const Gallery = (props) => {
               setPhoto(index);
               setActive(true);
             }}
-            onKeyPress={(event) => {
+            onKeyPress={event => {
               if (event.charCode === 13) {
                 setPhoto(index);
                 setActive(true);
               }
             }}
           >
-            <Img
-              fluid={photo.thumbnail}
-              alt={photo.title}
-              className={classes.photo}
-            />
+            <Img fluid={photo.thumbnail} alt={photo.title} className={classes.photo} />
           </div>
         ))}
       </Masonry>

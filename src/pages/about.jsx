@@ -8,7 +8,7 @@ import Metadata from '../components/common/Metadata';
 import SocialMedia from '../components/common/SocialMedia';
 import Background from '../components/common/Background';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   container: {
     paddingTop: theme.spacing(2),
     display: 'grid',
@@ -38,7 +38,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const About = (props) => {
+const About = props => {
   const { data } = props;
   const classes = useStyles();
 
@@ -53,23 +53,11 @@ const About = (props) => {
         <Background sizes={data.background.fluid} />
 
         <div className={classes.content}>
-          <Img
-            fluid={data.profilePicture.fluid}
-            alt="Headshot"
-            className={classes.profile}
-          />
-          <Typography
-            variant="body2"
-            color="secondary"
-            align="center"
-          >
+          <Img fluid={data.profilePicture.fluid} alt="Headshot" className={classes.profile} />
+          <Typography variant="body2" color="secondary" align="center">
             {data.location}
           </Typography>
-          <Typography
-            variant="body2"
-            color="secondary"
-            align="center"
-          >
+          <Typography variant="body2" color="secondary" align="center">
             {data.email}
           </Typography>
           {/* <Typography
@@ -85,7 +73,7 @@ const About = (props) => {
 
         <div
           className={classes.content}
-              // eslint-disable-next-line react/no-danger
+          // eslint-disable-next-line react/no-danger
           dangerouslySetInnerHTML={{ __html: data.bio.childMarkdownRemark.html }}
         />
       </div>
@@ -136,10 +124,6 @@ export default () => (
         }
       }
     `}
-    render={(data) => (
-      <About
-        data={data.contentfulAbout}
-      />
-    )}
+    render={data => <About data={data.contentfulAbout} />}
   />
 );

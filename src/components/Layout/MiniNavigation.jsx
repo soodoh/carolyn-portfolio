@@ -11,7 +11,7 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   navMenu: {
     backgroundColor: 'transparent',
     border: `1px solid ${theme.palette.secondary.main}`,
@@ -38,32 +38,20 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const MiniNavigation = (props) => {
+const MiniNavigation = props => {
   const { location, links } = props;
   const classes = useStyles();
   const [isActive, setActive] = useState(false);
 
   return (
     <>
-      <Fab
-        size="small"
-        color="secondary"
-        classes={{ root: classes.navMenu }}
-        onClick={() => setActive(true)}
-      >
+      <Fab size="small" color="secondary" classes={{ root: classes.navMenu }} onClick={() => setActive(true)}>
         <MenuIcon />
       </Fab>
 
-      <Drawer
-        anchor="right"
-        open={isActive}
-        onClose={() => setActive(false)}
-      >
+      <Drawer anchor="right" open={isActive} onClose={() => setActive(false)}>
         <div className={classes.drawerTop}>
-          <IconButton
-            color="primary"
-            onClick={() => setActive(false)}
-          >
+          <IconButton color="primary" onClick={() => setActive(false)}>
             <ArrowRight />
           </IconButton>
         </div>
@@ -81,10 +69,7 @@ const MiniNavigation = (props) => {
               href={path}
               to={path}
             >
-              <ListItemText
-                primary={label}
-                classes={{ primary: classes.listText }}
-              />
+              <ListItemText primary={label} classes={{ primary: classes.listText }} />
             </ListItem>
           ))}
         </List>

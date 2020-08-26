@@ -4,25 +4,20 @@ import { uid } from 'react-uid';
 import ProjectThumbnail from './ProjectThumbnail';
 import Masonry from '../common/Masonry';
 
-const Projects = (props) => {
+const Projects = props => {
   const { data } = props;
 
   return (
     <Masonry>
-      {data.map((project) => (
-        <ProjectThumbnail
-          key={uid(project)}
-          data={project}
-        />
+      {data.map(project => (
+        <ProjectThumbnail key={uid(project)} data={project} />
       ))}
     </Masonry>
   );
 };
 
 Projects.propTypes = {
-  data: PropTypes.arrayOf(
-    PropTypes.shape({}),
-  ).isRequired,
+  data: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
 };
 
 export default Projects;

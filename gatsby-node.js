@@ -40,7 +40,7 @@ exports.createPages = async ({ graphql, actions }) => {
   `);
   if (projectData.errors) throw projectData.errors;
 
-  projectData.data.allContentfulProject.edges.forEach((edge) => {
+  projectData.data.allContentfulProject.edges.forEach(edge => {
     const slug = slugify(edge.node.title, {
       replacement: '-',
       remove: /[^\w\s]/g,

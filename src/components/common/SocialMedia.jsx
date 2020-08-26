@@ -13,7 +13,7 @@ const useStyles = makeStyles({
   },
 });
 
-const SocialMedia = (props) => {
+const SocialMedia = props => {
   const { color, icons } = props;
   const classes = useStyles();
   const theme = useTheme();
@@ -21,20 +21,10 @@ const SocialMedia = (props) => {
 
   return (
     <div className={classes.container}>
-      {icons.map((icon) => (
-        <a
-          key={uid(icon)}
-          href={icon.link}
-          style={{ color: 'inherit' }}
-        >
-          <IconButton
-            color={color || 'inherit'}
-            aria-label={icon.title}
-          >
-            <SVG
-              src={icon.icon.file.url}
-              style={{ fill: colorCode }}
-            />
+      {icons.map(icon => (
+        <a key={uid(icon)} href={icon.link} style={{ color: 'inherit' }}>
+          <IconButton color={color || 'inherit'} aria-label={icon.title}>
+            <SVG src={icon.icon.file.url} style={{ fill: colorCode }} />
           </IconButton>
         </a>
       ))}
@@ -60,38 +50,31 @@ SocialMedia.defaultProps = {
   color: '',
 };
 
-const SocialMediaWithData = (props) => {
+const SocialMediaWithData = props => {
   const { color } = props;
 
   return (
     <StaticQuery
       query={graphql`
-      query SocialMediaQuery {
-        allContentfulSocialMedia{
-          edges{
-            node{
-              icon {
-                id
-                file {
-                  url
-                  contentType
+        query SocialMediaQuery {
+          allContentfulSocialMedia {
+            edges {
+              node {
+                icon {
+                  id
+                  file {
+                    url
+                    contentType
+                  }
                 }
+                link
+                title
               }
-              link
-              title
             }
           }
         }
-      }
-    `}
-      render={(data) => (
-        <SocialMedia
-          color={color}
-          icons={
-          data.allContentfulSocialMedia.edges.map((item) => item.node)
-        }
-        />
-      )}
+      `}
+      render={data => <SocialMedia color={color} icons={data.allContentfulSocialMedia.edges.map(item => item.node)} />}
     />
   );
 };

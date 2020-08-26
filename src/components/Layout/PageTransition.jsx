@@ -1,9 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {
-  TransitionGroup,
-  Transition as ReactTransition,
-} from 'react-transition-group';
+import { TransitionGroup, Transition as ReactTransition } from 'react-transition-group';
 
 export const transitionDelay = 500;
 
@@ -22,7 +19,7 @@ const getTransitionStyles = {
   },
 };
 
-const PageTransition = (props) => {
+const PageTransition = props => {
   const { children, location } = props;
 
   return (
@@ -34,7 +31,7 @@ const PageTransition = (props) => {
           exit: transitionDelay,
         }}
       >
-        {(status) => (
+        {status => (
           <div
             style={{
               ...getTransitionStyles[status],
@@ -49,10 +46,7 @@ const PageTransition = (props) => {
 };
 
 PageTransition.propTypes = {
-  children: PropTypes.oneOfType([
-    PropTypes.element,
-    PropTypes.arrayOf(PropTypes.element),
-  ]).isRequired,
+  children: PropTypes.oneOfType([PropTypes.element, PropTypes.arrayOf(PropTypes.element)]).isRequired,
   location: PropTypes.shape({
     pathname: PropTypes.string.isRequired,
   }).isRequired,

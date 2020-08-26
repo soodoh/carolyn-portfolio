@@ -8,7 +8,7 @@ import { makeStyles } from '@material-ui/styles';
 import logo from '../../../static/logo.svg';
 import MiniNavigation from './MiniNavigation';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   brand: {
     display: 'flex',
     flex: 1,
@@ -58,7 +58,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Header = (props) => {
+const Header = props => {
   const classes = useStyles();
   const { resume, location } = props;
   const [isTransparent, setTransparent] = useState(location.pathname === '/' || location.pathname.match(/about/gi));
@@ -102,57 +102,37 @@ const Header = (props) => {
   ];
 
   return (
-    <AppBar
-      position={location.pathname === '/' ? 'fixed' : 'sticky'}
-      className={isTransparent ? classes.transparent : classes.appBar}
-    >
+    <AppBar position={location.pathname === '/' ? 'fixed' : 'sticky'} className={isTransparent ? classes.transparent : classes.appBar}>
       <Toolbar>
         <div className={`${classes.brand} ${!showBrand && classes.hideBrand}`}>
           <Link to="/">
-            <img
-              className={classes.logo}
-              src={logo}
-              alt="CD Logo"
-            />
+            <img className={classes.logo} src={logo} alt="CD Logo" />
           </Link>
-          <Typography
-            variant="h2"
-            color="inherit"
-            className={classes.name}
-          >
+          <Typography variant="h2" color="inherit" className={classes.name}>
             Carolyn DiLoreto
           </Typography>
         </div>
 
-        {links.map((link) => {
+        {links.map(link => {
           if (link.external) {
             return (
-              <a
-                key={link.path}
-                href={link.path}
-                className={classes.link}
-                style={{ textDecoration: 'none' }}
-              >
-                <Typography variant="subtitle1" color="inherit">{link.label}</Typography>
+              <a key={link.path} href={link.path} className={classes.link} style={{ textDecoration: 'none' }}>
+                <Typography variant="subtitle1" color="inherit">
+                  {link.label}
+                </Typography>
               </a>
             );
           }
           return (
-            <Link
-              key={link.path}
-              to={link.path}
-              className={classes.link}
-              activeClassName={classes.active}
-            >
-              <Typography variant="subtitle1" color="inherit">{link.label}</Typography>
+            <Link key={link.path} to={link.path} className={classes.link} activeClassName={classes.active}>
+              <Typography variant="subtitle1" color="inherit">
+                {link.label}
+              </Typography>
             </Link>
           );
         })}
 
-        <MiniNavigation
-          location={location}
-          links={links}
-        />
+        <MiniNavigation location={location} links={links} />
       </Toolbar>
     </AppBar>
   );
@@ -165,7 +145,7 @@ Header.propTypes = {
   resume: PropTypes.string.isRequired,
 };
 
-const HeaderWithData = (props) => {
+const HeaderWithData = props => {
   const { location } = props;
 
   return (
@@ -181,12 +161,7 @@ const HeaderWithData = (props) => {
           }
         }
       `}
-      render={(data) => (
-        <Header
-          location={location}
-          resume={data.contentfulAbout.resume.file.url}
-        />
-      )}
+      render={data => <Header location={location} resume={data.contentfulAbout.resume.file.url} />}
     />
   );
 };

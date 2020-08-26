@@ -6,41 +6,32 @@ import Metadata from '../common/Metadata';
 import Filters from '../common/Filters';
 import ProjectsContainer from './ProjectsContainer';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   container: {
     padding: theme.spacing(0, 2),
   },
 }));
 
-const getCategories = (projects) => {
+const getCategories = projects => {
   const categories = projects.reduce((acc, project) => {
-    const typesToAdd = project.projectType.filter((type) => (
-      !acc.includes(type)
-    ));
+    const typesToAdd = project.projectType.filter(type => !acc.includes(type));
     return [...acc, ...typesToAdd];
   }, []);
 
-  return [
-    'All',
-    ...categories.sort((a, b) => (
-      a.localeCompare(b)
-    )),
-  ];
+  return ['All', ...categories.sort((a, b) => a.localeCompare(b))];
 };
 
 const filteredProjects = (projects, filter) => {
   const currentProjects = projects;
 
   if (filter !== 'All') {
-    return currentProjects.filter((project) => (
-      project.projectType.includes(filter)
-    ));
+    return currentProjects.filter(project => project.projectType.includes(filter));
   }
 
   return currentProjects;
 };
 
-const Projects = (props) => {
+const Projects = props => {
   const classes = useStyles();
   const [filter, setFilter] = useState('All');
   const { projects, isComponent } = props;
@@ -49,20 +40,15 @@ const Projects = (props) => {
 
   return (
     <>
-      {!isComponent
-        && (
-          <Metadata
-            title="CD Projects"
-            description="View Carolyn DiLoreto's past and current projects. From film editing to UX Engineering there are many skills showcased in this section of the portfolio."
-          />
-        )}
+      {!isComponent && (
+        <Metadata
+          title="CD Projects"
+          description="View Carolyn DiLoreto's past and current projects. From film editing to UX Engineering there are many skills showcased in this section of the portfolio."
+        />
+      )}
 
       <section className={classes.container}>
-        <Filters
-          list={filterList}
-          currentItem={filter}
-          onChange={(value) => setFilter(value)}
-        />
+        <Filters list={filterList} currentItem={filter} onChange={value => setFilter(value)} />
 
         <ProjectsContainer data={projectList} />
       </section>
@@ -71,9 +57,7 @@ const Projects = (props) => {
 };
 
 Projects.propTypes = {
-  projects: PropTypes.arrayOf(
-    PropTypes.shape({}),
-  ).isRequired,
+  projects: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   isComponent: PropTypes.bool,
 };
 Projects.defaultProps = {
@@ -84,7 +68,7 @@ export default () => (
   <StaticQuery
     query={graphql`
       query ProjectsQuery {
-        allContentfulProject (sort: {fields: order, order: ASC}) {
+        allContentfulProject(sort: { fields: order, order: ASC }) {
           edges {
             node {
               id
@@ -109,12 +93,6 @@ export default () => (
         }
       }
     `}
-    render={(data) => (
-      <Projects
-        projects={data.allContentfulProject.edges.map((item) => (
-          item.node
-        ))}
-      />
-    )}
+    render={data => <Projects projects={data.allContentfulProject.edges.map(item => item.node)} />}
   />
 );

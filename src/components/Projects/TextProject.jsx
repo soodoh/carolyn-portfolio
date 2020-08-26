@@ -5,7 +5,7 @@ import { makeStyles } from '@material-ui/styles';
 import Typography from '@material-ui/core/Typography';
 import ProjectDescription from './ProjectDescription';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   container: {
     display: 'grid',
     gridTemplateColumns: '50% 50%',
@@ -48,16 +48,14 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const TextProject = (props) => {
+const TextProject = props => {
   const classes = useStyles();
   const { data } = props;
 
   return (
     <div className={classes.container}>
       <div className={classes.title}>
-        <Typography variant="h2">
-          {data.title}
-        </Typography>
+        <Typography variant="h2">{data.title}</Typography>
         <Typography variant="h6" className={classes.role}>
           {data.role}
         </Typography>

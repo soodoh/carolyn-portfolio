@@ -26,32 +26,32 @@ const rawTheme = {
   },
   typography: {
     useNextVariants: true,
-    fontFamily: '\'Karla\', sans-serif',
+    fontFamily: "'Karla', sans-serif",
     h1: {
-      fontFamily: '\'Old Standard TT\', serif',
+      fontFamily: "'Old Standard TT', serif",
     },
     h2: {
-      fontFamily: '\'Old Standard TT\', serif',
+      fontFamily: "'Old Standard TT', serif",
     },
     h3: {
-      fontFamily: '\'Old Standard TT\', serif',
+      fontFamily: "'Old Standard TT', serif",
     },
     h4: {
-      fontFamily: '\'Old Standard TT\', serif',
+      fontFamily: "'Old Standard TT', serif",
     },
     h5: {
-      fontFamily: '\'Old Standard TT\', serif',
+      fontFamily: "'Old Standard TT', serif",
     },
     h6: {
-      fontFamily: '\'Karla\', sans-serif',
+      fontFamily: "'Karla', sans-serif",
       fontSize: '1.5rem',
     },
     body1: {
-      fontFamily: '\'Old Standard TT\', serif',
+      fontFamily: "'Old Standard TT', serif",
       fontSize: '1.2rem',
     },
     body2: {
-      fontFamily: '\'Karla\', sans-serif',
+      fontFamily: "'Karla', sans-serif",
       fontSize: '1.2rem',
     },
   },

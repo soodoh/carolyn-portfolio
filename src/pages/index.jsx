@@ -9,7 +9,7 @@ import Metadata from '../components/common/Metadata';
 import logo from '../../static/logo.svg';
 import Projects from '../components/Projects/Projects';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   backgroundContainer: {
     position: 'absolute',
     top: 0,
@@ -64,7 +64,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Home = (props) => {
+const Home = props => {
   const { background } = props;
   const classes = useStyles();
 
@@ -77,24 +77,11 @@ const Home = (props) => {
 
       <section className={classes.home}>
         <div className={classes.backgroundContainer}>
-          <Img
-            fluid={background}
-            className={classes.background}
-            alt="Background Image"
-          />
+          <Img fluid={background} className={classes.background} alt="Background Image" />
         </div>
 
-        <img
-          src={logo}
-          alt="CD Logo"
-          className={classes.logo}
-        />
-        <Typography
-          variant="h3"
-          color="inherit"
-          className={classes.title}
-          gutterBottom
-        >
+        <img src={logo} alt="CD Logo" className={classes.logo} />
+        <Typography variant="h3" color="inherit" className={classes.title} gutterBottom>
           Carolyn DiLoreto
         </Typography>
 
@@ -110,14 +97,7 @@ const Home = (props) => {
             View Photography
           </Button>
 
-          <Button
-            component={Link}
-            to="/projects"
-            variant="outlined"
-            color="secondary"
-            className={classes.button}
-            aria-label="Projects"
-          >
+          <Button component={Link} to="/projects" variant="outlined" color="secondary" className={classes.button} aria-label="Projects">
             View Projects
           </Button>
         </div>
@@ -147,8 +127,6 @@ export default () => (
         }
       }
     `}
-    render={(data) => (
-      <Home background={data.contentfulAbout.background.fluid} />
-    )}
+    render={data => <Home background={data.contentfulAbout.background.fluid} />}
   />
 );

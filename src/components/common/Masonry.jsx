@@ -4,7 +4,7 @@ import { makeStyles, useTheme } from '@material-ui/styles';
 import Masonry from 'react-masonry-css';
 import { uid } from 'react-uid';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   masonryContainer: {
     display: 'flex',
     padding: theme.spacing(0, 4),
@@ -21,7 +21,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const CustomMasonry = (props) => {
+const CustomMasonry = props => {
   const { children } = props;
   const classes = useStyles();
   const theme = useTheme();
@@ -33,31 +33,22 @@ const CustomMasonry = (props) => {
   };
 
   return (
-    <Masonry
-      breakpointCols={breakpoints}
-      className={classes.masonryContainer}
-      columnClassName={classes.column}
-    >
-      {Array.isArray(children)
-        ? children.map((child) => (
+    <Masonry breakpointCols={breakpoints} className={classes.masonryContainer} columnClassName={classes.column}>
+      {Array.isArray(children) ? (
+        children.map(child => (
           <div className={classes.item} key={uid(child)}>
             {child}
           </div>
         ))
-        : (
-          <div className={classes.item}>
-            {children}
-          </div>
-        )}
+      ) : (
+        <div className={classes.item}>{children}</div>
+      )}
     </Masonry>
   );
 };
 
 CustomMasonry.propTypes = {
-  children: PropTypes.oneOfType([
-    PropTypes.element,
-    PropTypes.arrayOf(PropTypes.element),
-  ]).isRequired,
+  children: PropTypes.oneOfType([PropTypes.element, PropTypes.arrayOf(PropTypes.element)]).isRequired,
 };
 
 export default CustomMasonry;

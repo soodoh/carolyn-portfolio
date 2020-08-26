@@ -8,7 +8,7 @@ import VideoProject from '../components/Projects/VideoProject';
 import TextProject from '../components/Projects/TextProject';
 import PasswordPrompt from '../components/Projects/PasswordPrompt';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   topButton: {
     marginBottom: theme.spacing(4),
   },
@@ -24,44 +24,27 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Project = (props) => {
+const Project = props => {
   const { pageContext } = props;
   const [canView, setCanView] = useState(!pageContext.password);
   const classes = useStyles();
 
   if (!canView) {
-    return (
-      <PasswordPrompt
-        password={pageContext.password}
-        onSuccess={() => setCanView(true)}
-      />
-    );
+    return <PasswordPrompt password={pageContext.password} onSuccess={() => setCanView(true)} />;
   }
   return (
     <div className={classes.container}>
       <div className={classes.topButton}>
-        <Button
-          component={Link}
-          to="/projects"
-          variant="outlined"
-          color="secondary"
-        >
+        <Button component={Link} to="/projects" variant="outlined" color="secondary">
           <ArrowBack />
           Go Back
         </Button>
       </div>
 
-      {pageContext.link
-        ? <VideoProject data={pageContext} />
-        : <TextProject data={pageContext} />}
+      {pageContext.link ? <VideoProject data={pageContext} /> : <TextProject data={pageContext} />}
 
       <div className={classes.bottomButton}>
-        <Button
-          component={Link}
-          to="/projects"
-          variant="contained"
-          color="secondary"
-        >
+        <Button component={Link} to="/projects" variant="contained" color="secondary">
           View More Work
         </Button>
       </div>

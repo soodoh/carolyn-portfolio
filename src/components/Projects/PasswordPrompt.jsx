@@ -9,7 +9,7 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import ArrowBack from '@material-ui/icons/ArrowBack';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   modal: {
     backgroundColor: theme.palette.primary.main,
     color: theme.palette.primary.contrastText,
@@ -47,13 +47,13 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const PasswordPrompt = (props) => {
+const PasswordPrompt = props => {
   const { password, onSuccess } = props;
   const [passwordInput, setPasswordInput] = useState('');
   const [showError, setShowError] = useState(false);
   const classes = useStyles();
 
-  const submitPassword = (event) => {
+  const submitPassword = event => {
     event.preventDefault();
     if (passwordInput === password) {
       onSuccess();
@@ -63,12 +63,7 @@ const PasswordPrompt = (props) => {
   };
 
   return (
-    <Dialog
-      maxWidth="md"
-      fullWidth
-      open
-      classes={{ paper: classes.modal }}
-    >
+    <Dialog maxWidth="md" fullWidth open classes={{ paper: classes.modal }}>
       <DialogContent>
         <Link className={classes.backButton} to="/projects">
           <ArrowBack />
@@ -89,17 +84,12 @@ const PasswordPrompt = (props) => {
               type="password"
               variant="outlined"
               color="secondary"
-              onChange={(event) => setPasswordInput(event.target.value)}
+              onChange={event => setPasswordInput(event.target.value)}
               value={passwordInput}
               error={showError}
               helperText={showError && 'The password you entered is incorrect.'}
             />
-            <Button
-              type="submit"
-              className={classes.submitButton}
-              color="secondary"
-              variant="outlined"
-            >
+            <Button type="submit" className={classes.submitButton} color="secondary" variant="outlined">
               Enter
             </Button>
           </form>

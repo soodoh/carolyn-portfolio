@@ -6,7 +6,7 @@ import Metadata from '../components/common/Metadata';
 import Filters from '../components/common/Filters';
 import Gallery from '../components/Photos/Gallery';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   container: {
     position: 'relative',
     padding: theme.spacing(0, 2),
@@ -14,15 +14,13 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const getPhotos = (albums, matchAlbum) => {
-  const currentAlbum = albums.find((album) => (
-    album.album === matchAlbum
-  ));
+  const currentAlbum = albums.find(album => album.album === matchAlbum);
   const { photos } = currentAlbum;
 
   return photos;
 };
 
-const Photography = (props) => {
+const Photography = props => {
   const classes = useStyles();
   const { albums } = props;
   const [currentAlbum, setAlbum] = useState(albums[0].album);
@@ -35,11 +33,7 @@ const Photography = (props) => {
       />
 
       <div className={classes.container}>
-        <Filters
-          list={albums.map((album) => album.album)}
-          currentItem={currentAlbum}
-          onChange={(value) => setAlbum(value)}
-        />
+        <Filters list={albums.map(album => album.album)} currentItem={currentAlbum} onChange={value => setAlbum(value)} />
 
         <Gallery photos={getPhotos(albums, currentAlbum)} />
       </div>
@@ -59,9 +53,9 @@ export default () => (
   <StaticQuery
     query={graphql`
       query PhotographyQuery {
-        allContentfulPhotoAlbum(sort: {fields: [order], order: ASC}) {
+        allContentfulPhotoAlbum(sort: { fields: [order], order: ASC }) {
           edges {
-            node{
+            node {
               album
               photos {
                 title
@@ -78,12 +72,6 @@ export default () => (
         }
       }
     `}
-    render={(data) => (
-      <Photography
-        albums={data.allContentfulPhotoAlbum.edges.map((item) => (
-          item.node
-        ))}
-      />
-    )}
+    render={data => <Photography albums={data.allContentfulPhotoAlbum.edges.map(item => item.node)} />}
   />
 );
