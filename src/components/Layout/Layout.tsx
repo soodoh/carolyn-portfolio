@@ -38,7 +38,7 @@ const Layout = (props: LayoutProps): ReactElement => {
         <Header location={props.location} />
 
         <div className={classes.content}>
-          <PageTransition location={location}>{props.children}</PageTransition>
+          <PageTransition location={props.location}>{props.children}</PageTransition>
         </div>
 
         <Footer />
