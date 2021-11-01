@@ -11,13 +11,13 @@ const useStyles = makeStyles(theme => ({
 
     '& h1, h2, h3': {
       ...theme.typography.h4,
-      display: 'flex',
-      justifyContent: 'center',
+      textAlign: 'center',
     },
     '& p': {
       ...theme.typography.body2,
       marginBottom: '1.5rem',
-      textAlign: 'center',
+      textAlign: 'left',
+      textIndent: '1em',
     },
     '& img': {
       width: '100%',

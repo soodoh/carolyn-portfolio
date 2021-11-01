@@ -39,7 +39,7 @@ const ProjectPage = (props: ProjectProps): ReactElement => {
   return (
     <div className={classes.container}>
       <div className={classes.topButton}>
-        <Button component={Link} to="/projects" variant="outlined" color="secondary">
+        <Button component={Link} to="/projects" variant="outlined" color="primary">
           <ArrowBack />
           Go Back
         </Button>
@@ -48,7 +48,7 @@ const ProjectPage = (props: ProjectProps): ReactElement => {
       {pageContext.link ? <VideoProject data={pageContext} /> : <TextProject data={pageContext} />}
 
       <div className={classes.bottomButton}>
-        <Button component={Link} to="/projects" variant="contained" color="secondary">
+        <Button component={Link} to="/projects" variant="contained" color="primary">
           View More Work
         </Button>
       </div>
