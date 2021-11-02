@@ -32,7 +32,7 @@ const useStyles = makeStyles(theme => ({
   },
   closeButton: {
     gridRow: '1/2',
-    gridColumn: '2/3',
+    gridColumn: '3/4',
     display: 'flex',
     justifyContent: 'flex-end',
   },
