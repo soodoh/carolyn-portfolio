@@ -25,6 +25,8 @@ const useStyles = makeStyles({
       textIndent: '2rem',
     },
     '& img': {
+      // Images are inside <p> tags, so margin should negate the textIndent
+      marginLeft: '-2rem',
       width: '100%',
     },
   },
