@@ -76,12 +76,12 @@ const ProjectThumbnail = (props: ThumbnailProps): ReactElement => {
 
   return (
     <div className={classes.photoContainer}>
-      <div className={classes.labelContainer}>
-        <h3>{data.title}</h3>
-
-        <h4>{data.summary.summary}</h4>
-      </div>
       <Link to={`/projects/${slug}`}>
+        <div className={classes.labelContainer}>
+          <h3>{data.title}</h3>
+          <h4>{data.summary.summary}</h4>
+        </div>
+
         <Img fluid={data.coverImage.fluid} alt={data.coverImage.title} className={classes.photo} />
       </Link>
     </div>
