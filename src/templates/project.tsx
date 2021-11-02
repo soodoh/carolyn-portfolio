@@ -9,6 +9,10 @@ import PasswordPrompt from '../components/Projects/PasswordPrompt';
 import { Project } from '../types';
 
 const useStyles = makeStyles({
+  container: {
+    margin: 'auto',
+    maxWidth: '960px',
+  },
   topButton: {
     marginBottom: '3rem',
   },
@@ -31,7 +35,7 @@ const ProjectPage = (props: ProjectProps): ReactElement => {
     return <PasswordPrompt password={pageContext.password} onSuccess={() => setCanView(true)} />;
   }
   return (
-    <>
+    <div className={classes.container}>
       <div className={classes.topButton}>
         <Button component={Link} to="/projects" variant="outlined" color="primary">
           <ArrowBack />
@@ -46,7 +50,7 @@ const ProjectPage = (props: ProjectProps): ReactElement => {
           View More Work
         </Button>
       </div>
-    </>
+    </div>
   );
 };
 

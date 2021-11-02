@@ -33,9 +33,6 @@ const useStyles = makeStyles(theme => ({
   },
   pageContent: {
     gridColumn: '1 / 3',
-    [theme.breakpoints.up('sm')]: {
-      margin: '0 4rem',
-    },
   },
   role: {
     fontWeight: 'bold',

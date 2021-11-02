@@ -2,13 +2,16 @@ import React, { ReactElement } from 'react';
 import { makeStyles } from '@material-ui/styles';
 import { bodyFont, primary, headerFont } from '../Layout/theme';
 
-const useStyles = makeStyles({
+const useStyles = makeStyles(theme => ({
   container: {
     display: 'flex',
     flexDirection: 'column',
     fontFamily: bodyFont,
     color: primary,
     padding: '3rem 0',
+    [theme.breakpoints.up('sm')]: {
+      margin: '0 4rem',
+    },
 
     '& h1, h2, h3': {
       fontSize: '2.25rem',
@@ -24,13 +27,15 @@ const useStyles = makeStyles({
       textAlign: 'left',
       textIndent: '2rem',
     },
-    '& img': {
-      // Images are inside <p> tags, so margin should negate the textIndent
+    // Images are inside <p> tags, so margin should negate the textIndent
+    '& p img:first-child': {
       marginLeft: '-2rem',
+    },
+    '& img': {
       width: '100%',
     },
   },
-});
+}));
 
 interface ProjectDescriptionProps {
   markdown: string;
