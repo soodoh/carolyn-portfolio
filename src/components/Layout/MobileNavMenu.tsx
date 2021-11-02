@@ -11,7 +11,7 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import { bodyFont, secondary } from '../Layout/theme';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles({
   navMenu: {
     backgroundColor: 'transparent',
     border: `1px solid ${secondary}`,
@@ -19,9 +19,6 @@ const useStyles = makeStyles(theme => ({
 
     '&:focus': {
       backgroundColor: 'transparent',
-    },
-    [theme.breakpoints.up('sm')]: {
-      display: 'none',
     },
   },
   list: {
@@ -36,7 +33,7 @@ const useStyles = makeStyles(theme => ({
     justifyContent: 'flex-start',
     padding: '0.5rem',
   },
-}));
+});
 
 interface NavigationProps {
   location: { pathname: string };
@@ -47,7 +44,7 @@ interface NavigationProps {
   }[];
 }
 
-const MiniNavigation = (props: NavigationProps): ReactElement => {
+const MobileNavMenu = (props: NavigationProps): ReactElement => {
   const { location, links } = props;
   const classes = useStyles();
   const [isActive, setActive] = useState(false);
@@ -87,4 +84,4 @@ const MiniNavigation = (props: NavigationProps): ReactElement => {
   );
 };
 
-export default MiniNavigation;
+export default MobileNavMenu;

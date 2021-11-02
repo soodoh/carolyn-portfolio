@@ -5,18 +5,21 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/styles';
 import logo from '../../../static/logo.svg';
-import MiniNavigation from './MiniNavigation';
-import { white, secondary } from '../Layout/theme';
+import MobileNavMenu from './MobileNavMenu';
+import { white, secondary, headerFont } from '../Layout/theme';
 
 const useStyles = makeStyles(theme => ({
   brand: {
     display: 'flex',
     flex: 1,
-    alignItems: 'center',
+    alignItems: 'flex-end',
     color: white,
     textDecoration: 'none',
     opacity: 1,
     transition: `opacity 250ms ease-in-out`,
+    [theme.breakpoints.down('xs')]: {
+      justifyContent: 'center',
+    },
   },
   hideBrand: {
     opacity: 0,
@@ -33,22 +36,34 @@ const useStyles = makeStyles(theme => ({
   },
   name: {
     fontSize: '2rem',
-    lineHeight: '1rem',
+    lineHeight: '2rem',
     paddingLeft: '2rem',
-
-    [theme.breakpoints.down('sm')]: {
-      display: 'none',
+    fontFamily: headerFont,
+    fontWeight: 'normal',
+    margin: 0,
+    [theme.breakpoints.down('xs')]: {
+      fontSize: '1.5rem',
+      lineHeight: '1.5rem',
+      paddingLeft: '0',
     },
   },
   logo: {
     height: '3rem',
+    [theme.breakpoints.down('xs')]: {
+      height: '2rem',
+    },
+  },
+  mobileNav: {
+    [theme.breakpoints.up('md')]: {
+      display: 'none',
+    },
   },
   link: {
     color: white,
     textDecoration: 'none',
     paddingLeft: '2rem',
 
-    [theme.breakpoints.down('xs')]: {
+    [theme.breakpoints.down('sm')]: {
       display: 'none',
     },
   },
@@ -66,7 +81,7 @@ interface HeaderProps {
 const Header = (props: HeaderProps): ReactElement => {
   const classes = useStyles();
   const { resume, location } = props;
-  const initialTransparency = location.pathname === '/' || /about/gi.test(location.pathname);
+  const initialTransparency = location.pathname === '/';
   const [isTransparent, setTransparent] = useState(initialTransparency);
   const [showBrand, setBrand] = useState(location.pathname !== '/');
 
@@ -110,14 +125,10 @@ const Header = (props: HeaderProps): ReactElement => {
   return (
     <AppBar position={location.pathname === '/' ? 'fixed' : 'sticky'} className={isTransparent ? classes.transparent : classes.appBar}>
       <Toolbar>
-        <div className={`${classes.brand} ${!showBrand && classes.hideBrand}`}>
-          <Link to="/">
-            <img className={classes.logo} src={logo} alt="CD Logo" />
-          </Link>
-          <Typography variant="h2" color="inherit" className={classes.name}>
-            Carolyn DiLoreto
-          </Typography>
-        </div>
+        <Link to="/" className={`${classes.brand} ${!showBrand && classes.hideBrand}`}>
+          <img className={classes.logo} src={logo} alt="CD Logo" />
+          <h2 className={classes.name}>Carolyn DiLoreto</h2>
+        </Link>
 
         {links.map(link => {
           if (link.external) {
@@ -138,7 +149,9 @@ const Header = (props: HeaderProps): ReactElement => {
           );
         })}
 
-        <MiniNavigation location={location} links={links} />
+        <div className={classes.mobileNav}>
+          <MobileNavMenu location={location} links={links} />
+        </div>
       </Toolbar>
     </AppBar>
   );
