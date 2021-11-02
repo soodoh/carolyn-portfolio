@@ -2,7 +2,7 @@ import React, { ReactElement, ReactChildren } from 'react';
 import { Helmet } from 'react-helmet';
 import { makeStyles, ThemeProvider } from '@material-ui/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import theme from './theme';
+import theme, { padding } from './theme';
 import Header from './Header';
 import Footer from './Footer';
 import PageTransition from './PageTransition';
@@ -12,10 +12,14 @@ const useStyles = makeStyles({
     minHeight: '100vh',
     display: 'flex',
     flexDirection: 'column',
-    alignItems: 'stretch',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   content: {
     flexGrow: 1,
+    padding,
+    width: '100%',
+    maxWidth: '1500px',
   },
 });
 

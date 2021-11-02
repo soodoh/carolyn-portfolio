@@ -2,13 +2,14 @@ import React, { ReactElement } from 'react';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/styles';
 import SocialMedia from '../common/SocialMedia';
+import { primary } from '../Layout/theme';
 
 const useStyles = makeStyles(theme => ({
   footer: {
     flexShrink: 0,
     width: '100%',
     height: 'auto',
-    padding: theme.spacing(1, 0),
+    padding: '1rem 0',
   },
   credits: {
     display: 'flex',
@@ -22,8 +23,8 @@ const useStyles = makeStyles(theme => ({
     flex: 1,
     justifyContent: 'space-between',
     alignItems: 'center',
-    padding: theme.spacing(0, 2),
-    color: theme.palette.gray[700],
+    padding: '0 1.5rem',
+    color: primary,
 
     [theme.breakpoints.down('sm')]: {
       flexDirection: 'column',

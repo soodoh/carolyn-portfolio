@@ -10,10 +10,10 @@ const useStyles = makeStyles(theme => ({
     display: 'grid',
     gridTemplateColumns: '50% 50%',
     gridTemplateRows: 'repeat(auto, 3)',
-    gridGap: '1em',
+    gridGap: '1rem',
   },
   coverImage: {
-    marginBottom: theme.spacing(2),
+    marginBottom: '1rem',
 
     [theme.breakpoints.down('sm')]: {
       gridRow: '1 / 2',
@@ -24,7 +24,7 @@ const useStyles = makeStyles(theme => ({
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
-    marginBottom: theme.spacing(2),
+    marginBottom: '1rem',
 
     [theme.breakpoints.down('sm')]: {
       gridRow: '2 / 3',
@@ -34,14 +34,8 @@ const useStyles = makeStyles(theme => ({
   pageContent: {
     gridColumn: '1 / 3',
     [theme.breakpoints.up('sm')]: {
-      margin: '0 10vw',
+      margin: '0 4rem',
     },
-  },
-  backButton: {
-    marginBottom: theme.spacing(2),
-  },
-  backArrow: {
-    marginRight: theme.spacing(1),
   },
   role: {
     fontWeight: 'bold',

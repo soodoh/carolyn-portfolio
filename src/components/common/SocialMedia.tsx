@@ -1,8 +1,9 @@
 import React, { ReactElement } from 'react';
 import { StaticQuery, graphql } from 'gatsby';
 import SVG from 'react-inlinesvg';
-import { makeStyles, useTheme } from '@material-ui/styles';
+import { makeStyles } from '@material-ui/styles';
 import IconButton from '@material-ui/core/IconButton';
+import { primary } from '../Layout/theme';
 
 const useStyles = makeStyles({
   container: {
@@ -19,22 +20,20 @@ interface SocialMediaLink {
 }
 
 interface SocialMediaProps {
-  color: string;
+  color?: string;
   icons: SocialMediaLink[];
 }
 
 const SocialMedia = (props: SocialMediaProps): ReactElement => {
-  const { color, icons } = props;
+  const { color = primary, icons } = props;
   const classes = useStyles();
-  const theme = useTheme();
-  const colorCode = color ? theme.palette[color].main : theme.palette.gray[700];
 
   return (
     <div className={classes.container}>
       {icons.map(icon => (
-        <a key={icon.id} href={icon.link} style={{ color: 'inherit' }}>
-          <IconButton color={color || 'inherit'} aria-label={icon.title}>
-            <SVG src={icon.icon.file.url} style={{ fill: colorCode }} />
+        <a key={icon.id} href={icon.link} style={{ color }}>
+          <IconButton style={{ color }} aria-label={icon.title}>
+            <SVG src={icon.icon.file.url} style={{ fill: color }} />
           </IconButton>
         </a>
       ))}
@@ -42,7 +41,7 @@ const SocialMedia = (props: SocialMediaProps): ReactElement => {
   );
 };
 
-const SocialMediaWithData = (props: { color: string }): ReactElement => {
+const SocialMediaWithData = (props: { color?: string }): ReactElement => {
   return (
     <StaticQuery
       query={graphql`

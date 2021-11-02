@@ -2,12 +2,13 @@ import React, { ReactElement } from 'react';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/styles';
 import Metadata from '../components/common/Metadata';
+import { padding } from '../components/Layout/theme';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles({
   container: {
-    padding: theme.spacing(2),
+    padding,
   },
-}));
+});
 const NotFound = (): ReactElement => {
   const classes = useStyles();
 

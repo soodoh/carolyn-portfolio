@@ -8,21 +8,15 @@ import TextProject from '../components/Projects/TextProject';
 import PasswordPrompt from '../components/Projects/PasswordPrompt';
 import { Project } from '../types';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles({
   topButton: {
-    marginBottom: theme.spacing(4),
-  },
-  container: {
-    padding: theme.spacing(6, 2),
-    [theme.breakpoints.up('xs')]: {
-      padding: `${theme.spacing(6)}px 10vw`,
-    },
+    marginBottom: '3rem',
   },
   bottomButton: {
     display: 'flex',
     justifyContent: 'center',
   },
-}));
+});
 
 interface ProjectProps {
   pageContext: Project;
@@ -37,7 +31,7 @@ const ProjectPage = (props: ProjectProps): ReactElement => {
     return <PasswordPrompt password={pageContext.password} onSuccess={() => setCanView(true)} />;
   }
   return (
-    <div className={classes.container}>
+    <>
       <div className={classes.topButton}>
         <Button component={Link} to="/projects" variant="outlined" color="primary">
           <ArrowBack />
@@ -52,7 +46,7 @@ const ProjectPage = (props: ProjectProps): ReactElement => {
           View More Work
         </Button>
       </div>
-    </div>
+    </>
   );
 };
 

@@ -7,6 +7,7 @@ import { makeStyles } from '@material-ui/styles';
 import Metadata from '../components/common/Metadata';
 import logo from '../../static/logo.svg';
 import Projects from '../components/Projects/Projects';
+import { secondary, primary, white, black } from '../components/Layout/theme';
 
 const useStyles = makeStyles(theme => ({
   backgroundContainer: {
@@ -22,7 +23,7 @@ const useStyles = makeStyles(theme => ({
   },
   home: {
     height: '100vh',
-    color: theme.palette.primary.contrastText,
+    color: white,
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
@@ -38,13 +39,12 @@ const useStyles = makeStyles(theme => ({
     width: '28rem',
   },
   button: {
-    border: `1px solid ${theme.palette.secondary.main}`,
-    width: '12em',
+    border: `1px solid ${secondary}`,
+    width: '10rem',
 
     '&:hover': {
-      transition: theme.transitions.easing,
-      color: theme.palette.common.black,
-      backgroundColor: theme.palette.secondary.main,
+      color: black,
+      backgroundColor: secondary,
     },
   },
   logo: {
@@ -57,7 +57,7 @@ const useStyles = makeStyles(theme => ({
   },
   [theme.breakpoints.down('sm')]: {
     logo: {
-      height: '5em',
+      height: '6rem',
     },
     title: {
       fontSize: '2rem',
@@ -67,7 +67,7 @@ const useStyles = makeStyles(theme => ({
       alignItems: 'center',
     },
     button: {
-      marginBottom: '1em',
+      marginBottom: '1rem',
     },
   },
 }));

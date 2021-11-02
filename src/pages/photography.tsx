@@ -5,13 +5,14 @@ import Metadata from '../components/common/Metadata';
 import Filters from '../components/common/Filters';
 import Gallery from '../components/Photos/Gallery';
 import { PhotoAlbum } from '../types';
+import { padding } from '../components/Layout/theme';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles({
   container: {
     position: 'relative',
-    padding: theme.spacing(0, 2),
+    marginTop: `-${padding}`,
   },
-}));
+});
 
 const getPhotos = (albums: PhotoAlbum[], matchAlbum: string) => {
   const currentAlbum = albums.find(album => album.album === matchAlbum);

@@ -5,9 +5,9 @@ import Typography from '@material-ui/core/Typography';
 import ProjectDescription from './ProjectDescription';
 import { Project } from '../../types';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles({
   title: {
-    marginBottom: theme.spacing(2),
+    marginBottom: '2rem',
   },
   role: {
     fontWeight: 'bold',
@@ -15,19 +15,15 @@ const useStyles = makeStyles(theme => ({
   videoContainer: {
     position: 'relative',
     paddingTop: '56.25%', // Player ratio: 100 / (1280 / 720)
-    marginBottom: theme.spacing(5),
+    marginBottom: '4rem',
   },
   video: {
     position: 'absolute',
     top: 0,
     left: 0,
   },
-  pageContent: {
-    [theme.breakpoints.up('sm')]: {
-      margin: '0 10vw',
-    },
-  },
-}));
+  pageContent: {},
+});
 
 interface VideoProjectProps {
   data: Project;

@@ -1,5 +1,14 @@
 import { createMuiTheme } from '@material-ui/core/styles';
 
+export const bodyFont = "'Karla', sans-serif";
+export const headerFont = "'Old Standard TT', serif";
+export const white = '#fff';
+export const black = '#000';
+export const primary = '#494F5C';
+export const secondary = '#CEC0A8';
+export const error = '#FD9F92';
+export const padding = '2rem';
+
 const rawTheme = {
   palette: {
     background: {

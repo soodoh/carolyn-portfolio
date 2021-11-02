@@ -6,34 +6,35 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/styles';
 import logo from '../../../static/logo.svg';
 import MiniNavigation from './MiniNavigation';
+import { white, secondary } from '../Layout/theme';
 
 const useStyles = makeStyles(theme => ({
   brand: {
     display: 'flex',
     flex: 1,
     alignItems: 'center',
-    color: theme.palette.primary.contrastText,
+    color: white,
     textDecoration: 'none',
     opacity: 1,
-    transition: `opacity ${theme.transitions.duration.standard}ms ${theme.transitions.easing.easeInOut}`,
+    transition: `opacity 250ms ease-in-out`,
   },
   hideBrand: {
     opacity: 0,
-    transition: `opacity ${theme.transitions.duration.standard}ms ${theme.transitions.easing.easeInOut}`,
+    transition: `opacity 250ms ease-in-out`,
   },
   appBar: {
-    transition: `background-color ${theme.transitions.duration.standard}ms ${theme.transitions.easing.easeInOut}`,
+    transition: `background-color 250ms ease-in-out`,
     boxShadow: 'none',
   },
   transparent: {
-    transition: `background-color ${theme.transitions.duration.standard}ms ${theme.transitions.easing.easeInOut}`,
+    transition: `background-color 250ms ease-in-out`,
     backgroundColor: 'transparent',
     boxShadow: 'none',
   },
   name: {
     fontSize: '2rem',
     lineHeight: '1rem',
-    paddingLeft: theme.spacing(4),
+    paddingLeft: '2rem',
 
     [theme.breakpoints.down('sm')]: {
       display: 'none',
@@ -43,16 +44,16 @@ const useStyles = makeStyles(theme => ({
     height: '3rem',
   },
   link: {
-    color: theme.palette.primary.contrastText,
+    color: white,
     textDecoration: 'none',
-    paddingLeft: theme.spacing(4),
+    paddingLeft: '2rem',
 
     [theme.breakpoints.down('xs')]: {
       display: 'none',
     },
   },
   active: {
-    color: theme.palette.secondary.main,
+    color: secondary,
     fontWeight: 'bold',
   },
 }));
@@ -65,7 +66,8 @@ interface HeaderProps {
 const Header = (props: HeaderProps): ReactElement => {
   const classes = useStyles();
   const { resume, location } = props;
-  const [isTransparent, setTransparent] = useState(location.pathname === '/' || location.pathname.match(/about/gi));
+  const initialTransparency = location.pathname === '/' || /about/gi.test(location.pathname);
+  const [isTransparent, setTransparent] = useState(initialTransparency);
   const [showBrand, setBrand] = useState(location.pathname !== '/');
 
   const handleScroll = () => {
@@ -83,7 +85,7 @@ const Header = (props: HeaderProps): ReactElement => {
 
   useEffect(() => {
     // Change style for different routes
-    setTransparent(location.pathname === '/' || location.pathname.match(/about/gi));
+    setTransparent(initialTransparency);
     setBrand(location.pathname !== '/');
 
     // Add scroll event listeners

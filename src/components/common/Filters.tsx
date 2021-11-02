@@ -3,14 +3,15 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/styles';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
+import { white, secondary } from '../Layout/theme';
 
 const useStyles = makeStyles(theme => ({
   container: {
     position: 'sticky',
     zIndex: theme.zIndex.appBar + 1,
     width: '100%',
-    height: theme.spacing(5),
-    backgroundColor: theme.palette.common.white,
+    height: '3rem',
+    backgroundColor: white,
     top: theme.mixins.toolbar.minHeight,
 
     // Copied from the height of theme's Toolbar
@@ -31,7 +32,7 @@ const useStyles = makeStyles(theme => ({
     },
   },
   filter: {
-    padding: `10px ${theme.spacing(4)}px`,
+    padding: `1rem 2rem`,
     cursor: 'pointer',
   },
   miniFilter: {
@@ -40,9 +41,9 @@ const useStyles = makeStyles(theme => ({
     },
   },
   selected: {
-    padding: `10px ${theme.spacing(4)}px`,
+    padding: `1rem 2rem`,
     marginTop: '-5px',
-    borderTop: `5px solid ${theme.palette.secondary.main}`,
+    borderTop: `5px solid ${secondary}`,
   },
 }));
 

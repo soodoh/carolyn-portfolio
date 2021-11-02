@@ -9,11 +9,12 @@ import Drawer from '@material-ui/core/Drawer';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
+import { bodyFont, secondary } from '../Layout/theme';
 
 const useStyles = makeStyles(theme => ({
   navMenu: {
     backgroundColor: 'transparent',
-    border: `1px solid ${theme.palette.secondary.main}`,
+    border: `1px solid ${secondary}`,
     borderRadius: '2px',
 
     '&:focus': {
@@ -24,16 +25,16 @@ const useStyles = makeStyles(theme => ({
     },
   },
   list: {
-    width: theme.spacing(30),
+    width: '15rem',
   },
   listText: {
-    fontFamily: theme.typography.fontFamily,
+    fontFamily: bodyFont,
     padding: '1rem 0',
   },
   drawerTop: {
     display: 'flex',
     justifyContent: 'flex-start',
-    padding: theme.spacing(0.5),
+    padding: '0.5rem',
   },
 }));
 

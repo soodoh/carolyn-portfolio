@@ -2,39 +2,53 @@ import React, { ReactElement } from 'react';
 import { StaticQuery, graphql } from 'gatsby';
 import Img, { GatsbyImageFluidProps } from 'gatsby-image';
 import { makeStyles } from '@material-ui/styles';
-import Typography from '@material-ui/core/Typography';
 import Metadata from '../components/common/Metadata';
 import SocialMedia from '../components/common/SocialMedia';
 import Background from '../components/common/Background';
 import { Markdown } from '../types';
+import { headerFont, white, bodyFont, secondary } from '../components/Layout/theme';
 
 const useStyles = makeStyles(theme => ({
   container: {
-    paddingTop: theme.spacing(2),
+    paddingTop: '1.5rem',
     display: 'grid',
-    gridTemplateColumns: '25% 75%',
+    gridTemplateColumns: '25% 1fr',
+    gridGap: '3rem',
 
     [theme.breakpoints.down('sm')]: {
-      gridTemplateColumns: '40% 60%',
+      gridTemplateColumns: '40% 1fr',
     },
     [theme.breakpoints.down('xs')]: {
       gridTemplateColumns: '100%',
     },
   },
   content: {
-    ...theme.typography.body1,
-    padding: theme.spacing(2),
-    color: theme.palette.primary.contrastText,
+    fontSize: '1.25rem',
+    fontFamily: headerFont,
+    color: white,
     marginBottom: '1.5rem',
 
     '& a': {
-      color: theme.palette.primary.contrastText,
+      color: white,
     },
+    '& p': {
+      margin: '0 0 2rem 0',
+    },
+  },
+  contact: {
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    fontFamily: bodyFont,
+    color: secondary,
+    fontSize: '1.5rem',
   },
   profile: {
     boxSizing: 'border-box',
-    border: `${theme.spacing(2)}px solid ${theme.palette.secondary.main}`,
+    border: `1.5rem solid ${secondary}`,
     width: '100%',
+    marginBottom: '1rem',
   },
 }));
 
@@ -64,21 +78,11 @@ const About = (props: AboutProps): ReactElement => {
 
         <div className={classes.content}>
           <Img fluid={data.profilePicture.fluid} alt="Headshot" className={classes.profile} />
-          <Typography variant="body2" color="secondary" align="center">
-            {data.location}
-          </Typography>
-          <Typography variant="body2" color="secondary" align="center">
-            {data.email}
-          </Typography>
-          {/* <Typography
-              variant="body2"
-              color="secondary"
-              align="center"
-            >
-              {data.phoneNumber}
-            </Typography> */}
-
-          <SocialMedia color="secondary" />
+          <div className={classes.contact}>
+            <span>{data.location}</span>
+            <span>{data.email}</span>
+            <SocialMedia color={secondary} />
+          </div>
         </div>
 
         <div

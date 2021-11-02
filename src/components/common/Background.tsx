@@ -18,7 +18,7 @@ const useStyles = makeStyles({
 });
 
 interface BackgroundProps {
-  sizes: FluidObject;
+  sizes: FluidObject | FluidObject[];
 }
 
 const Background = (props: BackgroundProps): ReactElement => {

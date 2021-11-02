@@ -4,12 +4,13 @@ import { makeStyles } from '@material-ui/styles';
 import Filters from '../common/Filters';
 import ProjectsContainer from './ProjectsContainer';
 import { Project } from '../../types';
+import { padding } from '../Layout/theme';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles({
   container: {
-    padding: theme.spacing(0, 2),
+    marginTop: `-${padding}`,
   },
-}));
+});
 
 const getCategories = (projects: Project[]) => {
   const categories = projects.reduce((acc, project) => {

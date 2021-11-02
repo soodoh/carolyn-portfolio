@@ -1,29 +1,34 @@
 import React, { ReactElement } from 'react';
 import { makeStyles } from '@material-ui/styles';
+import { bodyFont, primary, headerFont } from '../Layout/theme';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles({
   container: {
     display: 'flex',
     flexDirection: 'column',
-    fontFamily: theme.typography.fontFamily,
-    color: theme.palette.primary.main,
-    padding: theme.spacing(6, 0),
+    fontFamily: bodyFont,
+    color: primary,
+    padding: '3rem 0',
 
     '& h1, h2, h3': {
-      ...theme.typography.h4,
+      fontSize: '2.25rem',
+      fontWeight: 'normal',
+      margin: '1rem',
+      fontFamily: headerFont,
       textAlign: 'center',
     },
     '& p': {
-      ...theme.typography.body2,
+      fontSize: '1.25rem',
+      fontFamily: bodyFont,
       marginBottom: '1.5rem',
       textAlign: 'left',
-      textIndent: '1em',
+      textIndent: '2rem',
     },
     '& img': {
       width: '100%',
     },
   },
-}));
+});
 
 interface ProjectDescriptionProps {
   markdown: string;

@@ -50,12 +50,14 @@ const useStyles = makeStyles(theme => ({
       color: theme.palette.primary.main,
     },
     '& h3': {
-      fontSize: '1.5em',
-      lineHeight: '1em',
-      marginBottom: '0.3em',
+      fontSize: '1.75rem',
+      lineHeight: '1.75rem',
+      marginBottom: '0.5rem',
+      fontWeight: 'normal',
     },
     '& h4': {
-      fontSize: '1em',
+      fontSize: '1rem',
+      lineHeight: '1rem',
       fontWeight: 'bolder',
     },
   },
