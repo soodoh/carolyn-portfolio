@@ -39,6 +39,7 @@ const useStyles = makeStyles(theme => ({
   },
   button: {
     border: `1px solid ${theme.palette.secondary.main}`,
+    width: '12em',
 
     '&:hover': {
       transition: theme.transitions.easing,
@@ -47,11 +48,12 @@ const useStyles = makeStyles(theme => ({
     },
   },
   logo: {
-    height: '10rem',
-    marginBottom: theme.spacing(2),
+    height: '8rem',
+    marginBottom: '2rem',
   },
   title: {
     fontSize: '3.5rem',
+    marginBottom: '2rem',
   },
   [theme.breakpoints.down('sm')]: {
     logo: {
@@ -61,7 +63,11 @@ const useStyles = makeStyles(theme => ({
       fontSize: '2rem',
     },
     buttonGroup: {
-      width: '85vw',
+      flexDirection: 'column',
+      alignItems: 'center',
+    },
+    button: {
+      marginBottom: '1em',
     },
   },
 }));
