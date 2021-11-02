@@ -7,11 +7,12 @@ import DialogContent from '@material-ui/core/DialogContent';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import ArrowBack from '@material-ui/icons/ArrowBack';
+import { white, primary, secondary } from '../Layout/theme';
 
 const useStyles = makeStyles(theme => ({
   modal: {
-    backgroundColor: theme.palette.primary.main,
-    color: theme.palette.primary.contrastText,
+    backgroundColor: primary,
+    color: white,
   },
   content: {
     display: 'flex',
@@ -32,12 +33,12 @@ const useStyles = makeStyles(theme => ({
     },
   },
   password: {
-    backgroundColor: theme.palette.secondary.contrastText,
+    backgroundColor: white,
   },
   backButton: {
     display: 'flex',
     justifyContent: 'space-between',
-    color: theme.palette.secondary.main,
+    color: secondary,
     width: '8rem',
   },
   submitButton: {
