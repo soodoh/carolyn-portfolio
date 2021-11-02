@@ -28,8 +28,7 @@ const CustomMasonry = (props: MasonryProps): ReactElement => {
   const classes = useStyles();
   const theme = useTheme();
   const breakpoints = {
-    default: 4,
-    [theme.breakpoints.values.xl]: 3,
+    default: 3,
     [theme.breakpoints.values.md]: 2,
     [theme.breakpoints.values.sm]: 1,
   };
