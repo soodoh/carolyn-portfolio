@@ -1,4 +1,4 @@
-import React, { ReactElement, useState, useEffect } from 'react';
+import React, { ReactElement, useState, useEffect, useRef } from 'react';
 import { makeStyles } from '@material-ui/styles';
 import Backdrop from '@material-ui/core/Backdrop';
 import IconButton from '@material-ui/core/IconButton';
@@ -14,27 +14,41 @@ const useStyles = makeStyles(theme => ({
   container: {
     width: '100%',
     height: '100%',
+    display: 'grid',
+    gridTemplateRows: 'auto 1fr auto',
+    gridTemplateColumns: 'auto 1fr auto',
+  },
+  prevButton: {
+    gridRow: '2/3',
+    gridColumn: '1/2',
     display: 'flex',
     alignItems: 'center',
   },
-  topRow: {
+  nextButton: {
+    gridRow: '2/3',
+    gridColumn: '3/4',
     display: 'flex',
-    width: '100%',
     alignItems: 'center',
+  },
+  closeButton: {
+    gridRow: '1/2',
+    gridColumn: '2/3',
+    display: 'flex',
     justifyContent: 'flex-end',
   },
-  bottomRow: {
-    display: 'flex',
-    width: '100%',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
   imageContainer: {
-    flex: 1,
-    margin: '1rem 0',
+    gridRow: '2/3',
+    gridColumn: '2/3',
     display: 'flex',
-    flexDirection: 'column',
+    justifyContent: 'center',
     alignItems: 'center',
+    overflow: 'hidden', // Not needed if we calculate dimensions right.
+  },
+  imageText: {
+    gridRow: '3/4',
+    gridColumn: '2/3',
+    display: 'flex',
+    justifyContent: 'space-between',
   },
 }));
 
@@ -50,8 +64,8 @@ const ImageModal = (props: ModalProps): ReactElement => {
   const { onChange, onClose, images, photoIndex } = props;
   const classes = useStyles();
   const currentPhoto = images[photoIndex];
+  const imageContainerRef = useRef<HTMLDivElement>();
 
-  const [windowAspectRatio, setWindowRatio] = useState(window.innerWidth / window.innerHeight);
   const handleKeys = (event: KeyboardEvent) => {
     if (event.keyCode === 27) {
       // Escape
@@ -64,63 +78,75 @@ const ImageModal = (props: ModalProps): ReactElement => {
       onChange(photoIndex + 1);
     }
   };
-  const handleResize = () => {
-    setWindowRatio(window.innerWidth / window.innerHeight);
-  };
   useEffect(() => {
     window.addEventListener('keydown', handleKeys);
-    window.addEventListener('resize', handleResize);
     return () => {
       window.removeEventListener('keydown', handleKeys);
-      window.removeEventListener('resize', handleResize);
     };
   }, [photoIndex]);
 
+  // Below is some annoying math to set the exact image dimensions to fill the screen.
+  // Depending on aspect ratio, we know the image is either limited by X or Y (width or height)
   const imageAspectRatio = currentPhoto?.fullSize?.aspectRatio;
-
-  // Both viewport and image are landscape OR image is portrait and wider than viewport
-  const useFullWidth = windowAspectRatio < imageAspectRatio && ((windowAspectRatio > 1 && imageAspectRatio > 1) || imageAspectRatio < 1);
-  const width = useFullWidth ? '100%' : `calc(90vh * ${imageAspectRatio})`;
+  const maxWidth = imageContainerRef.current?.offsetWidth;
+  const maxHeight = imageContainerRef.current?.offsetHeight;
+  const calculatedWidth = maxHeight * imageAspectRatio;
+  const calculatedHeight = maxWidth / imageAspectRatio;
+  const maximizeWidth = { width: maxWidth, height: calculatedHeight };
+  const maximizeHeight = { width: calculatedWidth, height: maxHeight };
+  // None of this works until we know the aspect ratio
+  let imageStyles = {};
+  if (imageAspectRatio) {
+    imageStyles = calculatedWidth > maxWidth ? maximizeWidth : maximizeHeight;
+  }
 
   return (
     <Backdrop className={classes.backdrop} open={!!currentPhoto} onClick={onClose}>
       <div className={classes.container}>
-        <IconButton
-          color="secondary"
-          disabled={photoIndex < 1}
-          onClick={event => {
-            event.stopPropagation();
-            onChange(photoIndex - 1);
-          }}
-        >
-          <ChevronLeft />
-        </IconButton>
-        <div className={classes.imageContainer}>
-          <div className={classes.topRow} style={{ width }}>
-            <IconButton color="secondary" onClick={onClose}>
-              <Close />
-            </IconButton>
-          </div>
-          <div style={{ width }} onClick={event => event.stopPropagation()}>
+        <div className={classes.prevButton}>
+          <IconButton
+            color="secondary"
+            disabled={photoIndex < 1}
+            onClick={event => {
+              event.stopPropagation();
+              onChange(photoIndex - 1);
+            }}
+          >
+            <ChevronLeft />
+          </IconButton>
+        </div>
+
+        <div className={classes.closeButton}>
+          <IconButton color="secondary" onClick={onClose}>
+            <Close />
+          </IconButton>
+        </div>
+
+        <div className={classes.imageContainer} ref={imageContainerRef}>
+          <div style={imageStyles} onClick={event => event.stopPropagation()}>
             {currentPhoto && <Img fluid={currentPhoto?.fullSize} />}
           </div>
-          <div className={classes.bottomRow} style={{ width }}>
-            <Typography variant="subtitle1" color="secondary">
-              {currentPhoto?.description}
-            </Typography>
-            <Typography variant="subtitle1" color="secondary">{`${photoIndex + 1} / ${images.length}`}</Typography>
-          </div>
         </div>
-        <IconButton
-          color="secondary"
-          disabled={photoIndex >= images.length - 1}
-          onClick={event => {
-            event.stopPropagation();
-            onChange(photoIndex + 1);
-          }}
-        >
-          <ChevronRight />
-        </IconButton>
+
+        <div className={classes.imageText}>
+          <Typography variant="subtitle1" color="secondary">
+            {currentPhoto?.description || ''}
+          </Typography>
+          <Typography variant="subtitle1" color="secondary">{`${photoIndex + 1} / ${images.length}`}</Typography>
+        </div>
+
+        <div className={classes.nextButton}>
+          <IconButton
+            color="secondary"
+            disabled={photoIndex >= images.length - 1}
+            onClick={event => {
+              event.stopPropagation();
+              onChange(photoIndex + 1);
+            }}
+          >
+            <ChevronRight />
+          </IconButton>
+        </div>
       </div>
     </Backdrop>
   );

@@ -107,7 +107,7 @@ const Home = (props: HomeProps): ReactElement => {
       </section>
 
       <section className={classes.projectsContainer}>
-        <Projects isComponent />
+        <Projects />
       </section>
     </>
   );

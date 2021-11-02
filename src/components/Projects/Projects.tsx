@@ -1,7 +1,6 @@
 import React, { ReactElement, useState } from 'react';
 import { StaticQuery, graphql } from 'gatsby';
 import { makeStyles } from '@material-ui/styles';
-import Metadata from '../common/Metadata';
 import Filters from '../common/Filters';
 import ProjectsContainer from './ProjectsContainer';
 import { Project } from '../../types';
@@ -30,31 +29,21 @@ const filteredProjects = (projects: Project[], filter: string) => {
 
 interface ProjectsProps {
   projects: Project[];
-  isComponent?: boolean;
 }
 
 const Projects = (props: ProjectsProps): ReactElement => {
   const classes = useStyles();
   const [filter, setFilter] = useState('All');
-  const { projects, isComponent } = props;
+  const { projects } = props;
   const filterList = getCategories(projects);
   const projectList = filteredProjects(projects, filter);
 
   return (
-    <>
-      {!isComponent && (
-        <Metadata
-          title="CD Projects"
-          description="View Carolyn DiLoreto's past and current projects. From film editing to UX Engineering there are many skills showcased in this section of the portfolio."
-        />
-      )}
+    <section className={classes.container}>
+      <Filters list={filterList} currentItem={filter} onChange={value => setFilter(value)} />
 
-      <section className={classes.container}>
-        <Filters list={filterList} currentItem={filter} onChange={value => setFilter(value)} />
-
-        <ProjectsContainer data={projectList} />
-      </section>
-    </>
+      <ProjectsContainer data={projectList} />
+    </section>
   );
 };
 
