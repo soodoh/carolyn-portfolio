@@ -47,13 +47,16 @@ const useStyles = makeStyles(theme => ({
     },
   },
   logo: {
-    height: '15rem',
+    height: '10rem',
     marginBottom: theme.spacing(2),
   },
   title: {
     fontSize: '3.5rem',
   },
   [theme.breakpoints.down('sm')]: {
+    logo: {
+      height: '5em',
+    },
     title: {
       fontSize: '2rem',
     },
