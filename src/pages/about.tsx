@@ -42,7 +42,7 @@ const useStyles = makeStyles(theme => ({
     alignItems: 'center',
     fontFamily: bodyFont,
     color: secondary,
-    fontSize: '1.5rem',
+    fontSize: '1rem',
   },
   profile: {
     boxSizing: 'border-box',
