@@ -28,6 +28,8 @@ const useStyles = makeStyles(theme => ({
   appBar: {
     transition: `background-color 250ms ease-in-out`,
     boxShadow: 'none',
+    left: 0,
+    right: 0,
   },
   transparent: {
     transition: `background-color 250ms ease-in-out`,
