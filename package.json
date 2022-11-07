@@ -8,17 +8,14 @@
   },
   "dependencies": {
     "contentful": "^9.2.5",
-    "next": "^12.3.1",
     "plaiceholder": "^2.5.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
   "devDependencies": {
-    "@svgr/webpack": "^6.5.0",
     "@types/node": "^18.11.3",
     "@types/react": "^18.0.21",
     "eslint": "^8.26.0",
-    "eslint-config-next": "^12.3.1",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-prettier": "^4.2.1",
