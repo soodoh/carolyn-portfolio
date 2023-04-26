@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 	import Header from '$lib/Header.svelte';
 	import Footer from '$lib/Footer.svelte';
 	export let data;
@@ -16,7 +16,7 @@
 
 <Header />
 <main><slot /></main>
-<Footer />
+<Footer socialMedia={data.socialMedia} />
 
 <style>
 	:root {
