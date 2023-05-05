@@ -14,7 +14,7 @@
 	/>
 </svelte:head>
 
-<Header />
+<Header resumeLink={data.resumeLink} />
 <main><slot /></main>
 <Footer socialMedia={data.socialMedia} />
 

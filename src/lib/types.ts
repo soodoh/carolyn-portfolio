@@ -15,4 +15,5 @@ export type SocialMedia = {
 export type LayoutData = {
 	socialMedia: SocialMedia[];
 	backgroundImage: Asset;
+	resumeLink: string;
 };
