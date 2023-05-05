@@ -1,6 +1,7 @@
 <script lang="ts">
 	import Icon from '$lib/Icon.svelte';
 	import type { SocialMedia } from '$lib/types';
+
 	export let socialMedia: SocialMedia[];
 </script>
 

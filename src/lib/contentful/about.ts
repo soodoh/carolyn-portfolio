@@ -1,17 +1,19 @@
-import { formatAsset, client } from './utils';
-import type { EntryCollection, Asset } from 'contentful';
+import { client, formatAsset } from './utils';
+import type { Asset, EntryCollection } from 'contentful';
 
 type AboutFields = {
-	profilePicture: Asset,
-	bio: string,
-	location: string,
-	email: string,
-	phoneNumber?: string,
-	resume: Asset,
-}
+	profilePicture: Asset;
+	bio: string;
+	location: string;
+	email: string;
+	phoneNumber?: string;
+	resume: Asset;
+};
 
 export default async function getAboutData() {
-	const collection: EntryCollection<AboutFields> = await client.getEntries({ content_type: 'about' });
+	const collection: EntryCollection<AboutFields> = await client.getEntries({
+		content_type: 'about'
+	});
 	const aboutData = collection.items[0];
 	return {
 		profilePicture: formatAsset(aboutData.fields.profilePicture),
@@ -19,6 +21,6 @@ export default async function getAboutData() {
 		location: aboutData.fields.location,
 		email: aboutData.fields.email,
 		phoneNumber: aboutData.fields.phoneNumber || null,
-		resume: formatAsset(aboutData.fields.resume),
+		resume: formatAsset(aboutData.fields.resume)
 	};
 }

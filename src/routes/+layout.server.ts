@@ -1,6 +1,6 @@
-import { formatAsset, client } from '$lib/contentful/utils';
 import type { IconType, LayoutData } from '$lib/types';
 import type { Asset as ContentfulAsset } from 'contentful';
+import { client, formatAsset } from '$lib/contentful/utils';
 
 export async function load(): Promise<LayoutData> {
 	const [socialMedia, aboutData] = await Promise.all([

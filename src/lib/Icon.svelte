@@ -1,15 +1,16 @@
 <script lang="ts">
 	import type { SocialMedia } from '$lib/types';
+
 	export let icon: SocialMedia;
 </script>
 
 <a href={icon.link}>
-		{#if icon.title === 'linkedin'}
-			<svg inline-src="linkedin" />
-		{/if}
-		{#if icon.title === 'instagram'}
-			<svg inline-src="instagram" />
-		{/if}
+	{#if icon.title === 'linkedin'}
+		<svg inline-src="linkedin" />
+	{/if}
+	{#if icon.title === 'instagram'}
+		<svg inline-src="instagram" />
+	{/if}
 </a>
 
 <style>
@@ -22,8 +23,8 @@
 		align-items: center;
 		width: 1.5rem;
 		height: 1.5rem;
-		padding: .5rem;
-		margin: 0 .25rem;
+		padding: 0.5rem;
+		margin: 0 0.25rem;
 		transition: background-color 0.25s ease-in-out;
 	}
 	a:hover {
