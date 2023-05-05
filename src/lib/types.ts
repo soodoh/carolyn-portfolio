@@ -4,11 +4,12 @@ export type Asset = {
 	url: string;
 };
 
+export type IconType = 'instagram' | 'linkedin';
+
 export type SocialMedia = {
 	id: string;
-	title: string;
+	title: IconType;
 	link: string;
-	icon: Asset;
 };
 
 export type LayoutData = {

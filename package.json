@@ -12,6 +12,7 @@
 		"format": "prettier --plugin-search-dir . --write ."
 	},
 	"devDependencies": {
+		"@svelte-put/preprocess-inline-svg": "^2.1.1",
 		"@sveltejs/adapter-auto": "^2.0.1",
 		"@sveltejs/kit": "^1.15.8",
 		"@typescript-eslint/eslint-plugin": "^5.27.0",
@@ -29,8 +30,5 @@
 		"typescript": "^5.0.4",
 		"vite": "^4.3.2"
 	},
-	"type": "module",
-	"dependencies": {
-		"svelte-inline-svg": "^1.2.0"
-	}
+	"type": "module"
 }

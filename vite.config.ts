@@ -1,8 +1,19 @@
 import { sveltekit } from '@sveltejs/kit/vite';
-import type { UserConfig } from 'vite';
+import { inlineSvg } from '@svelte-put/preprocess-inline-svg/vite';
+import { defineConfig } from 'vite';
 
-const config: UserConfig = {
-	plugins: [sveltekit()]
-};
-
-export default config;
+export default defineConfig({
+	plugins: [
+		inlineSvg(
+			[
+				{
+					directories: 'static/icons'
+				}
+			],
+			{
+				inlineSrcAttributeName: 'inline-src'
+			}
+		),
+		sveltekit()
+	]
+});

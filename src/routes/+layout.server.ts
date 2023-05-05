@@ -1,4 +1,5 @@
 import { formatAsset, client } from '$lib/contentful/utils';
+import type { IconType } from '$lib/types';
 import type { Asset as ContentfulAsset } from 'contentful';
 
 export async function load() {
@@ -11,9 +12,8 @@ export async function load() {
 	return {
 		socialMedia: socialMedia.items.map((item) => ({
 			id: item.sys.id,
-			title: String(item.fields.title),
-			link: String(item.fields.link),
-			icon: formatAsset(item.fields.icon as ContentfulAsset)
+			title: String(item.fields.title) as IconType,
+			link: String(item.fields.link)
 		})),
 		backgroundImage: formatAsset(aboutEntry.fields.background as ContentfulAsset)
 	};

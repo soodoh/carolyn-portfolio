@@ -1,3 +1,13 @@
+<script lang="ts">
+</script>
+
+<style>
+	svg {
+		width: 20px;
+	}
+</style>
+
 <header>
-  HI
+	<svg inline-src="logo" />
+	HI
 </header>
