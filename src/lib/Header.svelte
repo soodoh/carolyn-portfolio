@@ -1,10 +1,9 @@
 <script lang="ts">
-	export let resumeLink: string;
 	const links = [
 		{ name: 'About', path: '/about' },
 		{ name: 'Projects', path: '/projects' },
 		{ name: 'Photography', path: '/photography' },
-		{ name: 'Resume', path: resumeLink }
+		{ name: 'Resume', path: '/resume' }
 	];
 </script>
 

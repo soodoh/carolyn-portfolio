@@ -8,7 +8,6 @@ export async function load(): Promise<LayoutData> {
 		client.getEntries({ content_type: 'about' })
 	]);
 	const aboutEntry = aboutData.items[0];
-	const resume = formatAsset(aboutEntry.fields.resume as ContentfulAsset);
 
 	return {
 		socialMedia: socialMedia.items.map((item) => ({
@@ -16,7 +15,6 @@ export async function load(): Promise<LayoutData> {
 			title: String(item.fields.title) as IconType,
 			link: String(item.fields.link)
 		})),
-		resumeLink: resume.url,
 		backgroundImage: formatAsset(aboutEntry.fields.background as ContentfulAsset)
 	};
 }
