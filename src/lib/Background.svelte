@@ -1,21 +1,22 @@
 <script lang="ts">
 	import type { Asset } from '$lib/types';
+	import Image from '$lib/Image.svelte';
 
 	export let image: Asset;
-	const sizes = [480, 768, 1024, 1366, 1600, 1920];
+	const srcset = [480, 768, 1024, 1366, 1600, 1920];
 	const formats = ['avif', 'webp', 'jpg'];
-	const srcsets = formats.map((format) => ({
-		format: `image/${format}`,
-		srcset: sizes.map((size) => `${image.url}?fm=${format}&w=${size} ${size}w`).join(', ')
-	}));
 </script>
 
 <div class="container">
 	<picture>
-		{#each srcsets as { format, srcset }}
-			<source type={format} {srcset} sizes="100vw" />
+		{#each formats as format}
+			<source
+				type={`image/${format}`}
+				srcset={srcset.map((size) => `${image.url}?w=${size}&fm=${format} ${size}w}`).join(', ')}
+				sizes="100vw"
+			/>
 		{/each}
-		<img src={`${image.url}?fm=jpg&w=${sizes[0]}`} alt={image.title} />
+		<img src={`${image.url}?fm=jpg&w=${srcset[0]}`} alt={image.title} />
 	</picture>
 </div>
 

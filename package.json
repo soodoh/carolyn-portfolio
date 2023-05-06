@@ -32,5 +32,8 @@
 		"typescript": "^5.0.4",
 		"vite": "^4.3.2"
 	},
-	"type": "module"
+	"type": "module",
+	"dependencies": {
+		"svelte-markdown": "^0.2.3"
+	}
 }
