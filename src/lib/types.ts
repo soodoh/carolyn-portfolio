@@ -11,8 +11,3 @@ export type SocialMedia = {
 	title: IconType;
 	link: string;
 };
-
-export type LayoutData = {
-	socialMedia: SocialMedia[];
-	backgroundImage: Asset;
-};
