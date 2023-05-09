@@ -1,27 +1,21 @@
 <script lang="ts">
 	import Background from '$lib/Background.svelte';
+	import Image from '$lib/Image.svelte';
 	import SvelteMarkdown from 'svelte-markdown';
 
 	export let data;
-	const formats = ['avif', 'webp', 'jpg'];
 	const srcset = [414, 728, 1440];
 </script>
 
 <Background image={data.backgroundImage} />
 <div class="container">
 	<div class="info">
-		<div class="photo-container">
-			<picture>
-				{#each formats as format}
-					<source
-						type={`image/${format}`}
-						srcset={srcset.map((size) => `${data.profilePicture.url}?w=${size}&fm=${format} ${size}w}`).join(', ')}
-						sizes="(max-width: 414px) 100vw, (max-width: 728px) 75vw, 25vw"
-					/>
-				{/each}
-				<img src={`${data.profilePicture.url}?fm=jpg&w=${srcset[0]}`} alt={data.profilePicture.title} />
-			</picture>
-		</div>
+		<Image
+			{srcset}
+			image={data.profilePicture}
+			sizes="(max-width: 414px) 100vw, (max-width: 728px) 75vw, 25vw"
+			class="photo-container"
+		/>
 		<span>{data.location}</span>
 		<span>{data.email}</span>
 	</div>
@@ -45,7 +39,7 @@
 		font-size: 1rem;
 		line-height: 1.5rem;
 	}
-	.photo-container img {
+	.container :global(.photo-container) {
 		width: 100%;
 		border: 1.5rem solid var(--light-color);
 		box-sizing: border-box;
@@ -59,10 +53,24 @@
 		font-size: 1.25rem;
 		line-height: 2rem;
 	}
-	:global(#markdown-container a) {
+	.container :global(#markdown-container a) {
 		color: var(--light-text);
 	}
-	:global(#markdown-container p) {
+	.container :global(#markdown-container p) {
 		margin: 0 0 1rem 0;
+	}
+	@media (max-width: 950px) {
+		.container {
+			grid-template-columns: 1fr 1fr;
+		}
+	}
+	@media (max-width: 600px) {
+		.container {
+			grid-template-columns: 1fr;
+			grid-template-rows: auto auto;
+		}
+		.info {
+			margin-bottom: 2.5rem;
+		}
 	}
 </style>

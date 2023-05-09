@@ -11,11 +11,11 @@
 	{#each formats as format}
 		<source
 			type={`image/${format}`}
-			srcset={srcset.map((size) => `${image.url}?w=${size}&fm=${format} ${size}w}`).join(', ')}
+			srcset={srcset.map((size) => `${image.url}?w=${size}&fm=${format} ${size}w`).join(', ')}
 			{sizes}
 		/>
 	{/each}
-	<img src={`${image.url}?fm=jpg&w=${srcset[0]}`} alt={image.title} />
+	<img class={$$restProps.class || ''} src={`${image.url}?fm=jpg&w=${srcset[0]}`} alt={image.title} />
 </picture>
 
 <style>

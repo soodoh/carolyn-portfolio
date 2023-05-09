@@ -8,16 +8,7 @@
 </script>
 
 <div class="container">
-	<picture>
-		{#each formats as format}
-			<source
-				type={`image/${format}`}
-				srcset={srcset.map((size) => `${image.url}?w=${size}&fm=${format} ${size}w}`).join(', ')}
-				sizes="100vw"
-			/>
-		{/each}
-		<img src={`${image.url}?fm=jpg&w=${srcset[0]}`} alt={image.title} />
-	</picture>
+	<Image {image} sizes="100vw" {srcset} class="image" />
 </div>
 
 <style>
@@ -30,7 +21,7 @@
 		bottom: 0;
 		z-index: -1;
 	}
-	.container img {
+	.container :global(.image) {
 		width: 100%;
 		height: 100%;
 		object-fit: cover;
