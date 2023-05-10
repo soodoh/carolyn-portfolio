@@ -52,13 +52,13 @@
 		position: relative;
 		z-index: 1;
 		color: var(--dark-color);
-		font-size: 0.9rem;
-		line-height: 1.75rem;
 	}
 	.dropdown {
 		display: none;
 	}
 	.filter {
+		font-size: 1rem;
+		line-height: 1.75rem;
 		border: none;
 		background-color: transparent;
 		padding: 1rem 2rem;
@@ -80,6 +80,8 @@
 			cursor: pointer;
 			border: none;
 			background-color: transparent;
+			font-size: 1.2rem;
+			line-height: 1.75rem;
 		}
 		.menu-button {
 			display: flex;
@@ -91,22 +93,27 @@
 			height: 1rem;
 		}
 		.dropdown-menu {
+			scale: 1;
+			transition: scale 0.2s ease-in-out;
 			display: grid;
 			z-index: 1;
 			position: absolute;
 			top: 0;
 			left: 0;
-			right: 0;
 			background-color: var(--light-text);
 			color: var(--dark-color);
 			overflow: hidden;
+			box-shadow: 0 0 0.5rem var(--dark-transparent-color);
 		}
 		.dropdown-menu button {
-			padding: 1rem 0;
+			padding: 1rem 2rem;
+		}
+		.dropdown-menu button:not(:last-child) {
 			border-bottom: 1px solid var(--dark-transparent-color);
 		}
 		.dropdown-menu[aria-hidden='true'] {
-			display: none;
+			scale: 0;
+			transition: scale 0.2s ease-in-out;
 		}
 	}
 </style>
