@@ -4,14 +4,13 @@
 	import SvelteMarkdown from 'svelte-markdown';
 
 	export let data;
-	const srcset = [414, 728, 1440];
 </script>
 
 <Background image={data.backgroundImage} />
 <div class="container">
 	<div class="info">
 		<Image
-			{srcset}
+			srcset={[414, 728, 1440]}
 			image={data.profilePicture}
 			sizes="(max-width: 414px) 100vw, (max-width: 728px) 75vw, 25vw"
 			class="photo-container"

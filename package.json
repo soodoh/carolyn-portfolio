@@ -34,6 +34,7 @@
 	},
 	"type": "module",
 	"dependencies": {
+		"svelte-bricks": "^0.1.7",
 		"svelte-markdown": "^0.2.3"
 	}
 }

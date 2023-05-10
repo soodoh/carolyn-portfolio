@@ -1,3 +1,8 @@
+export type Album = {
+	name: string;
+	photos: Asset[];
+};
+
 export type Asset = {
 	id: string;
 	title: string;
