@@ -28,7 +28,7 @@
 		z-index: 1;
 		color: var(--dark-color);
 	}
-	.dropdown {
+	.dropdown-container {
 		display: none;
 	}
 	.filter {
