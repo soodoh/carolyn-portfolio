@@ -9,24 +9,24 @@
 	let mobileNavOpen = false;
 </script>
 
-<header class={$page.url.pathname === '/' ? 'home' : ''}>
+<header class:home={$page.url.pathname === '/'}>
 	<a href="/" class="brand">
 		<svg inline-src="logo" />
 		<h1>Carolyn DiLoreto</h1>
 	</a>
-	<nav class={`mobile-nav ${mobileNavOpen ? 'mobile-open' : ''}`}>
+	<nav class:mobile-open={mobileNavOpen} class="mobile-nav">
 		{#each links as link}
 			<a
 				href={link.path}
-				class={$page.url.pathname === link.path ? 'active' : ''}
-				on:click={() => mobileNavOpen = false}
+				class:active={$page.url.pathname === link.path}
+				on:click={() => (mobileNavOpen = false)}
 			>
 				{`${link.name}.`}
 			</a>
 		{/each}
 	</nav>
-	<button class="mobile-nav-button" on:click={() => mobileNavOpen = !mobileNavOpen}>
-		<div class={`hamburger-icon ${mobileNavOpen ? 'close-icon' : ''}`} />
+	<button class="mobile-nav-button" on:click={() => (mobileNavOpen = !mobileNavOpen)}>
+		<div class:close-icon={mobileNavOpen} class="hamburger-icon" />
 	</button>
 </header>
 
@@ -39,7 +39,6 @@
 		background-color: var(--dark-color);
 		padding: 0rem var(--padding);
 		align-items: center;
-		z-index: 1;
 	}
 	a,
 	a:visited {
@@ -106,10 +105,10 @@
 			width: var(--mobile-nav-size);
 			height: var(--mobile-nav-size);
 			border: 1px solid var(--light-color);
-			border-radius: .2rem;
+			border-radius: 0.2rem;
 			background-color: transparent;
 			cursor: pointer;
-			z-index: 1;
+			z-index: 10;
 		}
 		.hamburger-icon {
 			position: relative;
@@ -158,6 +157,7 @@
 			transition: all 250ms ease-in-out;
 		}
 		.mobile-open {
+			z-index: 9;
 			opacity: 1;
 			transform: scale(1);
 			transition: all 250ms ease-in-out;

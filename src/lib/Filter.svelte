@@ -8,7 +8,7 @@
 
 <div class="container">
 	{#each options as name}
-		<button class={`filter ${current === name ? 'active' : ''}`} on:click={() => onChange(name)}>
+		<button class:active={current === name} class="filter" on:click={() => onChange(name)}>
 			{name}
 		</button>
 	{/each}
@@ -25,7 +25,7 @@
 		margin-top: calc(-1 * var(--border-height));
 		margin-bottom: 1.5rem;
 		position: relative;
-		z-index: 1;
+		z-index: 2;
 		color: var(--dark-color);
 	}
 	.dropdown-container {
