@@ -2,9 +2,11 @@
 	import type { Album } from '$lib/types';
 	import Filter from '$lib/Filter.svelte';
 	import Image from '$lib/Image.svelte';
+	import Modal from '$lib/Modal.svelte';
 	import Masonry from 'svelte-bricks';
 
 	export let data: { albums: Album[] };
+	let modalOpen = false;
 	let currentAlbum = 'All';
 	const allPhotos = data.albums.flatMap((album) => album.photos);
 	let photos = allPhotos;
@@ -23,8 +25,12 @@
 <div class="container">
 	<Filter options={albumNames} current={currentAlbum} onChange={handleAlbumChange} />
 
+	<Modal bind:isOpen={modalOpen}>
+		<div class="modal-container">hello how's it going</div>
+	</Modal>
+
 	<Masonry items={photos} minColWidth={250} maxColWidth={500} gap={50} let:item>
-		<button>
+		<button on:click={() => (modalOpen = true)}>
 			<Image
 				image={item}
 				srcset={[414, 728, 1440]}
@@ -45,5 +51,10 @@
 		background-color: transparent;
 		width: 100%;
 		cursor: pointer;
+	}
+	.modal-container {
+		width: 50vw;
+		background-color: var(--light-text);
+		color: var(--dark-color);
 	}
 </style>
