@@ -15,7 +15,7 @@
 			{sizes}
 		/>
 	{/each}
-	<img class={$$restProps.class || ''} src={`${image.url}?fm=jpg&w=${srcset[0]}`} alt={image.title} />
+	<img src={`${image.url}?fm=jpg&w=${srcset[0]}`} alt={image.title} />
 </picture>
 
 <style>

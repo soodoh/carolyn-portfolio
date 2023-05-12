@@ -4,8 +4,8 @@
 	export let data;
 </script>
 
-<Background image={data.backgroundImage} />
 <div class="container">
+	<Background image={data.backgroundImage} />
 	<div class="brand">
 		<svg inline-src="logo" />
 		<h1>Carolyn DiLoreto</h1>
@@ -55,14 +55,14 @@
 		color: var(--light-color);
 		text-decoration: none;
 		border: 1px solid var(--light-color);
-		padding: .5rem;
+		padding: 0.5rem;
 		width: 10rem;
-		transition: background-color .2s ease-in-out;
+		transition: background-color 0.2s ease-in-out;
 	}
 	.links a:hover {
 		background-color: var(--light-color);
 		color: black;
-		transition: background-color .2s ease-in-out;
+		transition: background-color 0.2s ease-in-out;
 	}
 	@media (max-width: 820px) {
 		.brand svg {

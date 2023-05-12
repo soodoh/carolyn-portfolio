@@ -39,6 +39,7 @@
 		background-color: var(--dark-color);
 		padding: 0rem var(--padding);
 		align-items: center;
+		z-index: 1;
 	}
 	a,
 	a:visited {

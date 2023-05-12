@@ -1,16 +1,15 @@
-<script lang="ts">
+<script lang='ts'>
 	export let isOpen = false;
 
-	function escapeModal(event: KeyboardEvent) {
-		if (event.key === 'Escape') {
+	function handleBackdrop(event: MouseEvent) {
+		if (event.target instanceof HTMLElement && event.target.matches('.modal')) {
 			isOpen = false;
 		}
 	}
 </script>
 
 {#if isOpen}
-	<div class="modal">
-		<div class="modal-overlay" on:click={() => (isOpen = false)} on:keypress={escapeModal} />
+	<div class="modal" on:click={handleBackdrop} on:keydown={() => {}}>
 		<div class="modal-content">
 			<slot />
 		</div>
@@ -27,19 +26,17 @@
 		display: flex;
 		justify-content: center;
 		align-items: center;
-		z-index: 1;
+		background-color: rgba(0, 0, 0, 0.5);
+		cursor: pointer;
+		z-index: 7;
 	}
-
-	.modal-overlay {
-		position: absolute;
-		top: 0;
-		left: 0;
-		width: 100%;
-		height: 100%;
-		background-color: rgba(0, 0, 0, 0.8);
-	}
-
 	.modal-content {
-		z-index: 2;
+		width: 90vw;
+		height: 90vh;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		cursor: auto;
+		z-index: 8;
 	}
 </style>

@@ -13,7 +13,6 @@
 			srcset={[414, 728, 1440]}
 			image={data.profilePicture}
 			sizes="(max-width: 414px) 100vw, (max-width: 728px) 75vw, 25vw"
-			class="photo-container"
 		/>
 		<span>{data.location}</span>
 		<span>{data.email}</span>
@@ -38,7 +37,7 @@
 		font-size: 1rem;
 		line-height: 1.5rem;
 	}
-	.container :global(.photo-container) {
+	:global(.info img) {
 		width: 100%;
 		border: 1.5rem solid var(--light-color);
 		box-sizing: border-box;

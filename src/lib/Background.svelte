@@ -8,7 +8,7 @@
 </script>
 
 <div class="container">
-	<Image {image} sizes="100vw" {srcset} class="image" />
+	<Image {image} sizes="100vw" {srcset} />
 </div>
 
 <style>
@@ -21,7 +21,7 @@
 		bottom: 0;
 		z-index: -1;
 	}
-	.container :global(.image) {
+	:global(.container img) {
 		width: 100%;
 		height: 100%;
 		object-fit: cover;
