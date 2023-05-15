@@ -1,5 +1,6 @@
 <script lang="ts">
 	export let isOpen = false;
+	export let onKeypress: ((event: KeyboardEvent) => void) | null = null;
 
 	function handleBackdrop(event: MouseEvent) {
 		if (event.target instanceof HTMLElement && event.target.matches('.modal')) {
@@ -9,6 +10,9 @@
 	function handleKeypress(event: KeyboardEvent) {
 		if (event.key === 'Escape') {
 			isOpen = false;
+		}
+		if (typeof onKeypress === 'function') {
+			onKeypress(event);
 		}
 	}
 
