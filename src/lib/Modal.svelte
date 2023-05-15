@@ -1,4 +1,4 @@
-<script lang='ts'>
+<script lang="ts">
 	export let isOpen = false;
 
 	function handleBackdrop(event: MouseEvent) {
@@ -6,17 +6,47 @@
 			isOpen = false;
 		}
 	}
+	function handleKeypress(event: KeyboardEvent) {
+		if (event.key === 'Escape') {
+			isOpen = false;
+		}
+	}
+
+	let modal: HTMLElement;
+	function handleFocus(event: FocusEvent) {
+		const focusableElements = modal.querySelectorAll(
+			'a, button, input, select, textarea, [tabindex]:not([tabindex="-1"])'
+		);
+		if (
+			event.target instanceof HTMLElement &&
+			focusableElements[0] instanceof HTMLElement &&
+			!event.target.closest('.modal')
+		) {
+			focusableElements[0].focus();
+		}
+	}
 </script>
 
-{#if isOpen}
-	<div class="modal" on:click={handleBackdrop} on:keydown={() => {}}>
-		<div class="modal-content">
-			<slot />
-		</div>
+<svelte:window
+	on:keydown={isOpen ? handleKeypress : null}
+	on:focusin={isOpen ? handleFocus : null}
+/>
+<div
+	class:modal-open={isOpen}
+	class="modal"
+	bind:this={modal}
+	on:click={handleBackdrop}
+	on:keydown={handleKeypress}
+>
+	<div class="modal-content">
+		<slot />
 	</div>
-{/if}
+</div>
 
 <style>
+	:global(body:has(.modal-open)) {
+		overflow: hidden;
+	}
 	.modal {
 		position: fixed;
 		top: 0;
@@ -26,17 +56,20 @@
 		display: flex;
 		justify-content: center;
 		align-items: center;
-		background-color: rgba(0, 0, 0, 0.5);
+		background-color: rgba(0, 0, 0, 0.8);
 		cursor: pointer;
-		z-index: 7;
+		z-index: 4;
+		opacity: 0;
+		transition: all 0.25s ease-in-out;
+		visibility: hidden;
+	}
+	.modal-open {
+		opacity: 1;
+		transition: all 0.25s ease-in-out;
+		visibility: visible;
 	}
 	.modal-content {
-		width: 90vw;
-		height: 90vh;
-		display: flex;
-		justify-content: center;
-		align-items: center;
 		cursor: auto;
-		z-index: 8;
+		z-index: 5;
 	}
 </style>

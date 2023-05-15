@@ -14,7 +14,7 @@
 		<svg inline-src="logo" />
 		<h1>Carolyn DiLoreto</h1>
 	</a>
-	<nav class:mobile-open={mobileNavOpen} class="mobile-nav">
+	<nav class:mobile-open={mobileNavOpen}>
 		{#each links as link}
 			<a
 				href={link.path}
@@ -39,6 +39,8 @@
 		background-color: var(--dark-color);
 		padding: 0rem var(--padding);
 		align-items: center;
+	}
+	nav {
 		z-index: 1;
 	}
 	a,
@@ -109,7 +111,7 @@
 			border-radius: 0.2rem;
 			background-color: transparent;
 			cursor: pointer;
-			z-index: 10;
+			z-index: 3;
 		}
 		.hamburger-icon {
 			position: relative;
@@ -146,7 +148,7 @@
 			opacity: 0;
 		}
 
-		.mobile-nav {
+		nav {
 			display: flex;
 			position: fixed;
 			top: 0;
@@ -158,7 +160,7 @@
 			transition: all 250ms ease-in-out;
 		}
 		.mobile-open {
-			z-index: 9;
+			z-index: 3;
 			opacity: 1;
 			transform: scale(1);
 			transition: all 250ms ease-in-out;
@@ -173,7 +175,7 @@
 			align-items: center;
 			justify-content: center;
 		}
-		.mobile-nav a {
+		nav a {
 			display: flex;
 			justify-content: center;
 			width: 100%;
