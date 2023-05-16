@@ -13,7 +13,7 @@
 	},
 	"devDependencies": {
 		"@svelte-put/preprocess-inline-svg": "^2.1.1",
-		"@sveltejs/adapter-auto": "^2.0.1",
+		"@sveltejs/adapter-netlify": "^1.0.0-next.88",
 		"@sveltejs/kit": "^1.15.8",
 		"@typescript-eslint/eslint-plugin": "^5.27.0",
 		"@typescript-eslint/parser": "^5.27.0",
