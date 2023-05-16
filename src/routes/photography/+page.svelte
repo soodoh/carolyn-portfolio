@@ -6,18 +6,13 @@
 	import Masonry from 'svelte-bricks';
 
 	export let data: { albums: Album[] };
-	let currentAlbum = 'All';
-	const allPhotos = data.albums.flatMap((album) => album.photos);
-	let photos = allPhotos;
-	const albumNames = ['All', ...data.albums.map((album) => album.name)];
+	let currentAlbum = data.albums[0].name;
+	let photos = data.albums[0].photos;
+	const albumNames = data.albums.map((album) => album.name);
 
 	function handleAlbumChange(albumName: string) {
 		currentAlbum = albumName;
-		if (currentAlbum === 'All') {
-			photos = allPhotos;
-		} else {
-			photos = data.albums.find((album) => album.name === albumName)?.photos || [];
-		}
+		photos = data.albums.find((album) => album.name === albumName)?.photos || [];
 	}
 
 	let photoIndex = 0;
