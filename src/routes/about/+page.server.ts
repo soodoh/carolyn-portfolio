@@ -6,7 +6,6 @@ export async function load() {
 	const aboutEntry = aboutData.items[0];
 
 	return {
-		backgroundImage: formatAsset(aboutEntry.fields.background as ContentfulAsset),
 		profilePicture: formatAsset(aboutEntry.fields.profilePicture as ContentfulAsset),
 		bio: String(aboutEntry.fields.bio),
 		location: String(aboutEntry.fields.location),

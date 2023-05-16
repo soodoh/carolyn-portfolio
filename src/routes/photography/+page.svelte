@@ -1,11 +1,11 @@
 <script lang="ts">
-	import type { Asset, Album } from '$lib/types';
+	import type { Asset } from '$lib/types';
 	import Filter from '$lib/components/Filter.svelte';
 	import Image from '$lib/components/Image.svelte';
 	import Modal from '$lib/components/Modal.svelte';
 	import Masonry from 'svelte-bricks';
 
-	export let data: { albums: Album[] };
+	export let data;
 	let currentAlbum = data.albums[0].name;
 	let photos = data.albums[0].photos;
 	const albumNames = data.albums.map((album) => album.name);

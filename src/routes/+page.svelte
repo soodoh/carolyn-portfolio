@@ -1,14 +1,10 @@
 <script lang="ts">
-	import type { Asset, Project } from '$lib/types';
 	import Background from '$lib/components/Background.svelte';
 	import Projects from '$lib/components/Projects.svelte';
 	import { onMount } from 'svelte';
 	import { transparentHeader } from '$lib/stores';
 
-	export let data: {
-		backgroundImage: Asset;
-		projects: Project[];
-	};
+	export let data;
 	let homePage: HTMLElement;
 	onMount(() => {
 		const observer = new IntersectionObserver(

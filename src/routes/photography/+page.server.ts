@@ -1,8 +1,9 @@
 import type { Album } from '$lib/types';
+import type { PageServerLoad } from './$types';
 import type { Asset as ContentfulAsset } from 'contentful';
 import { client, formatAsset } from '$lib/utils/contentful';
 
-export async function load(): Promise<{ albums: Album[] }> {
+export const load: PageServerLoad<{ albums: Album[] }> = async () => {
 	const albumData = await client.getEntries({
 		content_type: 'photos',
 		order: ['fields.order']
@@ -15,4 +16,4 @@ export async function load(): Promise<{ albums: Album[] }> {
 	}));
 
 	return { albums };
-}
+};
