@@ -6,7 +6,7 @@
 	export let data;
 </script>
 
-<Background image={data.backgroundImage} />
+<Background fixed image={data.backgroundImage} />
 <div class="container">
 	<div class="info">
 		<Image

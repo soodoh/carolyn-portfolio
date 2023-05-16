@@ -35,12 +35,12 @@
 		--mobile-nav-size: 2.5rem;
 	}
 	header {
+		position: sticky;
+		top: 0;
 		display: flex;
 		background-color: var(--dark-color);
 		padding: 0rem var(--padding);
 		align-items: center;
-	}
-	nav {
 		z-index: 1;
 	}
 	a,

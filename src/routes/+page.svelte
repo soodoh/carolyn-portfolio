@@ -1,7 +1,12 @@
 <script lang="ts">
+	import type { Asset, Project } from '$lib/types';
 	import Background from '$lib/Background.svelte';
+	import Projects from '$lib/Projects.svelte';
 
-	export let data;
+	export let data: {
+		backgroundImage: Asset;
+		projects: Project[];
+	};
 </script>
 
 <div class="container">
@@ -15,6 +20,7 @@
 		<a href="/projects">View Projects</a>
 	</div>
 </div>
+<Projects projects={data.projects} />
 
 <style>
 	.container {
