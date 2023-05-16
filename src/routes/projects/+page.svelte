@@ -1,5 +1,5 @@
 <script lang="ts">
-	import Projects from '$lib/Projects.svelte';
+	import Projects from '$lib/components/Projects.svelte';
 
 	export let data: { projects: Project[] };
 </script>

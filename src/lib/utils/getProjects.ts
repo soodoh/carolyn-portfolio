@@ -1,6 +1,6 @@
 import type { Project, ProjectType } from '$lib/types';
 import type { Asset as ContentfulAsset } from 'contentful';
-import { client, formatAsset } from '$lib/contentful/utils';
+import { client, formatAsset } from '$lib/utils/contentful';
 
 export default async function getProjects(): Promise<Project[]> {
 	const projectData = await client.getEntries({

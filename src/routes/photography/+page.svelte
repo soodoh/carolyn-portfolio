@@ -1,8 +1,8 @@
 <script lang="ts">
 	import type { Asset, Album } from '$lib/types';
-	import Filter from '$lib/Filter.svelte';
-	import Image from '$lib/Image.svelte';
-	import Modal from '$lib/Modal.svelte';
+	import Filter from '$lib/components/Filter.svelte';
+	import Image from '$lib/components/Image.svelte';
+	import Modal from '$lib/components/Modal.svelte';
 	import Masonry from 'svelte-bricks';
 
 	export let data: { albums: Album[] };

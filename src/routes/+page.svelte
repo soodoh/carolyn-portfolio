@@ -1,16 +1,29 @@
 <script lang="ts">
 	import type { Asset, Project } from '$lib/types';
-	import Background from '$lib/Background.svelte';
-	import Projects from '$lib/Projects.svelte';
+	import Background from '$lib/components/Background.svelte';
+	import Projects from '$lib/components/Projects.svelte';
+	import { onMount } from 'svelte';
 
 	export let data: {
 		backgroundImage: Asset;
 		projects: Project[];
 	};
+	let homePage: HTMLElement;
+	let transparentHeader = true;
+	onMount(() => {
+		const observer = new IntersectionObserver(
+			(entries) => {
+				const isIntersecting = entries[0].isIntersecting;
+				transparentHeader = isIntersecting;
+			},
+			{ rootMargin: `-${document.querySelector('header')?.clientHeight ?? 64}px`, threshold: 0 }
+		);
+		observer.observe(homePage);
+	});
 </script>
 
-<div class="container">
-	<Background image={data.backgroundImage} />
+<Background image={data.backgroundImage} />
+<div class="container" bind:this={homePage}>
 	<div class="brand">
 		<svg inline-src="logo" />
 		<h1>Carolyn DiLoreto</h1>
@@ -24,11 +37,7 @@
 
 <style>
 	.container {
-		position: absolute;
-		top: 0;
-		left: 0;
-		width: 100%;
-		height: 100%;
+		height: calc(100vh - var(--header-height));
 		display: flex;
 		justify-content: center;
 		align-items: center;

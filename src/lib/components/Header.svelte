@@ -42,6 +42,7 @@
 		padding: 0rem var(--padding);
 		align-items: center;
 		z-index: 1;
+		height: var(--header-height);
 	}
 	a,
 	a:visited {

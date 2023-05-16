@@ -1,6 +1,6 @@
 import type { Album } from '$lib/types';
 import type { Asset as ContentfulAsset } from 'contentful';
-import { client, formatAsset } from '$lib/contentful/utils';
+import { client, formatAsset } from '$lib/utils/contentful';
 
 export async function load(): Promise<{ albums: Album[] }> {
 	const albumData = await client.getEntries({

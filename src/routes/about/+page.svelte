@@ -1,6 +1,6 @@
 <script lang="ts">
-	import Background from '$lib/Background.svelte';
-	import Image from '$lib/Image.svelte';
+	import Background from '$lib/components/Background.svelte';
+	import Image from '$lib/components/Image.svelte';
 	import SvelteMarkdown from 'svelte-markdown';
 
 	export let data;

@@ -1,9 +1,10 @@
 <script lang="ts">
-	import Dropdown from '$lib/Dropdown.svelte';
+	import type { ProjectType } from '$lib/types';
+	import Dropdown from './Dropdown.svelte';
 
 	export let current: string;
 	export let options: string[];
-	export let onChange: (albumName: string) => void;
+	export let onChange: (albumName: string | ProjectType) => void;
 </script>
 
 <div class="container">
@@ -22,11 +23,12 @@
 		--border-height: 5px;
 	}
 	.container {
-		margin-top: calc(-1 * var(--border-height));
+		position: sticky;
+		top: var(--header-height);
 		margin-bottom: 1.5rem;
-		position: relative;
 		z-index: 2;
 		color: var(--dark-color);
+		background-color: var(--light-text);
 	}
 	.dropdown-container {
 		display: none;
@@ -41,6 +43,7 @@
 	}
 	.active {
 		border-top: var(--border-height) solid var(--light-color);
+		margin-top: calc(-1 * var(--border-height));
 	}
 	@media (max-width: 600px) {
 		.container {

@@ -1,6 +1,6 @@
 <script lang="ts">
-	import Footer from '$lib/Footer.svelte';
-	import Header from '$lib/Header.svelte';
+	import Footer from '$lib/components/Footer.svelte';
+	import Header from '$lib/components/Header.svelte';
 
 	export let data;
 </script>
@@ -30,6 +30,7 @@
 		--body-font: 'Karla', sans-serif;
 		--header-font: 'Old Standard TT', serif;
 		--padding: 1.5rem;
+		--header-height: 4rem;
 	}
 
 	:global(body) {

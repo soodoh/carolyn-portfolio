@@ -1,8 +1,8 @@
 <script lang="ts">
 	import type { ProjectType, Project } from '$lib/types';
-	import Filter from '$lib/Filter.svelte';
-	import Image from '$lib/Image.svelte';
-	import Modal from '$lib/Modal.svelte';
+	import Filter from './Filter.svelte';
+	import Image from './Image.svelte';
+	import Modal from './Modal.svelte';
 	import Masonry from 'svelte-bricks';
 
 	export let projects: Project[];
@@ -13,19 +13,21 @@
 				(typeList, project) => {
 					return typeList.concat(project.projectType);
 				},
-				['All']
+				['All'] as ProjectType[]
 			)
 		)
 	);
 	let currentProjectType: ProjectType = 'All';
 	let currentProjects = projects;
 
-	function handleProjectChange(projectType: ProjectType) {
-		currentProjectType = projectType;
+	function handleProjectChange(projectType: string) {
+		currentProjectType = projectType as ProjectType;
 		if (projectType === 'All') {
 			currentProjects = projects;
 		} else {
-			currentProjects = projects.filter((project) => project.projectType.includes(projectType));
+			currentProjects = projects.filter((project) =>
+				project.projectType.includes(currentProjectType)
+			);
 		}
 	}
 </script>
