@@ -20,8 +20,9 @@ export type SocialMedia = {
 
 export type Project = {
 	id: string;
-	coverImage: Asset;
 	title: string;
+	slug: string;
+	coverImage: Asset;
 	description: string;
 	role: string;
 	link: string;

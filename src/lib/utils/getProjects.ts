@@ -9,8 +9,9 @@ export default async function getProjects(): Promise<Project[]> {
 	});
 	return projectData.items.map((item) => ({
 		id: String(item.sys.id),
-		coverImage: formatAsset(item.fields.coverImage as ContentfulAsset),
 		title: String(item.fields.title),
+		slug: String(item.fields.slug),
+		coverImage: formatAsset(item.fields.coverImage as ContentfulAsset),
 		description: String(item.fields.description),
 		role: String(item.fields.role),
 		link: String(item.fields.link),

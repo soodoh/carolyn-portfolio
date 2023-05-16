@@ -2,7 +2,6 @@
 	import type { ProjectType, Project } from '$lib/types';
 	import Filter from './Filter.svelte';
 	import Image from './Image.svelte';
-	import Modal from './Modal.svelte';
 	import Masonry from 'svelte-bricks';
 
 	export let projects: Project[];
@@ -36,11 +35,13 @@
 	<Filter options={projectTypes} current={currentProjectType} onChange={handleProjectChange} />
 
 	<Masonry items={currentProjects} minColWidth={250} maxColWidth={500} gap={50} let:item>
-		<Image
-			image={item.coverImage}
-			srcset={[414, 728, 1440]}
-			sizes="(max-width: 414px) 100vw, (max-width: 728px) 75vw, 25vw"
-		/>
+		<a href={`/projects/${item.slug}`}>
+			<Image
+				image={item.coverImage}
+				srcset={[414, 728, 1440]}
+				sizes="(max-width: 414px) 100vw, (max-width: 728px) 75vw, 25vw"
+			/>
+		</a>
 	</Masonry>
 </div>
 
