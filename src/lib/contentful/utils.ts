@@ -1,10 +1,11 @@
 import contentful from 'contentful';
 import type { Asset } from '$lib/types';
 import type { Asset as ContentfulAsset } from 'contentful';
+import { CONTENTFUL_ACCESS_TOKEN, CONTENTFUL_SPACE_ID } from '$env/static/private';
 
 export const client = contentful.createClient({
-	space: import.meta.env.VITE_CONTENTFUL_SPACE_ID,
-	accessToken: import.meta.env.VITE_CONTENTFUL_DELIVERY_TOKEN
+	space: CONTENTFUL_SPACE_ID,
+	accessToken: CONTENTFUL_ACCESS_TOKEN
 });
 
 export function formatUrl(baseUrl: string) {
