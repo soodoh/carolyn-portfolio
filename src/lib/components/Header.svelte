@@ -1,5 +1,7 @@
 <script lang="ts">
 	import { page } from '$app/stores';
+	import { transparentHeader } from '$lib/stores';
+
 	const links = [
 		{ name: 'About', path: '/about' },
 		{ name: 'Projects', path: '/projects' },
@@ -9,7 +11,7 @@
 	let mobileNavOpen = false;
 </script>
 
-<header class:home={$page.url.pathname === '/'}>
+<header class:transparent={$page.url.pathname === '/' && $transparentHeader}>
 	<a href="/" class="brand">
 		<svg inline-src="logo" />
 		<h1>Carolyn DiLoreto</h1>
@@ -43,16 +45,19 @@
 		align-items: center;
 		z-index: 1;
 		height: var(--header-height);
+		transition: all 250ms ease-in-out;
 	}
 	a,
 	a:visited {
 		text-decoration: none;
 		color: var(--light-text);
 	}
-	.home {
+	.transparent {
+		transition: all 250ms ease-in-out;
 		background-color: transparent;
 	}
-	.home .brand {
+	.transparent .brand {
+		transition: all 250ms ease-in-out;
 		visibility: hidden;
 	}
 

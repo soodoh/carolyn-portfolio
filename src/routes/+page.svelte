@@ -3,18 +3,18 @@
 	import Background from '$lib/components/Background.svelte';
 	import Projects from '$lib/components/Projects.svelte';
 	import { onMount } from 'svelte';
+	import { transparentHeader } from '$lib/stores';
 
 	export let data: {
 		backgroundImage: Asset;
 		projects: Project[];
 	};
 	let homePage: HTMLElement;
-	let transparentHeader = true;
 	onMount(() => {
 		const observer = new IntersectionObserver(
 			(entries) => {
 				const isIntersecting = entries[0].isIntersecting;
-				transparentHeader = isIntersecting;
+				transparentHeader.update(() => isIntersecting);
 			},
 			{ rootMargin: `-${document.querySelector('header')?.clientHeight ?? 64}px`, threshold: 0 }
 		);
