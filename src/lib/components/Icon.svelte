@@ -29,7 +29,7 @@
 	}
 	a:hover {
 		transition: background-color 0.25s ease-in-out;
-		background-color: var(--dark-transparent-color);
+		background-color: rgba(var(--dark-color-rgb), 0.25);
 	}
 	svg {
 		fill: var(--dark-color);

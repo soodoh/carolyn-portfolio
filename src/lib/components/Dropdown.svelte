@@ -71,13 +71,13 @@
 		background-color: var(--light-text);
 		color: var(--dark-color);
 		overflow: hidden;
-		box-shadow: 0 0 0.5rem var(--dark-transparent-color);
+		box-shadow: 0 0 0.5rem rgba(var(--dark-color-rgb), 0.25);
 	}
 	.dropdown-menu button {
 		padding: 1rem 2rem;
 	}
 	.dropdown-menu button:not(:last-child) {
-		border-bottom: 1px solid var(--dark-transparent-color);
+		border-bottom: 1px solid rgba(var(--dark-color-rgb), 0.25);
 	}
 	.dropdown-menu[aria-hidden='true'] {
 		scale: 0;

@@ -23,10 +23,10 @@
 			/>
 		</div>
 	</section>
-	<div id="markdown-container">
-		<Markdown source={data.project.description} />
+	<div class="markdown-container">
+		{@html data.project.description}
 	</div>
-	<a href="/projects" class="view-more"> View More Work </a>
+	<a href="/projects" class="view-more">View More Work</a>
 </div>
 
 <style>
@@ -34,11 +34,15 @@
 		padding: 2rem var(--padding);
 		max-width: 1000px;
 		margin: auto;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
 	}
 	.go-back {
+		align-self: flex-start;
 		transition: all 250ms ease-in-out;
 		background-color: transparent;
-		border: 1px solid var(--dark-color);
+		border: 1px solid rgba(var(--dark-color-rgb), 0.5);
 		color: var(--dark-color);
 		display: inline-flex;
 		align-items: center;
@@ -48,8 +52,8 @@
 		margin-bottom: 2rem;
 	}
 	.go-back:hover {
-		background-color: var(--dark-transparent-color);
-		border: 1px solid var(--dark-transparent-color);
+		background-color: rgba(var(--dark-color-rgb), 0.1);
+		border: 1px solid rgba(var(--dark-color-rgb), 1);
 		transition: all 250ms ease-in-out;
 	}
 	.go-back svg {
@@ -58,12 +62,17 @@
 	}
 	.view-more {
 		background-color: var(--dark-color);
-		color: var(--light-color);
+		color: var(--light-text);
 		text-decoration: none;
 		margin: auto;
 		display: inline;
 		padding: 0.5rem 1rem;
 		font-size: 0.9rem;
+		transition: all 250ms ease-in-out;
+	}
+	.view-more:hover {
+		transition: all 250ms ease-in-out;
+		box-shadow: 0 .2rem .3rem var(--dark-color);
 	}
 	.header {
 		display: grid;
@@ -74,9 +83,37 @@
 	}
 	.info h1 {
 		font-size: 3.8rem;
-		margin-bottom: 0.5rem;
+		margin-bottom: 0.3rem;
 	}
 	.info h2 {
 		font-family: var(--body-font);
+	}
+	@media (max-width: 950px) {
+		.header {
+			grid-template-columns: 1fr;
+		}
+		.image {
+			grid-row-start: 1;
+		}
+	}
+
+	.markdown-container {
+		margin: 5rem 3rem;
+	}
+	.markdown-container :global(h1) {
+		text-align: center;
+		font-size: 2.25rem;
+	}
+	.markdown-container :global(p) {
+		text-indent: 2rem;
+		text-align: left;
+		line-height: 2rem;
+		font-size: 1.25rem;
+		font-family: var(--body-font);
+		margin-bottom: 2rem;
+	}
+	.markdown-container :global(img) {
+		margin-left: -2rem;
+		width: 100%;
 	}
 </style>

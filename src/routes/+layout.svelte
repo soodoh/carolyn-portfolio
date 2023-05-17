@@ -22,9 +22,8 @@
 <style>
 	:global(:root) {
 		--light-text: #fff;
-		/* --dark-color: #494f5c; */
-		--dark-color: rgb(73, 79, 92);
-		--dark-transparent-color: rgba(73, 79, 92, 0.25);
+		--dark-color: #494f5c;
+		--dark-color-rgb: 73, 79, 92;
 		--light-color: #cec0a8;
 		--error-color: #fd9f92;
 		--body-font: 'Karla', sans-serif;
