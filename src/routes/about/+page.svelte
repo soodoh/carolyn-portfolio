@@ -1,7 +1,7 @@
 <script lang="ts">
 	import Background from '$lib/components/Background.svelte';
 	import Image from '$lib/components/Image.svelte';
-	import SvelteMarkdown from 'svelte-markdown';
+	import Markdown from 'svelte-markdown';
 
 	export let data;
 </script>
@@ -18,7 +18,7 @@
 		<span>{data.email}</span>
 	</div>
 	<div id="markdown-container">
-		<SvelteMarkdown source={data.bio} />
+		<Markdown source={data.bio} />
 	</div>
 </div>
 
@@ -27,7 +27,9 @@
 		display: grid;
 		grid-template-columns: 25% 1fr;
 		grid-gap: 2.5rem;
-		margin: 3.5rem 2rem;
+		margin: auto;
+		padding: 3.5rem var(--padding);
+		max-width: var(--max-container-width);
 	}
 	.info {
 		display: flex;

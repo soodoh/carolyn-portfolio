@@ -31,6 +31,7 @@
 		--header-font: 'Old Standard TT', serif;
 		--padding: 1.5rem;
 		--header-height: 4rem;
+		--max-container-width: 1440px;
 	}
 
 	:global(body) {

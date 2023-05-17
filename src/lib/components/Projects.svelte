@@ -52,7 +52,7 @@
 <style>
 	.container {
 		margin: auto;
-		max-width: 1440px;
+		max-width: var(--max-container-width);
 		padding: 0 var(--padding);
 	}
 	.project-container {
