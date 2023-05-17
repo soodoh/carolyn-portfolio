@@ -1,7 +1,6 @@
 <script lang="ts">
 	import Background from '$lib/components/Background.svelte';
 	import Image from '$lib/components/Image.svelte';
-	import Markdown from 'svelte-markdown';
 
 	export let data;
 </script>
@@ -17,8 +16,8 @@
 		<span>{data.location}</span>
 		<span>{data.email}</span>
 	</div>
-	<div id="markdown-container">
-		<Markdown source={data.bio} />
+	<div class="markdown-container">
+		{@html data.parsedBio}
 	</div>
 </div>
 
@@ -46,18 +45,15 @@
 		padding: 0;
 		margin-bottom: 1rem;
 	}
-	#markdown-container {
+	.markdown-container {
 		flex-grow: 1;
 		color: var(--light-text);
 		font-family: var(--header-font);
 		font-size: 1.25rem;
 		line-height: 2rem;
 	}
-	.container :global(#markdown-container a) {
-		color: var(--light-text);
-	}
-	.container :global(#markdown-container p) {
-		margin: 0 0 1rem 0;
+	.markdown-container :global(a) {
+		color: var(--light-color);
 	}
 	@media (max-width: 950px) {
 		.container {
