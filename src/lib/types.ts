@@ -25,7 +25,7 @@ export type Project = {
 	coverImage: Asset;
 	description: string;
 	role: string;
-	link: string;
+	link: string | null;
 	summary: string;
 	projectType: ProjectType[];
 };

@@ -4,7 +4,7 @@
 
 	export let current: string;
 	export let options: string[];
-	export let onChange: (albumName: string | ProjectType) => void;
+	export let onChange: (name: string & ProjectType) => void;
 </script>
 
 <div class="container">
@@ -27,13 +27,14 @@
 		top: var(--header-height);
 		margin-bottom: 1.5rem;
 		z-index: 2;
-		color: var(--dark-color);
 		background-color: var(--light-text);
 	}
 	.dropdown-container {
 		display: none;
 	}
 	.filter {
+		color: var(--dark-color);
+		font-family: var(--body-font);
 		font-size: 1rem;
 		line-height: 1.75rem;
 		border: none;

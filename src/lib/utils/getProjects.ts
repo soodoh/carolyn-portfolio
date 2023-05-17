@@ -14,7 +14,7 @@ export default async function getProjects(): Promise<Project[]> {
 		coverImage: formatAsset(item.fields.coverImage as ContentfulAsset),
 		description: String(item.fields.description),
 		role: String(item.fields.role),
-		link: String(item.fields.link),
+		link: item.fields.link ? String(item.fields.link) : null,
 		summary: String(item.fields.summary),
 		projectType: item.fields.projectType as ProjectType[]
 	}));
