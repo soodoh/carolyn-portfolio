@@ -12,10 +12,12 @@
 </script>
 
 <header class:transparent={$page.url.pathname === '/' && $transparentHeader}>
-	<a aria-label="Home" href="/" class="brand">
-		<svg inline-src="logo" />
-		<h1>Carolyn DiLoreto</h1>
-	</a>
+	<div class="brand">
+		<a aria-label="Home" href="/">
+			<svg inline-src="logo" />
+			<h1>Carolyn DiLoreto</h1>
+		</a>
+	</div>
 	<nav class:mobile-open={mobileNavOpen}>
 		{#each links as link}
 			<a
@@ -67,10 +69,12 @@
 	}
 
 	.brand {
-		display: flex;
+		flex-grow: 1;
+	}
+	.brand a {
+		display: inline-flex;
 		align-items: flex-end;
 		margin: 0.5rem 0;
-		flex-grow: 1;
 	}
 	.brand svg {
 		height: 3rem;
