@@ -18,6 +18,9 @@
 	});
 </script>
 
+<svelte:head>
+	<title>CD Portfolio</title>
+</svelte:head>
 <Background image={data.backgroundImage} />
 <div class="container" bind:this={homePage}>
 	<div class="brand">

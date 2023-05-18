@@ -36,6 +36,9 @@
 	}
 </script>
 
+<svelte:head>
+	<title>CD Photography</title>
+</svelte:head>
 <LayoutContainer>
 	<Filter options={albumNames} current={currentAlbum} onChange={handleAlbumChange} />
 

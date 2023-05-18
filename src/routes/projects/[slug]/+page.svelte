@@ -17,6 +17,9 @@
 	}
 </script>
 
+<svelte:head>
+	<title>CD Projects</title>
+</svelte:head>
 {#if data.project.password && !authenticated}
 	<div class="password">
 		<a href="/projects">

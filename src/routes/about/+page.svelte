@@ -6,6 +6,9 @@
 	export let data;
 </script>
 
+<svelte:head>
+	<title>About Carolyn</title>
+</svelte:head>
 <Background fixed image={data.backgroundImage} />
 <LayoutContainer>
 	<div class="container">

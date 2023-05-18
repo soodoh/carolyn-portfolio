@@ -4,6 +4,9 @@
 	export let data;
 </script>
 
+<svelte:head>
+	<title>CD Projects</title>
+</svelte:head>
 <Projects projects={data.projects} />
 
 <style>
