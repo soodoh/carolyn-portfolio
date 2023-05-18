@@ -20,6 +20,10 @@
 
 <svelte:head>
 	<title>CD Portfolio</title>
+	<meta
+		name="description"
+		content="Carolyn DiLoreto is a multi-media visual artist, dancer and USC alumnus. In this portfolio, view photo galleries, read about past projects, or even read her bio."
+	/>
 </svelte:head>
 <Background image={data.backgroundImage} />
 <div class="container" bind:this={homePage}>

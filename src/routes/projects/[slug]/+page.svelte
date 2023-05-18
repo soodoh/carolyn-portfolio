@@ -17,7 +17,12 @@
 </script>
 
 <svelte:head>
-	<title>CD Projects</title>
+	<title>CD Projects - {data.project.title}</title>
+	<meta
+		name="description"
+		content={`Carolyn DiLoreto's project, ${data.project.title} - ${data.project.summary}`}
+	/>
+	<meta name="robots" content={data.project.password ? 'noindex, nofollow' : 'index, follow'} />
 </svelte:head>
 {#if data.project.password && !authenticated}
 	<div class="password">

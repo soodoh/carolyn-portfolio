@@ -8,6 +8,10 @@
 
 <svelte:head>
 	<title>About Carolyn</title>
+	<meta
+		name="description"
+		content="Carolyn DiLoreto is a multi-media visual artist, dancer, and USC alumnus, with a Media Arts + Practice major and a double minor in Dance and Computer Programming."
+	/>
 </svelte:head>
 <Background fixed image={data.backgroundImage} />
 <LayoutContainer>

@@ -39,6 +39,10 @@
 
 <svelte:head>
 	<title>CD Photography</title>
+	<meta
+		name="description"
+		content="Carolyn DiLoreto's photography portfolio consists of dance, scenery and headshots. She is available for hire as a professional photographer in Los Angeles, CA."
+	/>
 </svelte:head>
 <LayoutContainer>
 	<Filter options={albumNames} current={currentAlbum} onChange={handleAlbumChange} />
