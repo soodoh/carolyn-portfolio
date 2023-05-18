@@ -92,7 +92,7 @@
 	nav a.active {
 		color: var(--light-color);
 	}
-	@media (max-width: 414px) {
+	@media (max-width: 450px) {
 		:root {
 			--mobile-nav-size: 2rem;
 		}

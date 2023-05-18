@@ -18,12 +18,14 @@
 	<div class="container">
 		<div class="info">
 			<LayoutImage
-				srcset={[100, 200, 300, 500, 700]}
+				srcset={[100, 200, 300, 500]}
 				image={data.profilePicture}
 				sizes="(max-width: 600px) 100vw, (max-width: 950px) 50vw, (max-width: 1500px) 25vw, 360px"
 			/>
-			<span>{data.location}</span>
-			<span>{data.email}</span>
+			<section class="info-details">
+				<span>{data.location}</span>
+				<span>{data.email}</span>
+			</section>
 		</div>
 		<div class="markdown-container">
 			{@html data.parsedBio}
@@ -39,12 +41,15 @@
 		margin-top: 3.5rem;
 	}
 	.info {
-		display: flex;
-		align-items: center;
-		flex-direction: column;
 		color: var(--light-color);
 		font-size: 1rem;
 		line-height: 1.5rem;
+	}
+	.info-details {
+		margin-top: 1rem;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
 	}
 	:global(.info img) {
 		width: 100%;
