@@ -18,9 +18,9 @@
 	<div class="container">
 		<div class="info">
 			<LayoutImage
-				srcset={[414, 728, 1440]}
+				srcset={[100, 200, 300, 500, 700]}
 				image={data.profilePicture}
-				sizes="(max-width: 414px) 100vw, (max-width: 728px) 75vw, 25vw"
+				sizes="(max-width: 600px) 100vw, (max-width: 950px) 50vw, (max-width: 1500px) 25vw, 360px"
 			/>
 			<span>{data.location}</span>
 			<span>{data.email}</span>
