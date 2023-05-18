@@ -25,7 +25,7 @@
 	.fixed {
 		position: fixed;
 	}
-	:global(.container img) {
+	.container :global(img) {
 		width: 100%;
 		height: 100%;
 		object-fit: cover;
