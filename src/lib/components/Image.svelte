@@ -15,7 +15,7 @@
 			{sizes}
 		/>
 	{/each}
-	<img src={`${image.url}?fm=jpg&w=${srcset[0]}`} alt={image.title} />
+	<img loading="lazy" src={`${image.url}?fm=jpg&w=${srcset[0]}`} alt={image.title} />
 </picture>
 
 <style>

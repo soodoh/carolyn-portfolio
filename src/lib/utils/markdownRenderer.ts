@@ -23,7 +23,7 @@ export const imageRenderer: Renderer['image'] = (href: string, title) => {
 	return (
 		`<picture>` +
 		`${getSources(imageUrl, formats, srcset, sizes)}` +
-		`<img src="${imageUrl}?fm=jpg&w=${srcset[0]}" alt = "${title}" />` +
+		`<img src="${imageUrl}?fm=jpg&w=${srcset[0]}" alt="${title}" loading="lazy" />` +
 		`</picture>`
 	);
 };
