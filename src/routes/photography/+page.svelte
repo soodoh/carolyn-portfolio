@@ -54,7 +54,9 @@
 					>
 				{/if}
 			</div>
-			<Image image={currentPhoto} srcset={[500, 725, 1440]} sizes="100vw" />
+
+			<Image layoutShift={false} image={currentPhoto} srcset={[500, 725, 1440]} sizes="100vw" />
+
 			<div class="next">
 				{#if photoIndex <= photos.length - 2}
 					<button aria-label="Next photo" on:click={() => handlePhoto(photos[photoIndex + 1])}>
