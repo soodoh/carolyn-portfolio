@@ -1,5 +1,0 @@
-# Redirect domain aliases to primary domain
-https://carolyn.diloreto.com/* https://carolyndiloreto.com/:splat 301!
-
-# Optional: Redirect default Netlify subdomain to primary domain
-https://carolyndiloreto.netlify.com/* https://carolyndiloreto.com/:splat 301!
