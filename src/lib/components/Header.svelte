@@ -50,7 +50,7 @@
 		align-items: center;
 		height: var(--header-height);
 		transition: all 250ms ease-in-out;
-		z-index: 1;
+		z-index: 2;
 	}
 	a,
 	a:visited {

@@ -89,7 +89,7 @@
 		flex-direction: column;
 		justify-content: center;
 		align-items: center;
-		z-index: 2;
+		z-index: 1;
 	}
 	.project-container:hover .project-info {
 		transition: all 250ms ease-in-out;

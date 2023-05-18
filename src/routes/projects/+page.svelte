@@ -12,6 +12,3 @@
 	/>
 </svelte:head>
 <Projects projects={data.projects} />
-
-<style>
-</style>
