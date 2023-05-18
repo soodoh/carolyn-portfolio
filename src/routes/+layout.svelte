@@ -1,18 +1,14 @@
 <script lang="ts">
 	import Footer from '$lib/components/Footer.svelte';
 	import Header from '$lib/components/Header.svelte';
+	import '@fontsource/karla';
+	import '@fontsource/old-standard-tt';
 
 	export let data;
 </script>
 
 <svelte:head>
 	<meta name="google-site-verification" content="mZWTxlscBqxebm-E7NiMf8dG-G2qbqKKODr0BoCUobQ" />
-	<link rel="preconnect" href="https://fonts.googleapis.com" />
-	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="true" />
-	<link
-		href="https://fonts.googleapis.com/css2?family=Karla&family=Old+Standard+TT&display=swap"
-		rel="stylesheet"
-	/>
 </svelte:head>
 
 <Header />
