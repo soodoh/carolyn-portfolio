@@ -7,6 +7,8 @@ export type Asset = {
 	id: string;
 	title: string;
 	url: string;
+	width: number;
+	height: number;
 };
 
 export type IconType = 'instagram' | 'linkedin';
