@@ -78,6 +78,7 @@
 	}
 	.project-info {
 		transition: all 250ms ease-in-out;
+		opacity: 0;
 		visibility: hidden;
 		position: absolute;
 		top: 0;
@@ -88,9 +89,11 @@
 		flex-direction: column;
 		justify-content: center;
 		align-items: center;
+		z-index: 2;
 	}
 	.project-container:hover .project-info {
 		transition: all 250ms ease-in-out;
+		opacity: 1;
 		visibility: visible;
 		background-color: rgba(255, 255, 255, 0.9);
 	}
