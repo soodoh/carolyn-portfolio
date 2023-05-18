@@ -45,11 +45,11 @@
 	<Modal bind:isOpen onKeypress={handleKeypress}>
 		<div class="modal-container">
 			<div class="close">
-				<button on:click={() => (isOpen = false)}>&times;</button>
+				<button aria-label="Close image modal" on:click={() => (isOpen = false)}>&times;</button>
 			</div>
 			<div class="prev">
 				{#if photoIndex > 0}
-					<button on:click={() => handlePhoto(photos[photoIndex - 1])}
+					<button aria-label="Previous photo" on:click={() => handlePhoto(photos[photoIndex - 1])}
 						><svg inline-src="left-chevron" /></button
 					>
 				{/if}
@@ -57,9 +57,9 @@
 			<Image image={currentPhoto} srcset={[725, 1440]} sizes="100vw" />
 			<div class="next">
 				{#if photoIndex <= photos.length - 2}
-					<button on:click={() => handlePhoto(photos[photoIndex + 1])}
-						><svg inline-src="right-chevron" /></button
-					>
+					<button aria-label="Next photo" on:click={() => handlePhoto(photos[photoIndex + 1])}>
+						<svg inline-src="right-chevron" />
+					</button>
 				{/if}
 			</div>
 			<div class="info">
@@ -69,7 +69,7 @@
 	</Modal>
 
 	<Masonry items={photos} minColWidth={250} maxColWidth={500} gap={50} let:item>
-		<button on:click={() => handlePhoto(item)}>
+		<button aria-label="View fullscreen photo" on:click={() => handlePhoto(item)}>
 			<Image
 				image={item}
 				srcset={[414, 728, 1440]}

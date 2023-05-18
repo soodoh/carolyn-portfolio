@@ -15,6 +15,7 @@
 <div class="dropdown">
 	<button
 		class="menu-button"
+		aria-label="Choose a filter"
 		aria-haspopup="true"
 		aria-expanded={dropdownOpen}
 		on:click={() => (dropdownOpen = !dropdownOpen)}
@@ -25,6 +26,7 @@
 	<div class="dropdown-menu" role="menu" aria-hidden={!dropdownOpen}>
 		{#each options as option}
 			<button
+				aria-label={`Choose filter: ${option}`}
 				on:click={() => {
 					onChange(option);
 					dropdownOpen = false;

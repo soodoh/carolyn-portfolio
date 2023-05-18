@@ -4,12 +4,17 @@
 
 	export let current: string;
 	export let options: string[];
-	export let onChange: (name: string & ProjectType) => void;
+	export let onChange: (name: string) => void;
 </script>
 
 <div class="container">
 	{#each options as name}
-		<button class:active={current === name} class="filter" on:click={() => onChange(name)}>
+		<button
+			aria-label={`Choose filter: ${name}`}
+			class:active={current === name}
+			class="filter"
+			on:click={() => onChange(name)}
+		>
 			{name}
 		</button>
 	{/each}

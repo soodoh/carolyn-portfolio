@@ -20,8 +20,8 @@
 	let currentProjectType: ProjectType = 'All';
 	let currentProjects = projects;
 
-	function handleProjectChange(projectType: ProjectType) {
-		currentProjectType = projectType;
+	function handleProjectChange(projectType: string) {
+		currentProjectType = projectType as ProjectType;
 		if (projectType === 'All') {
 			currentProjects = projects;
 		} else {

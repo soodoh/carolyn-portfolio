@@ -27,7 +27,11 @@
 			</a>
 		{/each}
 	</nav>
-	<button class="mobile-nav-button" on:click={() => (mobileNavOpen = !mobileNavOpen)}>
+	<button
+		aria-label={mobileNavOpen ? 'Close navigation menu' : 'Open navigation menu'}
+		class="mobile-nav-button"
+		on:click={() => (mobileNavOpen = !mobileNavOpen)}
+	>
 		<div class:close-icon={mobileNavOpen} class="hamburger-icon" />
 	</button>
 </header>

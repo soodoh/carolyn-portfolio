@@ -33,7 +33,7 @@
 			{#if showError}
 				<span class="error-text">The password you entered is incorrect</span>
 			{/if}
-			<button type="submit">Enter</button>
+			<button aria-label="Enter password" type="submit">Enter</button>
 		</form>
 	</div>
 {:else}
