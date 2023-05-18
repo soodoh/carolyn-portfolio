@@ -13,7 +13,7 @@
 	},
 	"devDependencies": {
 		"@svelte-put/preprocess-inline-svg": "^2.1.1",
-		"@sveltejs/adapter-netlify": "^1.0.0-next.88",
+		"@sveltejs/adapter-netlify": "^2.0.7",
 		"@sveltejs/kit": "^1.15.8",
 		"@types/marked": "^4.3.0",
 		"@typescript-eslint/eslint-plugin": "^5.27.0",
@@ -27,7 +27,7 @@
 		"prettier-plugin-svelte": "^2.7.0",
 		"svelte": "^3.58.0",
 		"svelte-check": "^3.2.0",
-		"svelte-eslint-parser": "^0.27.0",
+		"svelte-eslint-parser": "^0.28.0",
 		"svelte-preprocess": "^5.0.3",
 		"tslib": "^2.3.1",
 		"typescript": "^5.0.4",
