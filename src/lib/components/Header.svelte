@@ -48,7 +48,6 @@
 		background-color: var(--dark-color);
 		padding: 0rem var(--padding);
 		align-items: center;
-		z-index: 1;
 		height: var(--header-height);
 		transition: all 250ms ease-in-out;
 	}
@@ -166,14 +165,18 @@
 			right: 0;
 			bottom: 0;
 			left: 0;
+			visibility: hidden;
 			opacity: 0;
 			transform: scale(0);
 			transition: all 250ms ease-in-out;
 		}
-		.mobile-open {
+		header:has(.mobile-open) {
 			z-index: 3;
+		}
+		.mobile-open {
 			opacity: 1;
 			transform: scale(1);
+			visibility: visible;
 			transition: all 250ms ease-in-out;
 			position: absolute;
 			top: 0;
