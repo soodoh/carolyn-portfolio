@@ -28,8 +28,8 @@
 		<h1>Carolyn DiLoreto</h1>
 	</div>
 	<div class="links">
-		<a href="/photography">View Photography</a>
-		<a href="/projects">View Projects</a>
+		<a aria-label="View Photography" href="/photography">View Photography</a>
+		<a aria-label="View Projects" href="/projects">View Projects</a>
 	</div>
 </div>
 <Projects projects={data.projects} />

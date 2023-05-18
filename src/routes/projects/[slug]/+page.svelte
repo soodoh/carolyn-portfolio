@@ -8,7 +8,6 @@
 
 	function handleSubmit(event: SubmitEvent) {
 		event.preventDefault();
-		console.log(passwordInput, data.project.password, 'hi');
 		if (passwordInput !== data.project.password) {
 			showError = true;
 		} else {
@@ -22,7 +21,7 @@
 </svelte:head>
 {#if data.project.password && !authenticated}
 	<div class="password">
-		<a href="/projects">
+		<a aria-label="Go back" href="/projects">
 			<svg inline-src="left-arrow" />
 			Go Back
 		</a>
@@ -38,7 +37,7 @@
 	</div>
 {:else}
 	<div class="container">
-		<a href="/projects" class="go-back">
+		<a aria-label="Go back" href="/projects" class="go-back">
 			<svg inline-src="left-arrow" />
 			Go Back
 		</a>
@@ -70,7 +69,7 @@
 		<div class="markdown-container">
 			{@html data.project.description}
 		</div>
-		<a href="/projects" class="view-more">View More Work</a>
+		<a aria-label="View more work" href="/projects" class="view-more">View More Work</a>
 	</div>
 {/if}
 

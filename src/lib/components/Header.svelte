@@ -12,13 +12,14 @@
 </script>
 
 <header class:transparent={$page.url.pathname === '/' && $transparentHeader}>
-	<a href="/" class="brand">
+	<a aria-label="Home" href="/" class="brand">
 		<svg inline-src="logo" />
 		<h1>Carolyn DiLoreto</h1>
 	</a>
 	<nav class:mobile-open={mobileNavOpen}>
 		{#each links as link}
 			<a
+				aria-label={link.name}
 				href={link.path}
 				class:active={$page.url.pathname === link.path}
 				on:click={() => (mobileNavOpen = false)}

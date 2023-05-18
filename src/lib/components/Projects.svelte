@@ -36,7 +36,11 @@
 	<Filter options={projectTypes} current={currentProjectType} onChange={handleProjectChange} />
 
 	<Masonry items={currentProjects} minColWidth={250} maxColWidth={500} gap={50} let:item>
-		<a href={`/projects/${item.slug}`} class="project-container">
+		<a
+			aria-label={`${item.title} - ${item.summary}`}
+			href={`/projects/${item.slug}`}
+			class="project-container"
+		>
 			<div class="project-info">
 				<h2>{item.title}</h2>
 				<h3>{item.summary}</h3>

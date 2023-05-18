@@ -4,7 +4,7 @@
 	export let icon: SocialMedia;
 </script>
 
-<a href={icon.link}>
+<a aria-label={`View social media: ${icon.title}`} href={icon.link}>
 	{#if icon.title === 'linkedin'}
 		<svg inline-src="linkedin" />
 	{/if}
