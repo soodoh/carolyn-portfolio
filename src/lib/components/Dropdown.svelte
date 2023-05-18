@@ -4,14 +4,14 @@
 	export let onChange: (option: string) => void;
 
 	let dropdownOpen = false;
-	const close = (event: MouseEvent) => {
+	const close = (event: MouseEvent | TouchEvent) => {
 		if (event.target instanceof HTMLElement && !event.target.closest('.dropdown')) {
 			dropdownOpen = false;
 		}
 	};
 </script>
 
-<svelte:document on:click={close} />
+<svelte:document on:click={close} on:touchstart={close} />
 <div class="dropdown">
 	<button
 		class="menu-button"
@@ -43,7 +43,7 @@
 		display: inline-block;
 		position: relative;
 		width: auto;
-		margin: 0.5rem 0 1.5rem 0;
+		margin-top: 0.5rem;
 	}
 	.dropdown button {
 		cursor: pointer;
@@ -51,6 +51,7 @@
 		background-color: transparent;
 		font-size: 1.2rem;
 		line-height: 1.75rem;
+		color: var(--dark-color);
 	}
 	.menu-button {
 		display: flex;

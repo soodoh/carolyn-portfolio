@@ -235,15 +235,6 @@
 		margin: 0;
 		font-family: var(--body-font);
 	}
-	@media (max-width: 950px) {
-		.header {
-			grid-template-columns: 1fr;
-		}
-		.image {
-			grid-row-start: 1;
-			margin-bottom: 2rem;
-		}
-	}
 
 	.markdown-container {
 		margin: 5rem 4rem;
@@ -260,8 +251,31 @@
 		font-family: var(--body-font);
 		margin-bottom: 2rem;
 	}
-	.markdown-container :global(img) {
+	.markdown-container :global(p > :first-child) {
 		margin-left: -2rem;
+	}
+	.markdown-container :global(img) {
 		width: 100%;
+	}
+
+	@media (max-width: 950px) {
+		.header {
+			grid-template-columns: 1fr;
+		}
+		.image {
+			grid-row-start: 1;
+			margin-bottom: 2rem;
+		}
+		.markdown-container {
+			margin: 5rem 1rem;
+		}
+	}
+	@media (max-width: 600px) {
+		.password form {
+			width: 100%;
+		}
+		.password button {
+			width: 100%;
+		}
 	}
 </style>

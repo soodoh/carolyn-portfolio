@@ -115,6 +115,7 @@
 			display: none;
 		}
 		.mobile-nav-button {
+			padding: 0.3rem;
 			display: block;
 			width: var(--mobile-nav-size);
 			height: var(--mobile-nav-size);

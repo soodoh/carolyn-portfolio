@@ -1,5 +1,4 @@
 <script lang="ts">
-	import type { ProjectType } from '$lib/types';
 	import Dropdown from './Dropdown.svelte';
 
 	export let current: string;
@@ -8,19 +7,21 @@
 </script>
 
 <div class="container">
-	{#each options as name}
-		<button
-			aria-label={`Choose filter: ${name}`}
-			class:active={current === name}
-			class="filter"
-			on:click={() => onChange(name)}
-		>
-			{name}
-		</button>
-	{/each}
-</div>
-<div class="dropdown-container">
-	<Dropdown {current} {options} {onChange} />
+	<div class="filter-buttons">
+		{#each options as name}
+			<button
+				aria-label={`Choose filter: ${name}`}
+				class:active={current === name}
+				class="filter"
+				on:click={() => onChange(name)}
+			>
+				{name}
+			</button>
+		{/each}
+	</div>
+	<div class="filter-dropdown">
+		<Dropdown {current} {options} {onChange} />
+	</div>
 </div>
 
 <style>
@@ -34,7 +35,7 @@
 		z-index: 2;
 		background-color: var(--light-text);
 	}
-	.dropdown-container {
+	.filter-dropdown {
 		display: none;
 	}
 	.filter {
@@ -52,10 +53,10 @@
 		margin-top: calc(-1 * var(--border-height));
 	}
 	@media (max-width: 600px) {
-		.container {
+		.filter-buttons {
 			display: none;
 		}
-		.dropdown-container {
+		.filter-dropdown {
 			display: block;
 		}
 	}
