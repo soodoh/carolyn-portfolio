@@ -1,34 +1,35 @@
 <script lang="ts">
 	import Background from '$lib/components/Background.svelte';
 	import Image from '$lib/components/Image.svelte';
+	import LayoutContainer from '$lib/components/LayoutContainer.svelte';
 
 	export let data;
 </script>
 
 <Background fixed image={data.backgroundImage} />
-<div class="container">
-	<div class="info">
-		<Image
-			srcset={[414, 728, 1440]}
-			image={data.profilePicture}
-			sizes="(max-width: 414px) 100vw, (max-width: 728px) 75vw, 25vw"
-		/>
-		<span>{data.location}</span>
-		<span>{data.email}</span>
+<LayoutContainer>
+	<div class="container">
+		<div class="info">
+			<Image
+				srcset={[414, 728, 1440]}
+				image={data.profilePicture}
+				sizes="(max-width: 414px) 100vw, (max-width: 728px) 75vw, 25vw"
+			/>
+			<span>{data.location}</span>
+			<span>{data.email}</span>
+		</div>
+		<div class="markdown-container">
+			{@html data.parsedBio}
+		</div>
 	</div>
-	<div class="markdown-container">
-		{@html data.parsedBio}
-	</div>
-</div>
+</LayoutContainer>
 
 <style>
 	.container {
 		display: grid;
 		grid-template-columns: 25% 1fr;
 		grid-gap: 2.5rem;
-		margin: auto;
-		padding: 3.5rem var(--padding);
-		max-width: var(--max-container-width);
+		margin-top: 3.5rem;
 	}
 	.info {
 		display: flex;
@@ -54,6 +55,10 @@
 	}
 	.markdown-container :global(a) {
 		color: var(--light-color);
+	}
+	.markdown-container :global(p) {
+		margin-top: 0;
+		margin-bottom: 2rem;
 	}
 	@media (max-width: 950px) {
 		.container {

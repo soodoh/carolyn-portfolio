@@ -4,6 +4,7 @@
 	import Image from '$lib/components/Image.svelte';
 	import Modal from '$lib/components/Modal.svelte';
 	import Masonry from 'svelte-bricks';
+	import LayoutContainer from '$lib/components/LayoutContainer.svelte';
 
 	export let data;
 	let currentAlbum = data.albums[0].name;
@@ -35,7 +36,7 @@
 	}
 </script>
 
-<div class="container">
+<LayoutContainer>
 	<Filter options={albumNames} current={currentAlbum} onChange={handleAlbumChange} />
 
 	<Modal bind:isOpen onKeypress={handleKeypress}>
@@ -73,21 +74,16 @@
 			/>
 		</button>
 	</Masonry>
-</div>
+</LayoutContainer>
 
 <style>
-	.container {
-		margin: auto;
-		max-width: var(--max-container-width);
-		padding: 0 var(--padding);
-	}
 	button {
 		border: none;
 		background-color: transparent;
 		width: 100%;
 		cursor: pointer;
 	}
-	.container :global(img) {
+	.modal-container :global(img) {
 		width: 100%;
 		height: 100%;
 		max-width: calc(100vw - 5rem);

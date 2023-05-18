@@ -25,7 +25,8 @@ export type Project = {
 	coverImage: Asset;
 	description: string;
 	role: string;
-	link: string | null;
+	videoLink: string | null;
 	summary: string;
 	projectType: ProjectType[];
+	password: string | null;
 };

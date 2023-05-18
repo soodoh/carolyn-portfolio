@@ -3,6 +3,7 @@
 	import Filter from './Filter.svelte';
 	import Image from './Image.svelte';
 	import Masonry from 'svelte-bricks';
+	import LayoutContainer from '$lib/components/LayoutContainer.svelte';
 
 	export let projects: Project[];
 
@@ -31,7 +32,7 @@
 	}
 </script>
 
-<div class="container">
+<LayoutContainer>
 	<Filter options={projectTypes} current={currentProjectType} onChange={handleProjectChange} />
 
 	<Masonry items={currentProjects} minColWidth={250} maxColWidth={500} gap={50} let:item>
@@ -47,14 +48,9 @@
 			/>
 		</a>
 	</Masonry>
-</div>
+</LayoutContainer>
 
 <style>
-	.container {
-		margin: auto;
-		max-width: var(--max-container-width);
-		padding: 0 var(--padding);
-	}
 	.project-container {
 		position: relative;
 		display: flex;

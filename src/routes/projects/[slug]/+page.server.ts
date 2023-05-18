@@ -1,10 +1,24 @@
 import { error } from '@sveltejs/kit';
 import { marked } from 'marked';
-import type { Project, ProjectType } from '$lib/types';
+import type { Project } from '$lib/types';
 import type { PageServerLoad } from './$types';
-import type { Asset as ContentfulAsset } from 'contentful';
-import { client, formatAsset } from '$lib/utils/contentful';
+import { client } from '$lib/utils/contentful';
+import { formatProject } from '$lib/utils/getProjects';
 import { imageRenderer } from '$lib/utils/markdownRenderer';
+
+function getLink(rawLink: unknown): string | null {
+	if (!rawLink) return null;
+	const link = String(rawLink);
+	if (/vimeo/gi.test(link)) {
+		return `${link}?title=0&byline=0&portrait=0`;
+	}
+	if (/youtu\.?be/gi.test(link)) {
+		const videoId = link.match(/\w+$/)?.pop();
+		return videoId ? `https://www.youtube.com/embed/${videoId}` : link;
+	}
+
+	return link;
+}
 
 export const load: PageServerLoad<{ project: Project }> = async ({ params }) => {
 	const projectData = await client.getEntries({
@@ -16,23 +30,17 @@ export const load: PageServerLoad<{ project: Project }> = async ({ params }) => 
 	}
 
 	marked.use({
+		mangle: false,
+		headerIds: false,
 		renderer: {
 			image: imageRenderer
 		}
 	});
-	const descriptionString = String(projectData.items[0].fields.description);
+	const project = formatProject(projectData.items[0]);
+	const descriptionString = String(project.description);
 	const parsedDescription = marked.parse(descriptionString);
+	project.description = parsedDescription;
+	project.videoLink = getLink(project.videoLink);
 
-	const project = {
-		id: String(projectData.items[0].sys.id),
-		slug: String(projectData.items[0].fields.slug),
-		coverImage: formatAsset(projectData.items[0].fields.coverImage as ContentfulAsset),
-		title: String(projectData.items[0].fields.title),
-		description: parsedDescription,
-		role: String(projectData.items[0].fields.role),
-		link: projectData.items[0].fields.link ? String(projectData.items[0].fields.link) : null,
-		summary: String(projectData.items[0].fields.summary),
-		projectType: projectData.items[0].fields.projectType as ProjectType[]
-	};
 	return { project };
 };
