@@ -25,6 +25,7 @@
 		content="Carolyn DiLoreto is a multi-media visual artist, dancer and USC alumnus. In this portfolio, view photo galleries, read about past projects, or even read her bio."
 	/>
 </svelte:head>
+
 <Background image={data.backgroundImage} />
 <div class="container" bind:this={homePage}>
 	<div class="brand">
@@ -40,11 +41,11 @@
 
 <style>
 	.container {
-		height: calc(100vh - var(--header-height));
 		display: flex;
 		justify-content: center;
 		align-items: center;
 		flex-direction: column;
+		height: 100vh;
 	}
 	.brand {
 		display: flex;
@@ -92,6 +93,7 @@
 		.links {
 			flex-direction: column;
 			align-items: center;
+			width: auto;
 		}
 		.links a {
 			margin-bottom: 1rem;

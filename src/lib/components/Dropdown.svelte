@@ -44,6 +44,7 @@
 		position: relative;
 		width: auto;
 		margin-top: 0.5rem;
+		padding-bottom: 0.5rem;
 	}
 	.dropdown button {
 		cursor: pointer;

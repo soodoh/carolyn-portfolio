@@ -14,6 +14,7 @@
 <style>
 	.container {
 		background-color: var(--dark-color);
+		height: 100vh;
 		position: absolute;
 		top: 0;
 		left: 0;

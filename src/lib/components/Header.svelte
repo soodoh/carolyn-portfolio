@@ -11,7 +11,10 @@
 	let mobileNavOpen = false;
 </script>
 
-<header class:transparent={$page.url.pathname === '/' && $transparentHeader}>
+<header
+	class:fixed={$page.url.pathname === '/'}
+	class:transparent={$page.url.pathname === '/' && $transparentHeader}
+>
 	<div class="brand">
 		<a aria-label="Home" href="/">
 			<svg inline-src="logo" />
@@ -53,6 +56,12 @@
 		height: var(--header-height);
 		transition: all 250ms ease-in-out;
 		z-index: 2;
+	}
+	.fixed {
+		position: fixed;
+		top: 0;
+		left: 0;
+		right: 0;
 	}
 	a,
 	a:visited {

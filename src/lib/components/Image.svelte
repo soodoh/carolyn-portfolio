@@ -5,7 +5,7 @@
 	export let srcset: number[];
 	export let sizes: string;
 	export let image: Asset;
-	const formats = ['avif', 'webp', 'jpg'];
+	const formats = ['avif', 'webp', 'jpg', 'gif'];
 	let imageElement: HTMLElement;
 	let inViewport = false;
 
