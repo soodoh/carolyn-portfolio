@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { ProjectType, Project } from '$lib/types';
 	import Filter from './Filter.svelte';
-	import Image from './Image.svelte';
+	import LayoutImage from '$lib/components/LayoutImage.svelte';
 	import Masonry from 'svelte-bricks';
 	import LayoutContainer from '$lib/components/LayoutContainer.svelte';
 
@@ -45,7 +45,7 @@
 				<h2>{item.title}</h2>
 				<h3>{item.summary}</h3>
 			</div>
-			<Image
+			<LayoutImage
 				image={item.coverImage}
 				srcset={[100, 200, 300, 480]}
 				sizes="(max-width: 414px) 100vw, (max-width: 728px) 75vw, 25vw"

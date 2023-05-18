@@ -5,7 +5,6 @@
 	export let fixed = false;
 	export let image: Asset;
 	const srcset = [480, 768, 1024, 1366, 1600, 1920];
-	const formats = ['avif', 'webp', 'jpg'];
 </script>
 
 <div class="container" class:fixed>

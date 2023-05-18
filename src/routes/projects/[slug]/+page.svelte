@@ -1,5 +1,5 @@
 <script lang="ts">
-	import Image from '$lib/components/Image.svelte';
+	import LayoutImage from '$lib/components/LayoutImage.svelte';
 
 	export let data;
 	let showError = false;
@@ -48,7 +48,7 @@
 			</div>
 			{#if !data.project.videoLink}
 				<div class="image">
-					<Image
+					<LayoutImage
 						image={data.project.coverImage}
 						sizes="(max-width: 950px) 100vw, 450px"
 						srcset={[414, 728, 1440]}

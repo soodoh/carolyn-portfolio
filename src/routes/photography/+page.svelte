@@ -2,6 +2,7 @@
 	import type { Asset } from '$lib/types';
 	import Filter from '$lib/components/Filter.svelte';
 	import Image from '$lib/components/Image.svelte';
+	import LayoutImage from '$lib/components/LayoutImage.svelte';
 	import Modal from '$lib/components/Modal.svelte';
 	import Masonry from 'svelte-bricks';
 	import LayoutContainer from '$lib/components/LayoutContainer.svelte';
@@ -55,7 +56,7 @@
 				{/if}
 			</div>
 
-			<Image layoutShift={false} image={currentPhoto} srcset={[500, 725, 1440]} sizes="100vw" />
+			<Image image={currentPhoto} srcset={[500, 725, 1440]} sizes="100vw" />
 
 			<div class="next">
 				{#if photoIndex <= photos.length - 2}
@@ -72,7 +73,7 @@
 
 	<Masonry items={photos} minColWidth={250} maxColWidth={500} gap={50} let:item>
 		<button aria-label="View fullscreen photo" on:click={() => handlePhoto(item)}>
-			<Image
+			<LayoutImage
 				image={item}
 				srcset={[100, 200, 300, 480]}
 				sizes="(max-width: 414px) 100vw, (max-width: 728px) 75vw, 25vw"
