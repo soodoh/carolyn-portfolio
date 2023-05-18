@@ -96,13 +96,16 @@
 	.modal-container :global(img) {
 		width: 100%;
 		height: 100%;
-		max-width: calc(100vw - 5rem);
-		max-height: calc(100vh - 5rem);
+		max-width: calc(100vw - 2rem);
+		max-height: calc(100vh - 4rem);
 	}
 	.modal-container {
+		position: absolute;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
 		display: grid;
-		height: 100vh;
-		width: 100vw;
 		grid-template-rows: 1fr auto 1fr;
 		grid-template-columns: 1fr auto 1fr;
 		justify-items: center;
