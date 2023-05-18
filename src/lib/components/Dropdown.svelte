@@ -63,6 +63,7 @@
 		height: 1rem;
 	}
 	.dropdown-menu {
+		visibility: visible;
 		scale: 1;
 		transition: all 0.2s ease-in-out;
 		display: grid;
@@ -75,14 +76,15 @@
 		overflow: hidden;
 		box-shadow: 0 0 0.5rem rgba(var(--dark-color-rgb), 0.25);
 	}
+	.dropdown-menu[aria-hidden='true'] {
+		visibility: hidden;
+		scale: 0;
+		transition: all 0.2s ease-in-out;
+	}
 	.dropdown-menu button {
 		padding: 1rem 2rem;
 	}
 	.dropdown-menu button:not(:last-child) {
 		border-bottom: 1px solid rgba(var(--dark-color-rgb), 0.25);
-	}
-	.dropdown-menu[aria-hidden='true'] {
-		scale: 0;
-		transition: scale 0.2s ease-in-out;
 	}
 </style>
