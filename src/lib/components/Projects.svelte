@@ -47,7 +47,7 @@
 			</div>
 			<Image
 				image={item.coverImage}
-				srcset={[414, 728, 1440]}
+				srcset={[100, 200, 300, 480]}
 				sizes="(max-width: 414px) 100vw, (max-width: 728px) 75vw, 25vw"
 			/>
 		</a>

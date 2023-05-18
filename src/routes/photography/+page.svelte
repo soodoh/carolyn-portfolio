@@ -54,7 +54,7 @@
 					>
 				{/if}
 			</div>
-			<Image image={currentPhoto} srcset={[725, 1440]} sizes="100vw" />
+			<Image image={currentPhoto} srcset={[500, 725, 1440]} sizes="100vw" />
 			<div class="next">
 				{#if photoIndex <= photos.length - 2}
 					<button aria-label="Next photo" on:click={() => handlePhoto(photos[photoIndex + 1])}>
@@ -72,7 +72,7 @@
 		<button aria-label="View fullscreen photo" on:click={() => handlePhoto(item)}>
 			<Image
 				image={item}
-				srcset={[414, 728, 1440]}
+				srcset={[100, 200, 300, 480]}
 				sizes="(max-width: 414px) 100vw, (max-width: 728px) 75vw, 25vw"
 			/>
 		</button>
