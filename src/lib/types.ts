@@ -26,7 +26,7 @@ export type Project = {
 	slug: string;
 	coverImage: Asset;
 	description: string;
-	role: string;
+	role: string | null;
 	videoLink: string | null;
 	summary: string;
 	projectType: ProjectType[];

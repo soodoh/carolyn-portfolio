@@ -49,7 +49,9 @@
 		<section class="header" class:video-header={!!data.project.videoLink}>
 			<div class="info">
 				<h1>{data.project.title}</h1>
-				<h2>{data.project.role}</h2>
+				{#if data.project.role}
+					<h2>{data.project.role}</h2>
+				{/if}
 			</div>
 			{#if !data.project.videoLink}
 				<div class="image">

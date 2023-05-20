@@ -9,7 +9,7 @@ export function formatProject(item: Entry): Project {
 		slug: String(item.fields.slug),
 		coverImage: formatAsset(item.fields.coverImage as ContentfulAsset),
 		description: String(item.fields.description),
-		role: String(item.fields.role),
+		role: item.fields.role ? String(item.fields.role) : null,
 		videoLink: item.fields.videoLink ? String(item.fields.videoLink) : null,
 		summary: String(item.fields.summary),
 		projectType: item.fields.projectType as ProjectType[],
