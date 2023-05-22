@@ -83,7 +83,7 @@
 		color: black;
 		transition: background-color 0.2s ease-in-out;
 	}
-	@media (max-width: 820px) {
+	@media (--md-viewport) {
 		.brand svg {
 			height: 6rem;
 		}

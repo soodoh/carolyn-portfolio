@@ -3,6 +3,7 @@
 	import Header from '$lib/components/Header.svelte';
 	import '@fontsource/karla';
 	import '@fontsource/old-standard-tt';
+	import '$lib/globals.css';
 
 	export let data;
 </script>
@@ -16,31 +17,6 @@
 <Footer socialMedia={data.socialMedia} />
 
 <style lang="postcss">
-	:global(:root) {
-		--light-text: #fff;
-		--dark-color: #494f5c;
-		--dark-color-rgb: 73, 79, 92;
-		--light-color: #cec0a8;
-		--error-color: #fd9f92;
-		--body-font: 'Karla', sans-serif;
-		--header-font: 'Old Standard TT', serif;
-		--padding: 1.5rem;
-		--header-height: 4rem;
-		--max-container-width: 1440px;
-	}
-
-	:global(body) {
-		margin: 0;
-		padding: 0;
-		min-height: 100vh;
-		display: flex;
-		flex-direction: column;
-		font-family: var(--body-font);
-		color: var(--dark-color);
-	}
-	:global(h1, h2, h3, h4, h5) {
-		font-family: var(--header-font);
-	}
 	main {
 		flex-grow: 1;
 		display: flex;

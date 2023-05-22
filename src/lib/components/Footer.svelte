@@ -36,7 +36,7 @@
 		justify-content: center;
 		align-items: center;
 	}
-	@media (max-width: 768px) {
+	@media (--md-viewport) {
 		footer {
 			flex-direction: column;
 			align-items: center;

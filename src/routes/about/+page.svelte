@@ -72,12 +72,12 @@
 		margin-top: 0;
 		margin-bottom: 2rem;
 	}
-	@media (max-width: 950px) {
+	@media (--lg-viewport) {
 		.container {
 			grid-template-columns: 1fr 1fr;
 		}
 	}
-	@media (max-width: 600px) {
+	@media (--md-viewport) {
 		.container {
 			grid-template-columns: 1fr;
 			grid-template-rows: auto auto;

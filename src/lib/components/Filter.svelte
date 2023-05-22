@@ -52,7 +52,7 @@
 		border-top: var(--border-height) solid var(--light-color);
 		margin-top: calc(-1 * var(--border-height));
 	}
-	@media (max-width: 600px) {
+	@media (--md-viewport) {
 		.filter-buttons {
 			display: none;
 		}

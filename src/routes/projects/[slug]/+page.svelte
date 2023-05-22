@@ -260,7 +260,7 @@
 		width: 100%;
 	}
 
-	@media (max-width: 950px) {
+	@media (--md-viewport) {
 		.header {
 			grid-template-columns: 1fr;
 		}
@@ -272,7 +272,7 @@
 			margin: 5rem 1rem;
 		}
 	}
-	@media (max-width: 600px) {
+	@media (--md-viewport) {
 		.password form {
 			width: 100%;
 		}

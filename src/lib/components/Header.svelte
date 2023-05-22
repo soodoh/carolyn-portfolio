@@ -100,13 +100,17 @@
 	.mobile-nav-button {
 		display: none;
 	}
+	nav a:first-child {
+		margin-left: 0;
+	}
 	nav a {
 		margin-left: 2rem;
 	}
 	nav a.active {
 		color: var(--light-color);
 	}
-	@media (max-width: 450px) {
+
+	@media (--sm-viewport) {
 		:root {
 			--mobile-nav-size: 2rem;
 		}
@@ -123,7 +127,8 @@
 			margin-left: 0;
 		}
 	}
-	@media (max-width: 820px) {
+
+	@media (--lg-viewport) {
 		nav {
 			display: none;
 		}
@@ -160,7 +165,6 @@
 		.hamburger-icon:after {
 			top: calc(var(--mobile-nav-size) / 6);
 		}
-
 		.close-icon {
 			transform: rotate(135deg);
 		}
@@ -209,6 +213,7 @@
 			justify-content: center;
 			width: 100%;
 			padding: 3rem;
+			margin: 0;
 		}
 	}
 </style>

@@ -1,0 +1,30 @@
+	@custom-media --sm-viewport (max-width: 480px);
+	@custom-media --md-viewport (max-width: 768px);
+	@custom-media --lg-viewport (max-width: 1024px);
+
+	:root {
+		--light-text: #fff;
+		--dark-color: #494f5c;
+		--dark-color-rgb: 73, 79, 92;
+		--light-color: #cec0a8;
+		--error-color: #fd9f92;
+		--body-font: 'Karla', sans-serif;
+		--header-font: 'Old Standard TT', serif;
+		--padding: 1.5rem;
+		--header-height: 4rem;
+		--max-container-width: 1440px;
+	}
+
+	body {
+		margin: 0;
+		padding: 0;
+		min-height: 100vh;
+		display: flex;
+		flex-direction: column;
+		font-family: var(--body-font);
+		color: var(--dark-color);
+	}
+
+	h1, h2, h3, h4, h5 {
+		font-family: var(--header-font);
+	}
