@@ -7,7 +7,7 @@
 	<h2>Page not found</h2>
 </div>
 
-<style>
+<style lang="postcss">
 	.container {
 		display: flex;
 		flex-direction: column;

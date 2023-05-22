@@ -12,7 +12,7 @@
 	<Image {srcset} {sizes} {image} />
 </div>
 
-<style>
+<style lang="postcss">
 	.responsive-image {
 		position: relative;
 		width: 100%;

@@ -11,7 +11,7 @@
 	<Image {image} sizes="100vw" {srcset} />
 </div>
 
-<style>
+<style lang="postcss">
 	.container {
 		background-color: var(--dark-color);
 		height: 100vh;

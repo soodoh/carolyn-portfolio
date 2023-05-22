@@ -54,7 +54,7 @@
 	</Masonry>
 </LayoutContainer>
 
-<style>
+<style lang="postcss">
 	.project-container {
 		position: relative;
 		display: flex;

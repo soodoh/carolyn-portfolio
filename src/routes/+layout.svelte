@@ -15,7 +15,7 @@
 <main><slot /></main>
 <Footer socialMedia={data.socialMedia} />
 
-<style>
+<style lang="postcss">
 	:global(:root) {
 		--light-text: #fff;
 		--dark-color: #494f5c;

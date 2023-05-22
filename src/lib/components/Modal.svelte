@@ -47,7 +47,7 @@
 	</div>
 </div>
 
-<style>
+<style lang="postcss">
 	:global(body:has(.modal-open)) {
 		overflow: hidden;
 	}

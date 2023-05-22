@@ -13,7 +13,7 @@
 	{/if}
 </a>
 
-<style>
+<style lang="postcss">
 	a {
 		border-radius: 50%;
 		text-decoration: none;

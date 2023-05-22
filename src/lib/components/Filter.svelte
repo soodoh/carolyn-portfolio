@@ -24,7 +24,7 @@
 	</div>
 </div>
 
-<style>
+<style lang="postcss">
 	:root {
 		--border-height: 5px;
 	}

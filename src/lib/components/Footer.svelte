@@ -18,7 +18,7 @@
 	</div>
 </footer>
 
-<style>
+<style lang="postcss">
 	footer {
 		display: flex;
 		justify-content: space-between;

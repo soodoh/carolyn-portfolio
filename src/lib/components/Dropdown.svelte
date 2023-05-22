@@ -38,7 +38,7 @@
 	</div>
 </div>
 
-<style>
+<style lang="postcss">
 	.dropdown {
 		display: inline-block;
 		position: relative;

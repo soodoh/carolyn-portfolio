@@ -39,7 +39,7 @@
 </div>
 <Projects projects={data.projects} />
 
-<style>
+<style lang="postcss">
 	.container {
 		display: flex;
 		justify-content: center;

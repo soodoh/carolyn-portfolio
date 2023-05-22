@@ -33,7 +33,7 @@
 	</div>
 </LayoutContainer>
 
-<style>
+<style lang="postcss">
 	.container {
 		display: grid;
 		grid-template-columns: 25% 1fr;

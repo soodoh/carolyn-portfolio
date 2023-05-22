@@ -86,7 +86,7 @@
 	</Masonry>
 </LayoutContainer>
 
-<style>
+<style lang="postcss">
 	button {
 		border: none;
 		background-color: transparent;

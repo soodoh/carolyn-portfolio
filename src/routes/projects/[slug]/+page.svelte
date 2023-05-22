@@ -80,7 +80,7 @@
 	</div>
 {/if}
 
-<style>
+<style lang="postcss">
 	.password {
 		display: flex;
 		flex-direction: column;

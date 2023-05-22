@@ -42,7 +42,7 @@
 	</button>
 </header>
 
-<style>
+<style lang="postcss">
 	:root {
 		--mobile-nav-size: 2.5rem;
 	}
