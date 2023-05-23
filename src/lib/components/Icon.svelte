@@ -21,8 +21,8 @@
 		display: flex;
 		justify-content: center;
 		align-items: center;
-		width: 1.5rem;
-		height: 1.5rem;
+		width: 2.5rem;
+		height: 2.5rem;
 		padding: 0.5rem;
 		margin: 0 0.25rem;
 		transition: background-color 0.25s ease-in-out;

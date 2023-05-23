@@ -239,7 +239,7 @@
 	}
 
 	.markdown-container {
-		margin: 5rem 4rem;
+		margin: 5rem 4rem 2rem 4rem;
 	}
 	.markdown-container :global(h1) {
 		text-align: center;
@@ -258,6 +258,7 @@
 	}
 	.markdown-container :global(img) {
 		width: 100%;
+		margin-bottom: 0.5rem;
 	}
 
 	@media (--md-viewport) {
