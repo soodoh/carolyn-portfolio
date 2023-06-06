@@ -2,11 +2,6 @@
 	export let isOpen = false;
 	export let onKeypress: ((event: KeyboardEvent) => void) | null = null;
 
-	function handleBackdrop(event: MouseEvent) {
-		if (event.target instanceof HTMLElement && event.target.matches('.modal')) {
-			isOpen = false;
-		}
-	}
 	function handleKeypress(event: KeyboardEvent) {
 		if (event.key === 'Escape') {
 			isOpen = false;
@@ -35,13 +30,7 @@
 	on:keydown={isOpen ? handleKeypress : null}
 	on:focusin={isOpen ? handleFocus : null}
 />
-<div
-	class:modal-open={isOpen}
-	class="modal"
-	bind:this={modal}
-	on:click={handleBackdrop}
-	on:keydown={handleKeypress}
->
+<div class:modal-open={isOpen} class="modal" bind:this={modal}>
 	<div class="modal-content">
 		<slot />
 	</div>

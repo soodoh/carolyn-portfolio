@@ -28,11 +28,17 @@
 	}
 
 	function handleKeypress(event: KeyboardEvent) {
-		if (event.key == 'ArrowLeft' && photoIndex > 0) {
+		if (event.key === 'ArrowLeft' && photoIndex > 0) {
 			handlePhoto(photos[photoIndex - 1]);
-		}
-		if (event.key == 'ArrowRight' && photoIndex <= photos.length - 2) {
+		} else if (event.key === 'ArrowRight' && photoIndex <= photos.length - 2) {
 			handlePhoto(photos[photoIndex + 1]);
+		} else if (event.key === 'Escape') {
+			isOpen = false;
+		}
+	}
+	function handleModalBackdrop(event: MouseEvent) {
+		if (event.target instanceof HTMLElement && event.target.matches('.modal-container')) {
+			isOpen = false;
 		}
 	}
 </script>
@@ -48,7 +54,7 @@
 	<Filter options={albumNames} current={currentAlbum} onChange={handleAlbumChange} />
 
 	<Modal bind:isOpen onKeypress={handleKeypress}>
-		<div class="modal-container">
+		<div class="modal-container" on:click={handleModalBackdrop} on:keypress={handleKeypress}>
 			<div class="close">
 				<button aria-label="Close image modal" on:click={() => (isOpen = false)}>&times;</button>
 			</div>
@@ -123,6 +129,10 @@
 		grid-column: 1/4;
 		justify-self: flex-end;
 		align-self: flex-start;
+	}
+	.prev button,
+	.next button {
+		padding: 0.5rem;
 	}
 	.prev {
 		justify-self: flex-start;
