@@ -1,7 +1,7 @@
 <script lang="ts">
 	import Background from '$lib/components/Background.svelte';
-	import LayoutImage from '$lib/components/LayoutImage.svelte';
 	import LayoutContainer from '$lib/components/LayoutContainer.svelte';
+	import LayoutImage from '$lib/components/LayoutImage.svelte';
 
 	export let data;
 </script>

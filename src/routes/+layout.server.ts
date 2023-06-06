@@ -8,9 +8,10 @@ export async function load() {
 		client.getEntries({ content_type: 'about' })
 	]);
 	const aboutEntry = aboutData.items[0];
+	const backgroundImage = await formatAsset(aboutEntry.fields.background as ContentfulAsset);
 
 	return {
-		backgroundImage: formatAsset(aboutEntry.fields.background as ContentfulAsset),
+		backgroundImage,
 		socialMedia: socialMedia.items.map((item) => ({
 			id: item.sys.id,
 			title: String(item.fields.title) as IconType,

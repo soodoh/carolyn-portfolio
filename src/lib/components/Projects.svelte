@@ -1,9 +1,9 @@
 <script lang="ts">
-	import type { ProjectType, Project } from '$lib/types';
-	import Filter from './Filter.svelte';
-	import LayoutImage from '$lib/components/LayoutImage.svelte';
 	import Masonry from 'svelte-bricks';
+	import Filter from './Filter.svelte';
+	import type { Project, ProjectType } from '$lib/types';
 	import LayoutContainer from '$lib/components/LayoutContainer.svelte';
+	import LayoutImage from '$lib/components/LayoutImage.svelte';
 
 	export let projects: Project[];
 

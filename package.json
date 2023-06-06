@@ -43,7 +43,9 @@
 	"dependencies": {
 		"@fontsource/karla": "^4.5.11",
 		"@fontsource/old-standard-tt": "^4.5.9",
+		"blurhash": "^2.0.5",
 		"marked": "^5.0.2",
+		"sharp": "^0.32.1",
 		"svelte-bricks": "^0.1.7"
 	}
 }

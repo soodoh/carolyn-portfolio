@@ -8,9 +8,10 @@ export async function load() {
 	const bioString = String(aboutEntry.fields.bio);
 	marked.use({ mangle: false, headerIds: false });
 	const parsedBio: string = marked.parse(bioString);
+	const profilePicture = await formatAsset(aboutEntry.fields.profilePicture as ContentfulAsset);
 
 	return {
-		profilePicture: formatAsset(aboutEntry.fields.profilePicture as ContentfulAsset),
+		profilePicture,
 		parsedBio,
 		location: String(aboutEntry.fields.location),
 		email: String(aboutEntry.fields.email)

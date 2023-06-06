@@ -1,6 +1,6 @@
 <script lang="ts">
-	import type { Asset } from '$lib/types';
 	import { onMount } from 'svelte';
+	import type { Asset } from '$lib/types';
 
 	export let srcset: number[];
 	export let sizes: string;

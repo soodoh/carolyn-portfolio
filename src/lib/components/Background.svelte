@@ -1,6 +1,6 @@
 <script lang="ts">
-	import type { Asset } from '$lib/types';
 	import Image from './Image.svelte';
+	import type { Asset } from '$lib/types';
 
 	export let fixed = false;
 	export let image: Asset;

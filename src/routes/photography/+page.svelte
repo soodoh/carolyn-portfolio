@@ -1,11 +1,11 @@
 <script lang="ts">
+	import Masonry from 'svelte-bricks';
 	import type { Asset } from '$lib/types';
 	import Filter from '$lib/components/Filter.svelte';
 	import Image from '$lib/components/Image.svelte';
+	import LayoutContainer from '$lib/components/LayoutContainer.svelte';
 	import LayoutImage from '$lib/components/LayoutImage.svelte';
 	import Modal from '$lib/components/Modal.svelte';
-	import Masonry from 'svelte-bricks';
-	import LayoutContainer from '$lib/components/LayoutContainer.svelte';
 
 	export let data;
 	let currentAlbum = data.albums[0].name;

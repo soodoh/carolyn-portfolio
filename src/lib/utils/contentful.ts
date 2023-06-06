@@ -2,6 +2,7 @@ import contentful from 'contentful';
 import type { Asset } from '$lib/types';
 import type { AssetDetails, Asset as ContentfulAsset } from 'contentful';
 import { CONTENTFUL_ACCESS_TOKEN, CONTENTFUL_SPACE_ID } from '$env/static/private';
+import { encodeImageToBlurhash } from '$lib/utils/images';
 
 export const client = contentful.createClient({
 	space: CONTENTFUL_SPACE_ID,
@@ -12,13 +13,19 @@ export function formatUrl(baseUrl: string) {
 	return `https:${baseUrl}`;
 }
 
-export function formatAsset(asset: ContentfulAsset): Asset {
+export async function formatAsset(asset: ContentfulAsset): Promise<Asset> {
 	const imageDetails = asset.fields.file?.details as AssetDetails;
+	const imageUrl = formatUrl(String(asset.fields.file?.url));
+	const imageWidth = imageDetails.image?.width ?? 0;
+	const imageHeight = imageDetails.image?.height ?? 0;
+	const blurHash = await encodeImageToBlurhash(`${imageUrl}?w=100`);
+
 	return {
 		id: asset.sys.id,
 		title: String(asset.fields.title),
-		url: formatUrl(String(asset.fields.file?.url)),
-		width: imageDetails.image?.width ?? 0,
-		height: imageDetails.image?.height ?? 0
+		blurHash,
+		url: imageUrl,
+		width: imageWidth,
+		height: imageHeight
 	};
 }

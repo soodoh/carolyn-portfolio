@@ -5,14 +5,17 @@ import { client, formatAsset } from '$lib/utils/contentful';
 
 export const load: PageServerLoad<{ albums: Album[] }> = async () => {
 	const albumData = await client.getEntries({
-		content_type: 'photos',
+	content_type: 'photos',
 		order: ['fields.order']
 	});
-	const albums: Album[] = albumData.items.map((item) => ({
-		name: String(item.fields.album),
-		photos: Array.isArray(item.fields.photos)
-			? item.fields.photos.map((photo) => formatAsset(photo as ContentfulAsset))
-			: []
+	const albums = await Promise.all(albumData.items.map(async (item) => {
+	const photos = Array.isArray(item.fields.photos)
+			? await Promise.all(item.fields.photos.map((photo) => formatAsset(photo as ContentfulAsset)))
+			: [];
+		return {
+			name: String(item.fields.album),
+			photos,
+		};
 	}));
 
 	return { albums };

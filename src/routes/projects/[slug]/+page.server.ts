@@ -36,7 +36,7 @@ export const load: PageServerLoad<{ project: Project }> = async ({ params }) => 
 			image: imageRenderer
 		}
 	});
-	const project = formatProject(projectData.items[0]);
+	const project = await formatProject(projectData.items[0]);
 	const descriptionString = String(project.description);
 	const parsedDescription = marked.parse(descriptionString);
 	project.description = parsedDescription;

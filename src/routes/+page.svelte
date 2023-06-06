@@ -1,7 +1,7 @@
 <script lang="ts">
+	import { onMount } from 'svelte';
 	import Background from '$lib/components/Background.svelte';
 	import Projects from '$lib/components/Projects.svelte';
-	import { onMount } from 'svelte';
 	import { transparentHeader } from '$lib/stores';
 
 	export let data;
