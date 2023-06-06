@@ -50,7 +50,8 @@
 		cursor: pointer;
 		border: none;
 		background-color: transparent;
-		font-size: 1.2rem;
+		font-family: var(--body-font);
+		font-size: 1rem;
 		line-height: 1.75rem;
 		color: var(--dark-color);
 	}
