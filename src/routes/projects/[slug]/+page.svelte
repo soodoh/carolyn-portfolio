@@ -252,9 +252,9 @@
 		font-size: 1.25rem;
 		font-family: var(--body-font);
 		margin-bottom: 2rem;
-	}
-	.markdown-container :global(p > :first-child) {
-		margin-left: -2rem;
+		& > :first-child:not(a) {
+			margin-left: -2rem;
+		}
 	}
 	.markdown-container :global(img) {
 		width: 100%;

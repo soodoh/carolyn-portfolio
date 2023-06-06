@@ -17,7 +17,7 @@ function getSources(imageUrl: string, formats: string[], srcset: number[], sizes
 
 export const imageRenderer: Renderer['image'] = (href: string, title) => {
 	const imageUrl = formatUrl(href);
-	const formats = ['avif', 'webp', 'jpg'];
+	const formats = ['webp', 'jpg', 'gif'];
 	const srcset = [414, 700, 1000];
 	const sizes = '100vw';
 	return (
