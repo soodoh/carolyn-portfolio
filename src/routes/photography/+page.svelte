@@ -94,8 +94,6 @@
 		cursor: pointer;
 	}
 	.modal-container :global(img) {
-		width: 100%;
-		height: 100%;
 		max-width: calc(100vw - 2rem);
 		max-height: calc(100vh - 4rem);
 	}
