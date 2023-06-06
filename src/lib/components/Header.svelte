@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { page } from '$app/stores';
 	import { transparentHeader } from '$lib/stores';
+	import MobileNav from '$lib/components/MobileNav.svelte';
 
 	const links = [
 		{ name: 'About', path: '/about' },
@@ -14,6 +15,7 @@
 <header
 	class:fixed={$page.url.pathname === '/'}
 	class:transparent={$page.url.pathname === '/' && $transparentHeader}
+	class:mobile-open={mobileNavOpen}
 >
 	<div class="brand">
 		<a aria-label="Home" href="/">
@@ -21,34 +23,19 @@
 			<h1>Carolyn DiLoreto</h1>
 		</a>
 	</div>
-	<nav class:mobile-open={mobileNavOpen}>
+	<nav>
 		{#each links as link}
-			<a
-				aria-label={link.name}
-				href={link.path}
-				class:active={$page.url.pathname === link.path}
-				on:click={() => (mobileNavOpen = false)}
-			>
+			<a aria-label={link.name} href={link.path} class:active={$page.url.pathname === link.path}>
 				{`${link.name}.`}
 			</a>
 		{/each}
 	</nav>
-	<button
-		aria-label={mobileNavOpen ? 'Close navigation menu' : 'Open navigation menu'}
-		class="mobile-nav-button"
-		on:click={() => (mobileNavOpen = !mobileNavOpen)}
-	>
-		<div class:close-icon={mobileNavOpen} class="hamburger-icon" />
-	</button>
+	<div class="mobile-nav-container">
+		<MobileNav {links} bind:isOpen={mobileNavOpen} />
+	</div>
 </header>
 
 <style lang="postcss">
-	:root {
-		--mobile-nav-size: 2.5rem;
-		@media (--sm-viewport) {
-			--mobile-nav-size: 2rem;
-		}
-	}
 	header {
 		position: sticky;
 		top: 0;
@@ -59,11 +46,8 @@
 		height: var(--header-height);
 		transition: all 250ms ease-in-out;
 		z-index: 2;
-
-		@media (--lg-viewport) {
-			&:has(.mobile-open) {
-				z-index: 3;
-			}
+		&.mobile-open {
+			z-index: 3;
 		}
 	}
 	.fixed {
@@ -72,6 +56,7 @@
 		left: 0;
 		right: 0;
 	}
+
 	a,
 	a:visited {
 		text-decoration: none;
@@ -121,23 +106,6 @@
 		line-height: 1.75rem;
 	}
 
-	.mobile-nav-button {
-		display: none;
-		@media (--lg-viewport) {
-			& {
-				padding: 0.3rem;
-				display: block;
-				width: var(--mobile-nav-size);
-				height: var(--mobile-nav-size);
-				border: 1px solid var(--light-color);
-				border-radius: 0.2rem;
-				background-color: transparent;
-				cursor: pointer;
-				z-index: 3;
-			}
-		}
-	}
-
 	nav {
 		& a {
 			margin-left: 2rem;
@@ -149,85 +117,17 @@
 				color: var(--light-color);
 			}
 		}
-
-		@media (--sm-viewport) {
+		@media (--md-viewport) {
 			& {
 				display: none;
 			}
 		}
+	}
 
-		@media (--lg-viewport) {
-			& {
-				display: flex;
-				position: fixed;
-				top: 0;
-				right: 0;
-				bottom: 0;
-				left: 0;
-				visibility: hidden;
-				opacity: 0;
-				transform: scale(0);
-				transition: all 250ms ease-in-out;
-			}
-			& a {
-				display: flex;
-				justify-content: center;
-				width: 100%;
-				padding: 3rem;
-				font-size: 1.5rem;
-				margin: 0;
-			}
+	.mobile-nav-container {
+		display: none;
+		@media (--md-viewport) {
+			display: block;
 		}
-	}
-
-	.mobile-open {
-		opacity: 1;
-		transform: scale(1);
-		visibility: visible;
-		transition: all 250ms ease-in-out;
-		position: absolute;
-		top: 0;
-		left: 0;
-		width: 100%;
-		height: 100vh;
-		background-color: var(--dark-color);
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		justify-content: center;
-	}
-
-	.hamburger-icon {
-		position: relative;
-		flex: none;
-		width: 100%;
-		height: 2px;
-		background-color: var(--light-text);
-		transition: all 250ms ease-in-out;
-	}
-	.hamburger-icon:before,
-	.hamburger-icon:after {
-		content: '';
-		position: absolute;
-		top: calc(var(--mobile-nav-size) / -6);
-		left: 0;
-		width: 100%;
-		height: 2px;
-		background-color: var(--light-text);
-		transition: var(--menu-transition);
-	}
-	.hamburger-icon:after {
-		top: calc(var(--mobile-nav-size) / 6);
-	}
-	.close-icon {
-		transform: rotate(135deg);
-	}
-	.close-icon:before,
-	.close-icon:after {
-		top: 0;
-		transform: rotate(90deg);
-	}
-	.close-icon:after {
-		opacity: 0;
 	}
 </style>

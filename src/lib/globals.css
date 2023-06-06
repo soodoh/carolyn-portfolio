@@ -1,7 +1,7 @@
 @import 'sanitize.css';
 
 @custom-media --sm-viewport (max-width: 480px);
-@custom-media --md-viewport (max-width: 768px);
+@custom-media --md-viewport (max-width: 800px);
 @custom-media --lg-viewport (max-width: 1024px);
 
 :root {
