@@ -139,14 +139,15 @@
 	}
 
 	nav {
-		& a:first-child {
-			margin-left: 0;
-		}
 		& a {
 			margin-left: 2rem;
-		}
-		& a.active {
-			color: var(--light-color);
+			font-size: 1rem;
+			&:first-child {
+				margin-left: 0;
+			}
+			&.active {
+				color: var(--light-color);
+			}
 		}
 
 		@media (--sm-viewport) {
@@ -173,6 +174,7 @@
 				justify-content: center;
 				width: 100%;
 				padding: 3rem;
+				font-size: 1.5rem;
 				margin: 0;
 			}
 		}
