@@ -1,19 +1,21 @@
 module.exports = {
 	plugins: {
-    'postcss-normalize': {},
-    'postcss-flexbugs-fixes': {},
+		'postcss-normalize': {},
+		'postcss-flexbugs-fixes': {},
 		'@csstools/postcss-global-data': {
-			files: ['./src/lib/globals.css'],
+			files: ['./src/lib/globals.css']
 		},
-    'postcss-preset-env': {
-      autoprefixer: {},
-      stage: 3,
-      features: {
-        'custom-media-queries': true,
-      }
-    },
-    cssnano: {
-      preset: 'default',
-    },
-	},
+		'postcss-preset-env': {
+			autoprefixer: {},
+			stage: 3,
+			features: {
+				'custom-media-queries': true,
+				'nesting-rules': true,
+				'not-pseudo-class': true
+			}
+		},
+		cssnano: {
+			preset: 'default'
+		}
+	}
 };

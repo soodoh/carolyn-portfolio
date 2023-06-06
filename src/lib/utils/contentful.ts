@@ -13,12 +13,12 @@ export function formatUrl(baseUrl: string) {
 	return `https:${baseUrl}`;
 }
 
-export async function formatAsset(asset: ContentfulAsset): Promise<Asset> {
+export async function formatAsset(asset: ContentfulAsset, useBlur = true): Promise<Asset> {
 	const imageDetails = asset.fields.file?.details as AssetDetails;
 	const imageUrl = formatUrl(String(asset.fields.file?.url));
 	const imageWidth = imageDetails.image?.width ?? 0;
 	const imageHeight = imageDetails.image?.height ?? 0;
-	const blurHash = await encodeImageToBlurhash(`${imageUrl}?w=100`);
+	const blurHash = useBlur ? await encodeImageToBlurhash(`${imageUrl}?w=100`) : null;
 
 	return {
 		id: asset.sys.id,
