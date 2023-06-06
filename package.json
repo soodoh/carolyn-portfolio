@@ -14,7 +14,7 @@
 	"devDependencies": {
 		"@csstools/postcss-global-data": "^1.0.3",
 		"@svelte-put/preprocess-inline-svg": "^2.1.1",
-		"@sveltejs/adapter-static": "^2.0.2",
+		"@sveltejs/adapter-netlify": "^1.0.0-next.88",
 		"@sveltejs/kit": "^1.15.8",
 		"@types/marked": "^5.0.0",
 		"@typescript-eslint/eslint-plugin": "^5.27.0",
@@ -43,8 +43,8 @@
 	"dependencies": {
 		"@fontsource/karla": "^5.0.2",
 		"@fontsource/old-standard-tt": "^5.0.2",
-		"blurhash": "^2.0.5",
 		"marked": "^5.0.2",
+		"sharp": "^0.32.1",
 		"svelte-bricks": "^0.2.0"
 	}
 }

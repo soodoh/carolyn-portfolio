@@ -9,7 +9,8 @@ export type Asset = {
 	url: string;
 	width: number;
 	height: number;
-	blurHash: string | null;
+	dominantColor?: string;
+	placeholder?: string;
 };
 
 export type IconType = 'instagram' | 'linkedin';

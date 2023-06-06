@@ -25,8 +25,7 @@
 		/>
 	{/each}
 	<img
-		loading={!inViewport ? 'lazy' : null}
-		src={`${image.url}?fm=jpg&w=${srcset[0]}`}
+		src={image.dominantColor || `${image.url}?fm=jpg&w=${srcset[0]}`}
 		alt={image.title}
 		bind:this={imageElement}
 	/>
