@@ -37,6 +37,18 @@
 	}
 	.filter-dropdown {
 		display: none;
+		@media (--md-viewport) {
+			& {
+				display: block;
+			}
+		}
+	}
+	.filter-buttons {
+		@media (--md-viewport) {
+			& {
+				display: none;
+			}
+		}
 	}
 	.filter {
 		color: var(--dark-color);
@@ -51,13 +63,5 @@
 	.active {
 		border-top: var(--border-height) solid var(--light-color);
 		margin-top: calc(-1 * var(--border-height));
-	}
-	@media (--md-viewport) {
-		.filter-buttons {
-			display: none;
-		}
-		.filter-dropdown {
-			display: block;
-		}
 	}
 </style>

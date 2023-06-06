@@ -39,11 +39,27 @@
 		grid-template-columns: 25% 1fr;
 		grid-gap: 2.5rem;
 		margin-top: 3.5rem;
+		@media (--lg-viewport) {
+			& {
+				grid-template-columns: 1fr 1fr;
+			}
+		}
+		@media (--md-viewport) {
+			& {
+				grid-template-columns: 1fr;
+				grid-template-rows: auto auto;
+			}
+		}
 	}
 	.info {
 		color: var(--light-color);
 		font-size: 1rem;
 		line-height: 1.5rem;
+		@media (--md-viewport) {
+			& {
+				margin-bottom: 2.5rem;
+			}
+		}
 	}
 	.info-details {
 		margin-top: 1rem;
@@ -71,19 +87,5 @@
 	.markdown-container :global(p) {
 		margin-top: 0;
 		margin-bottom: 2rem;
-	}
-	@media (--lg-viewport) {
-		.container {
-			grid-template-columns: 1fr 1fr;
-		}
-	}
-	@media (--md-viewport) {
-		.container {
-			grid-template-columns: 1fr;
-			grid-template-rows: auto auto;
-		}
-		.info {
-			margin-bottom: 2.5rem;
-		}
 	}
 </style>

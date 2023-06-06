@@ -23,6 +23,12 @@
 		display: flex;
 		justify-content: space-between;
 		padding: 1rem var(--padding);
+		@media (--md-viewport) {
+			& {
+				flex-direction: column;
+				align-items: center;
+			}
+		}
 	}
 	.copyright {
 		display: flex;
@@ -30,22 +36,20 @@
 		justify-content: center;
 		font-size: 0.75rem;
 		line-height: 1.25rem;
+		@media (--md-viewport) {
+			& {
+				align-items: center;
+			}
+		}
 	}
 	.social-media {
 		display: flex;
 		justify-content: center;
 		align-items: center;
-	}
-	@media (--md-viewport) {
-		footer {
-			flex-direction: column;
-			align-items: center;
-		}
-		.copyright {
-			align-items: center;
-		}
-		.social-media {
-			margin-top: 1rem;
+		@media (--md-viewport) {
+			& {
+				margin-top: 1rem;
+			}
 		}
 	}
 </style>
