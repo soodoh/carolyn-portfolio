@@ -1,10 +1,10 @@
 <script lang="ts">
-	import type { Asset } from '$lib/types';
+	import type { ImageType } from '$lib/types';
 	import Image from '$lib/components/Image.svelte';
 
 	export let srcset: number[];
 	export let sizes: string;
-	export let image: Asset;
+	export let image: ImageType;
 	let paddingBottom = `${(image.height / image.width) * 100}%`;
 </script>
 

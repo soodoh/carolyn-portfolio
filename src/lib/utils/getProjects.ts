@@ -1,9 +1,9 @@
 import type { Project, ProjectType } from '$lib/types';
 import type { Asset as ContentfulAsset, Entry } from 'contentful';
-import { client, formatAsset } from '$lib/utils/contentful';
+import { client, formatImage } from '$lib/utils/contentful';
 
 export async function formatProject(item: Entry) {
-	const coverImage = await formatAsset(item.fields.coverImage as ContentfulAsset);
+	const coverImage = await formatImage(item.fields.coverImage as ContentfulAsset);
 	const project: Project = {
 		id: String(item.sys.id),
 		title: String(item.fields.title),

@@ -1,6 +1,6 @@
 <script lang="ts">
 	import Masonry from 'svelte-bricks';
-	import type { Asset } from '$lib/types';
+	import type { ImageType } from '$lib/types';
 	import Filter from '$lib/components/Filter.svelte';
 	import Image from '$lib/components/Image.svelte';
 	import LayoutContainer from '$lib/components/LayoutContainer.svelte';
@@ -21,7 +21,7 @@
 	let currentPhoto = photos[0];
 	let isOpen = false;
 
-	function handlePhoto(image: Asset) {
+	function handlePhoto(image: ImageType) {
 		photoIndex = photos.findIndex((cur) => cur === image);
 		currentPhoto = image;
 		isOpen = true;

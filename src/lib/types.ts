@@ -1,16 +1,19 @@
 export type Album = {
 	name: string;
-	photos: Asset[];
+	photos: ImageType[];
 };
 
 export type Asset = {
 	id: string;
 	title: string;
 	url: string;
+};
+
+export type ImageType = Asset & {
 	width: number;
 	height: number;
+	placeholder: string;
 	dominantColor?: string;
-	placeholder?: string;
 };
 
 export type IconType = 'instagram' | 'linkedin';
@@ -26,7 +29,7 @@ export type Project = {
 	id: string;
 	title: string;
 	slug: string;
-	coverImage: Asset;
+	coverImage: ImageType;
 	description: string;
 	role: string | null;
 	videoLink: string | null;

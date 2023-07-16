@@ -1,6 +1,6 @@
 import type { IconType } from '$lib/types';
 import type { Asset as ContentfulAsset } from 'contentful';
-import { client, formatAsset } from '$lib/utils/contentful';
+import { client, formatImage } from '$lib/utils/contentful';
 
 export async function load() {
 	const [socialMedia, aboutData] = await Promise.all([
@@ -8,7 +8,7 @@ export async function load() {
 		client.getEntries({ content_type: 'about' })
 	]);
 	const aboutEntry = aboutData.items[0];
-	const backgroundImage = await formatAsset(aboutEntry.fields.background as ContentfulAsset);
+	const backgroundImage = await formatImage(aboutEntry.fields.background as ContentfulAsset);
 
 	return {
 		backgroundImage,

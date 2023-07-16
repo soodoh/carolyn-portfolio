@@ -1,10 +1,10 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import type { Asset } from '$lib/types';
+	import type { ImageType } from '$lib/types';
 
 	export let srcset: number[];
 	export let sizes: string;
-	export let image: Asset;
+	export let image: ImageType;
 	// const formats = ['avif', 'webp', 'jpg', 'gif'];
 	const formats = ['webp', 'jpg', 'gif'];
 	let imageElement: HTMLElement;
@@ -25,7 +25,7 @@
 		/>
 	{/each}
 	<img
-		src={image.dominantColor || `${image.url}?fm=jpg&w=${srcset[0]}`}
+		src={image.placeholder || `${image.url}?fm=jpg&w=${srcset[0]}`}
 		alt={image.title}
 		bind:this={imageElement}
 	/>

@@ -1,7 +1,7 @@
 import sharp from 'sharp';
 import type { Sharp } from 'sharp';
 
-const getDominantColor = async (image: Sharp) => {
+export const getDominantColor = async (image: Sharp) => {
 	try {
 		const { dominant } = await image.stats();
 		const { r, g, b } = dominant;
@@ -38,11 +38,7 @@ export const getPlaceholder = async (imageUrl: string) => {
 			})
 			.toBuffer({ resolveWithObject: false });
 		const placeholder = `data:image/jpeg;base64,${buffer.toString('base64')}`;
-		const dominantColor = await getDominantColor(image);
-		return {
-			placeholder,
-			dominantColor
-		};
+		return placeholder;
 	} catch (error) {
 		throw new Error(`Error generating low resolution placeholder: ${imageUrl}`);
 	}

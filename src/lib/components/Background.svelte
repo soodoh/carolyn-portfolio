@@ -1,9 +1,9 @@
 <script lang="ts">
 	import Image from './Image.svelte';
-	import type { Asset } from '$lib/types';
+	import type { ImageType } from '$lib/types';
 
 	export let fixed = false;
-	export let image: Asset;
+	export let image: ImageType;
 	const srcset = [480, 768, 1024, 1366, 1600, 1920];
 </script>
 
