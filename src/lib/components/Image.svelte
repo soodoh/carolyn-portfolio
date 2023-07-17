@@ -12,24 +12,24 @@
 	let imageElement: HTMLImageElement;
 	let inViewport = false;
 
-	let loading = true;
+	let loading = useBlur;
 	let onLoad = (event: Event) => {
 		loading = false;
 	};
 
 	afterUpdate(() => {
-		if (!imageElement.complete) {
+		if (useBlur && !imageElement.complete) {
 			loading = true;
 		}
 	});
 
 	onMount(() => {
 		const rect = imageElement.getBoundingClientRect();
-		inViewport = rect.top < window.innerHeight && rect.bottom >= 0;
+		inViewport = rect.top <= window.innerHeight && rect.bottom >= 0;
 	});
 </script>
 
-{#if useBlur && loading}
+{#if loading}
 	<img src={image.placeholder} alt="Blur placeholder" />
 {/if}
 <picture>
@@ -49,3 +49,9 @@
 		loading={!inViewport ? 'lazy' : 'eager'}
 	/>
 </picture>
+
+<style lang='postcss'>
+	.loading {
+		display: none;
+	}
+</style>
