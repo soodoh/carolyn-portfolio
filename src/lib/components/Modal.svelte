@@ -1,10 +1,11 @@
 <script lang="ts">
-	export let isOpen = false;
+	export let open = false;
+	export let onClose = () => (open = false);
 	export let onKeypress: ((event: KeyboardEvent) => void) | null = null;
 
 	function handleKeypress(event: KeyboardEvent) {
 		if (event.key === 'Escape') {
-			isOpen = false;
+			onClose();
 		}
 		if (typeof onKeypress === 'function') {
 			onKeypress(event);
@@ -26,11 +27,8 @@
 	}
 </script>
 
-<svelte:window
-	on:keydown={isOpen ? handleKeypress : null}
-	on:focusin={isOpen ? handleFocus : null}
-/>
-<div class:modal-open={isOpen} class="modal" bind:this={modal}>
+<svelte:window on:keydown={open ? handleKeypress : null} on:focusin={open ? handleFocus : null} />
+<div class:modal-open={open} class="modal" bind:this={modal}>
 	<div class="modal-content">
 		<slot />
 	</div>
