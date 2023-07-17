@@ -1,7 +1,7 @@
 import type { Album } from '$lib/types';
 import type { PageServerLoad } from './$types';
 import type { Asset as ContentfulAsset } from 'contentful';
-import { client, formatImage } from '$lib/utils/contentful';
+import { client, formatImage } from '$lib/server/contentful';
 
 export const load: PageServerLoad<{ albums: Album[] }> = async () => {
 	const albumData = await client.getEntries({

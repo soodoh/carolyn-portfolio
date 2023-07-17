@@ -1,4 +1,4 @@
-import getProjects from '$lib/utils/getProjects';
+import getProjects from '$lib/server/getProjects';
 
 export async function load() {
 	const projects = await getProjects();

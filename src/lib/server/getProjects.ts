@@ -1,9 +1,9 @@
 import { marked } from 'marked';
+import { client, formatImage } from './contentful';
 import { createImage } from './images';
 import type { Project, ProjectType } from '$lib/types';
 import type { Asset as ContentfulAsset, Entry } from 'contentful';
 import LayoutImage from '$lib/components/LayoutImage.svelte';
-import { client, formatImage } from '$lib/utils/contentful';
 
 function getLink(rawLink: unknown): string | null {
 	if (!rawLink) return null;

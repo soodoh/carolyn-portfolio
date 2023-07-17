@@ -1,8 +1,8 @@
 import contentful from 'contentful';
+import { getPlaceholder } from './images';
 import type { Asset, ImageType } from '$lib/types';
 import type { AssetDetails, Asset as ContentfulAsset } from 'contentful';
 import { CONTENTFUL_ACCESS_TOKEN, CONTENTFUL_SPACE_ID } from '$env/static/private';
-import { getPlaceholder } from '$lib/utils/images';
 
 export const client = contentful.createClient({
 	space: CONTENTFUL_SPACE_ID,

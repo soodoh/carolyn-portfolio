@@ -1,6 +1,6 @@
 import type { IconType } from '$lib/types';
 import type { Asset as ContentfulAsset } from 'contentful';
-import { client, formatImage } from '$lib/utils/contentful';
+import { client, formatImage } from '$lib/server/contentful';
 
 export async function load() {
 	const [socialMedia, aboutData] = await Promise.all([

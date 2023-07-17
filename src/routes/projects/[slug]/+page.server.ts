@@ -1,8 +1,8 @@
 import { error } from '@sveltejs/kit';
 import type { Project } from '$lib/types';
 import type { PageServerLoad } from './$types';
-import { client } from '$lib/utils/contentful';
-import { formatProject } from '$lib/utils/getProjects.server';
+import { client } from '$lib/server/contentful';
+import { formatProject } from '$lib/server/getProjects';
 
 export const load: PageServerLoad<{ project: Project }> = async ({ params }) => {
 	const projectData = await client.getEntries({
