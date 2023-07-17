@@ -1,5 +1,5 @@
 import Jimp from 'jimp';
-import { formatUrl, getUrlForThumbnail } from './contentful';
+import { formatUrl } from './contentful';
 import type { ImageType } from '$lib/types';
 
 async function readImage(url: string): Promise<Jimp> {
@@ -16,8 +16,8 @@ async function readImage(url: string): Promise<Jimp> {
 	});
 }
 
-export const getPlaceholder = async (imageUrl: string) => {
-	const image = await readImage(imageUrl);
+export const getPlaceholder = async (url: string) => {
+	const image = await readImage(`${url}?w=100&fm=jpg`);
 	image.resize(25, Jimp.AUTO).quality(25).blur(5);
 	const placeholder = await image.getBase64Async(image.getMIME());
 	return placeholder;
@@ -25,8 +25,8 @@ export const getPlaceholder = async (imageUrl: string) => {
 
 export async function createImage(baseUrl: string, title: string): Promise<ImageType> {
 	const url = formatUrl(baseUrl);
-	const image = await readImage(url);
-	const placeholder = await getPlaceholder(getUrlForThumbnail(url));
+	const image = await readImage(`${url}?w=100&fm=jpg`);
+	const placeholder = await getPlaceholder(url);
 	return {
 		id: url, // Probably unique enough
 		title,
