@@ -8,14 +8,8 @@
 	export let current: number;
 	export let onClose = () => (open = false);
 
-	let loading = true;
-
 	function handleImage(imageIndex: number) {
-		loading = true;
 		current = imageIndex;
-	}
-	function onLoad(event: Event) {
-		loading = false;
 	}
 
 	function handleKeypress(event: KeyboardEvent) {
