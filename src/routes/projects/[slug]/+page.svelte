@@ -283,8 +283,7 @@
 	.markdown-container :global(p > :first-child:is(img)) {
 		margin-left: -2rem;
 	}
-	.markdown-container :global(img) {
-		width: 100%;
+	.markdown-container :global(div:has(img)) {
 		margin-bottom: 0.5rem;
 	}
 </style>
