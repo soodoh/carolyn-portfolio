@@ -27,7 +27,7 @@ export async function formatImage(contentfulAsset: ContentfulAsset): Promise<Ima
 	const imageDetails = contentfulAsset.fields.file?.details as AssetDetails;
 	const imageWidth = imageDetails.image?.width ?? 0;
 	const imageHeight = imageDetails.image?.height ?? 0;
-	const placeholder = await getPlaceholder(`${asset.url}?w=100`);
+	const placeholder = await getPlaceholder(`${asset.url}?w=100&fm=jpg`);
 
 	return {
 		...asset,

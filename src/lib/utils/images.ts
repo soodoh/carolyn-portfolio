@@ -1,45 +1,22 @@
-import sharp from 'sharp';
-import type { Sharp } from 'sharp';
+import Jimp from 'jimp';
 
-export const getDominantColor = async (image: Sharp) => {
-	try {
-		const { dominant } = await image.stats();
-		const { r, g, b } = dominant;
-		const placeholderBuffer = await sharp({
-			create: {
-				width: 3,
-				height: 2,
-				channels: 3,
-				background: { r, g, b }
+async function readImage(url: string): Promise<Jimp> {
+	const response = await fetch(url);
+	const arrayBuffer = await response.arrayBuffer();
+	const buffer = Buffer.from(arrayBuffer);
+	return new Promise((resolve, reject) => {
+		Jimp.read(buffer, (err, image) => {
+			if (err) {
+				reject(err);
 			}
-		})
-			.jpeg()
-			.toBuffer({ resolveWithObject: false });
-		return `data:image/jpeg;base64,${placeholderBuffer.toString('base64')}`;
-	} catch (error) {
-		throw new Error(`Error determining dominant colour`);
-	}
-};
+			resolve(image);
+		});
+	});
+}
 
 export const getPlaceholder = async (imageUrl: string) => {
-	try {
-		const response = await fetch(imageUrl);
-		const imageBuffer = await response.arrayBuffer();
-		const image = sharp(imageBuffer);
-		const buffer = await image
-			.resize(10)
-			.jpeg({
-				quality: 50,
-				progressive: true,
-				optimiseScans: true,
-				chromaSubsampling: '4:2:0',
-				trellisQuantisation: true,
-				quantisationTable: 2
-			})
-			.toBuffer({ resolveWithObject: false });
-		const placeholder = `data:image/jpeg;base64,${buffer.toString('base64')}`;
-		return placeholder;
-	} catch (error) {
-		throw new Error(`Error generating low resolution placeholder: ${imageUrl}`);
-	}
+	const image = await readImage(imageUrl);
+	image.resize(25, Jimp.AUTO).quality(25).blur(5);
+	const placeholder = await image.getBase64Async(image.getMIME());
+	return placeholder;
 };
