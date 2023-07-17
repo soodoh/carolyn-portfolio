@@ -13,6 +13,10 @@ export function formatUrl(baseUrl: string) {
 	return `https:${baseUrl}`;
 }
 
+export function getUrlForThumbnail(url: string) {
+	return `${url}?w=100&fm=jpg`;
+}
+
 export function formatAsset(asset: ContentfulAsset): Asset {
 	const assetUrl = formatUrl(String(asset.fields.file?.url));
 	return {
@@ -27,7 +31,7 @@ export async function formatImage(contentfulAsset: ContentfulAsset): Promise<Ima
 	const imageDetails = contentfulAsset.fields.file?.details as AssetDetails;
 	const imageWidth = imageDetails.image?.width ?? 0;
 	const imageHeight = imageDetails.image?.height ?? 0;
-	const placeholder = await getPlaceholder(`${asset.url}?w=100&fm=jpg`);
+	const placeholder = await getPlaceholder(getUrlForThumbnail(asset.url));
 
 	return {
 		...asset,

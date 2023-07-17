@@ -15,7 +15,6 @@
 		current = imageIndex;
 	}
 	function onLoad(event: Event) {
-		console.log('loaded');
 		loading = false;
 	}
 

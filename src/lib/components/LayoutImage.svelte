@@ -5,12 +5,13 @@
 	export let srcset: number[];
 	export let sizes: string;
 	export let image: ImageType;
+	export let useBlur = true;
 
 	let paddingBottom = `${(image.height / image.width) * 100}%`;
 </script>
 
-<div class="responsive-image" style:padding-bottom={paddingBottom}>
-	<Image {srcset} {sizes} {image} />
+<div class="responsive-image" style:padding-bottom={paddingBottom} style:background-image={useBlur ? `url(${image.placeholder})` : null}>
+	<Image {srcset} {sizes} {image} useBlur={!useBlur} />
 </div>
 
 <style lang="postcss">
@@ -18,6 +19,7 @@
 		position: relative;
 		width: 100%;
 		height: 0;
+		background-size: 100%;
 	}
 	.responsive-image :global(img) {
 		position: absolute;

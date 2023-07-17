@@ -1,7 +1,7 @@
 <script lang="ts">
 	import Background from '$lib/components/Background.svelte';
 	import LayoutContainer from '$lib/components/LayoutContainer.svelte';
-	import LayoutImage from '$lib/components/LayoutImage.svelte';
+	import Image from '$lib/components/LayoutImage.svelte';
 
 	export let data;
 </script>
@@ -17,7 +17,7 @@
 <LayoutContainer>
 	<div class="container">
 		<div class="info">
-			<LayoutImage
+			<Image
 				srcset={[100, 200, 300, 500]}
 				image={data.profilePicture}
 				sizes="(max-width: 600px) 100vw, (max-width: 950px) 50vw, (max-width: 1500px) 25vw, 360px"

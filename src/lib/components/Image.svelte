@@ -5,6 +5,7 @@
 	export let srcset: number[];
 	export let sizes: string;
 	export let image: ImageType;
+	export let useBlur = true;
 
 	// const formats = ['avif', 'webp', 'jpg', 'gif'];
 	const formats = ['webp', 'jpg', 'gif'];
@@ -28,8 +29,8 @@
 	});
 </script>
 
-{#if loading}
-	<img class="placeholder" src={image.placeholder} alt="Blur placeholder" />
+{#if useBlur && loading}
+	<img src={image.placeholder} alt="Blur placeholder" />
 {/if}
 <picture>
 	{#each formats as format}
@@ -48,9 +49,3 @@
 		loading={!inViewport ? 'lazy' : 'eager'}
 	/>
 </picture>
-
-<style lang="postcss">
-	.loading {
-		display: none;
-	}
-</style>
