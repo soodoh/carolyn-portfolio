@@ -13,6 +13,9 @@
 		"test:integration": "playwright test",
 		"test:unit": "vitest"
 	},
+	"browserslist": [
+		"defaults"
+	],
 	"devDependencies": {
 		"@csstools/postcss-global-data": "^2.0.0",
 		"@playwright/test": "^1.36.1",
@@ -22,6 +25,7 @@
 		"@types/marked": "^5.0.0",
 		"@typescript-eslint/eslint-plugin": "^6.0.0",
 		"@typescript-eslint/parser": "^6.0.0",
+		"browserslist": "^4.21.9",
 		"contentful": "^10.1.3",
 		"cssnano": "^6.0.1",
 		"eslint": "^8.16.0",
