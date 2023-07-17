@@ -5,6 +5,7 @@
 	export let srcset: number[];
 	export let sizes: string;
 	export let image: ImageType;
+
 	let paddingBottom = `${(image.height / image.width) * 100}%`;
 </script>
 
