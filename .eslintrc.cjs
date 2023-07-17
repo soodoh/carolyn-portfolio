@@ -6,6 +6,18 @@ module.exports = {
 		'plugin:svelte/recommended',
 		'prettier'
 	],
+	parser: '@typescript-eslint/parser',
+	plugins: ['@typescript-eslint', 'import'],
+	parserOptions: {
+		sourceType: 'module',
+		ecmaVersion: 2020,
+		extraFileExtensions: ['.svelte']
+	},
+	env: {
+		browser: true,
+		es2017: true,
+		node: true
+	},
 	rules: {
 		'sort-imports': [
 			'error',
@@ -28,8 +40,6 @@ module.exports = {
 			}
 		]
 	},
-	plugins: ['@typescript-eslint', 'import'],
-	ignorePatterns: ['*.cjs'],
 	overrides: [
 		{
 			files: ['*.svelte'],
@@ -38,20 +48,5 @@ module.exports = {
 				parser: '@typescript-eslint/parser'
 			}
 		}
-	],
-	settings: {
-		'svelte/typescript': () => require('typescript')
-	},
-	parser: '@typescript-eslint/parser',
-	parserOptions: {
-		sourceType: 'module',
-		ecmaVersion: 2021,
-		project: 'tsconfig.json',
-		extraFileExtensions: ['.svelte']
-	},
-	env: {
-		browser: true,
-		es2017: true,
-		node: true
-	}
+	]
 };
