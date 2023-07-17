@@ -13,7 +13,7 @@
 
 	let loading = true;
 	let onLoad = (event: Event) => {
-		// loading = false;
+		loading = false;
 	};
 
 	afterUpdate(() => {
