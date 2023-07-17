@@ -25,15 +25,18 @@ export type SocialMedia = {
 	link: string;
 };
 
-export type Project = {
+export type BaseProject = {
 	id: string;
 	title: string;
 	slug: string;
 	coverImage: ImageType;
-	description: string;
-	role: string | null;
-	videoLink: string | null;
-	summary: string;
 	projectType: ProjectType[];
+	summary: string;
+};
+
+export type Project = BaseProject & {
+	role: string | null;
+	description: string;
+	videoLink: string | null;
 	password: string | null;
 };

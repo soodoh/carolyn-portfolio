@@ -1,5 +1,5 @@
 import contentful from 'contentful';
-import { getPlaceholder } from './images';
+import { getPlaceholder, readImage } from './images';
 import type { Asset, ImageType } from '$lib/types';
 import type { AssetDetails, Asset as ContentfulAsset } from 'contentful';
 import { CONTENTFUL_ACCESS_TOKEN, CONTENTFUL_SPACE_ID } from '$env/static/private';
@@ -25,14 +25,15 @@ export function formatAsset(asset: ContentfulAsset): Asset {
 export async function formatImage(contentfulAsset: ContentfulAsset): Promise<ImageType> {
 	const asset = formatAsset(contentfulAsset);
 	const imageDetails = contentfulAsset.fields.file?.details as AssetDetails;
-	const imageWidth = imageDetails.image?.width ?? 0;
-	const imageHeight = imageDetails.image?.height ?? 0;
-	const placeholder = await getPlaceholder(asset.url);
+	const width = imageDetails.image?.width ?? 0;
+	const height = imageDetails.image?.height ?? 0;
+	const image = await readImage(asset.url);
+	const placeholder = await getPlaceholder(image);
 
 	return {
 		...asset,
-		width: imageWidth,
-		height: imageHeight,
+		width,
+		height,
 		placeholder
 	};
 }

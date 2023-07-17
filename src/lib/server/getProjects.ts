@@ -1,7 +1,7 @@
 import { marked } from 'marked';
 import { client, formatImage } from './contentful';
 import { createImage } from './images';
-import type { Project, ProjectType } from '$lib/types';
+import type { BaseProject, Project, ProjectType } from '$lib/types';
 import type { Asset as ContentfulAsset, Entry } from 'contentful';
 import LayoutImage from '$lib/components/LayoutImage.svelte';
 
@@ -40,27 +40,33 @@ async function parseMarkdown(source: string) {
 	return marked.parse(source);
 }
 
-export async function formatProject(item: Entry) {
+export async function formatProject(item: Entry, useBase = false) {
 	const coverImage = await formatImage(item.fields.coverImage as ContentfulAsset);
-	const project: Project = {
+	const baseProject: BaseProject = {
 		id: String(item.sys.id),
 		title: String(item.fields.title),
 		slug: String(item.fields.slug),
 		coverImage,
-		description: await parseMarkdown(String(item.fields.description)),
-		role: item.fields.role ? String(item.fields.role) : null,
-		videoLink: getLink(item.fields.videoLink),
-		summary: String(item.fields.summary),
 		projectType: item.fields.projectType as ProjectType[],
+		summary: String(item.fields.summary)
+	};
+	if (useBase) {
+		return baseProject;
+	}
+	const project: Project = {
+		...baseProject,
+		role: item.fields.role ? String(item.fields.role) : null,
+		description: await parseMarkdown(String(item.fields.description)),
+		videoLink: getLink(item.fields.videoLink),
 		password: item.fields.password ? String(item.fields.password) : null
 	};
 	return project;
 }
 
-export default async function getProjects(): Promise<Project[]> {
+export default async function getProjects(): Promise<BaseProject[]> {
 	const projectData = await client.getEntries({
 		content_type: 'project',
 		order: ['fields.order']
 	});
-	return Promise.all(projectData.items.map(formatProject));
+	return Promise.all(projectData.items.map((project) => formatProject(project, true)));
 }

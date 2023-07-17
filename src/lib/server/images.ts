@@ -2,7 +2,15 @@ import Jimp from 'jimp';
 import { formatUrl } from './contentful';
 import type { ImageType } from '$lib/types';
 
-async function readImage(url: string): Promise<Jimp> {
+const imageCache: Map<string, Jimp> = new Map();
+
+export async function readImage(baseUrl: string): Promise<Jimp> {
+	const cached = imageCache.get(baseUrl);
+	if (cached) {
+		console.log(`CACHED ${baseUrl.split('/').pop()}`);
+		return cached;
+	}
+	const url = `${baseUrl}?w=75&fm=jpg`;
 	const response = await fetch(url);
 	const arrayBuffer = await response.arrayBuffer();
 	const buffer = Buffer.from(arrayBuffer);
@@ -11,13 +19,13 @@ async function readImage(url: string): Promise<Jimp> {
 			if (err) {
 				reject(err);
 			}
+			imageCache.set(baseUrl, image);
 			resolve(image);
 		});
 	});
 }
 
-export const getPlaceholder = async (url: string) => {
-	const image = await readImage(`${url}?w=100&fm=jpg`);
+export const getPlaceholder = async (image: Jimp) => {
 	image.resize(25, Jimp.AUTO).quality(25).blur(5);
 	const placeholder = await image.getBase64Async(image.getMIME());
 	return placeholder;
@@ -25,8 +33,8 @@ export const getPlaceholder = async (url: string) => {
 
 export async function createImage(baseUrl: string, title: string): Promise<ImageType> {
 	const url = formatUrl(baseUrl);
-	const image = await readImage(`${url}?w=100&fm=jpg`);
-	const placeholder = await getPlaceholder(url);
+	const image = await readImage(url);
+	const placeholder = await getPlaceholder(image);
 	return {
 		id: url, // Probably unique enough
 		title,
