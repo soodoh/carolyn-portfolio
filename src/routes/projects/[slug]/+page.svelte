@@ -280,7 +280,7 @@
 		font-family: var(--body-font);
 		margin-bottom: 2rem;
 	}
-	.markdown-container :global(p > :first-child:not(a)) {
+	.markdown-container :global(p > :first-child:is(img)) {
 		margin-left: -2rem;
 	}
 	.markdown-container :global(img) {
