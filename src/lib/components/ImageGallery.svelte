@@ -34,8 +34,8 @@
 	}
 </script>
 
-<Modal {open} {onClose} onKeypress={handleKeypress}>
-	<div class="modal-container" on:click={handleModalBackdrop} on:keypress={handleKeypress}>
+<Modal {open} {onClose} onClick={handleModalBackdrop} onKeypress={handleKeypress}>
+	<div class="modal-container">
 		<div class="close">
 			<button aria-label="Close image modal" on:click={onClose}>&times;</button>
 		</div>
@@ -88,9 +88,6 @@
 		width: calc(100vw - 6rem);
 		height: calc(100vh - 4rem);
 		position: relative;
-	}
-	.placeholder {
-		position: absolute;
 	}
 	.modal-image :global(img) {
 		width: 100%;

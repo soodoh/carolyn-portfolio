@@ -2,6 +2,7 @@
 	export let open = false;
 	export let onClose = () => (open = false);
 	export let onKeypress: ((event: KeyboardEvent) => void) | null = null;
+	export let onClick: ((event: MouseEvent) => void) | null = null;
 
 	function handleKeypress(event: KeyboardEvent) {
 		if (event.key === 'Escape') {
@@ -27,8 +28,8 @@
 	}
 </script>
 
-<svelte:window on:keydown={open ? handleKeypress : null} on:focusin={open ? handleFocus : null} />
-<div class:modal-open={open} class="modal" bind:this={modal}>
+<svelte:window on:click={onClick} on:keydown={open ? handleKeypress : null} on:focusin={open ? handleFocus : null} />
+<div class:modal-open={open} class="modal" bind:this={modal} aria-modal="true" role="dialog">
 	<div class="modal-content">
 		<slot />
 	</div>
