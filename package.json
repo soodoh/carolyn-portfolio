@@ -17,6 +17,9 @@
 		"defaults"
 	],
 	"devDependencies": {
+		"@commitlint/cli": "^17.7.1",
+		"@commitlint/config-conventional": "^17.7.0",
+		"@commitlint/types": "^17.4.4",
 		"@csstools/postcss-global-data": "^2.0.0",
 		"@playwright/test": "^1.36.1",
 		"@svelte-put/preprocess-inline-svg": "^2.1.1",
@@ -54,5 +57,6 @@
 		"jimp": "^0.22.8",
 		"marked": "8.0.0",
 		"svelte-bricks": "^0.2.0"
-	}
+	},
+	"packageManager": "yarn@3.6.3"
 }
