@@ -1,6 +1,6 @@
 <script lang="ts">
-	import Image from '$lib/components/Image.svelte';
 	import Modal from '$lib/components/Modal.svelte';
+	import Image from './Image.svelte';
 	import type { ImageType } from '$lib/types';
 
 	export let open = false;
@@ -78,6 +78,8 @@
 		color: var(--light-color);
 	}
 	.modal-image {
+		grid-row: 1/3;
+		grid-column: 2/3;
 		width: calc(100vw - 6rem);
 		height: calc(100vh - 4rem);
 		position: relative;
@@ -97,9 +99,12 @@
 		stroke: var(--light-color);
 	}
 	.close {
-		grid-column: 1/4;
+		grid-column: 3/4;
 		justify-self: flex-end;
 		align-self: flex-start;
+		& button {
+			font-size: 3rem;
+		}
 	}
 	.prev button,
 	.next button {

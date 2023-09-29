@@ -28,7 +28,11 @@
 	}
 </script>
 
-<svelte:window on:click={onClick} on:keydown={open ? handleKeypress : null} on:focusin={open ? handleFocus : null} />
+<svelte:window
+	on:click={onClick}
+	on:keydown={open ? handleKeypress : null}
+	on:focusin={open ? handleFocus : null}
+/>
 <div class:modal-open={open} class="modal" bind:this={modal} aria-modal="true" role="dialog">
 	<div class="modal-content">
 		<slot />
@@ -48,7 +52,7 @@
 		display: flex;
 		justify-content: center;
 		align-items: center;
-		background-color: rgba(0, 0, 0, 0.8);
+		background-color: rgba(0, 0, 0, 0.95);
 		cursor: pointer;
 		z-index: 4;
 		opacity: 0;
