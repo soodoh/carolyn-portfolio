@@ -13,7 +13,7 @@
 	let inViewport = false;
 
 	let loading = useBlur;
-	let onLoad = (event: Event) => {
+	let onLoad = (_event: Event) => {
 		loading = false;
 	};
 
@@ -50,7 +50,7 @@
 	/>
 </picture>
 
-<style lang='postcss'>
+<style lang="postcss">
 	.loading {
 		display: none;
 	}
