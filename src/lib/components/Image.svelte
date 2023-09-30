@@ -1,24 +1,22 @@
 <script lang="ts">
 	import { onMount, afterUpdate } from 'svelte';
 	import type { ImageType } from '$lib/types';
+	import { imageFormats } from '$lib/constants';
 
 	export let srcset: number[];
 	export let sizes: string;
 	export let image: ImageType;
-	export let useBlur = true;
 
-	// const formats = ['avif', 'webp', 'jpg', 'gif'];
-	const formats = ['webp', 'jpg', 'gif'];
 	let imageElement: HTMLImageElement;
 	let inViewport = false;
 
-	let loading = useBlur;
+	let loading = true;
 	let onLoad = (_event: Event) => {
 		loading = false;
 	};
 
 	afterUpdate(() => {
-		if (useBlur && !imageElement.complete) {
+		if (!imageElement.complete) {
 			loading = true;
 		}
 	});
@@ -33,7 +31,7 @@
 	<img src={image.placeholder} alt="Blur placeholder" />
 {/if}
 <picture>
-	{#each formats as format}
+	{#each imageFormats as format}
 		<source
 			type={`image/${format}`}
 			srcset={srcset.map((size) => `${image.url}?w=${size}&fm=${format} ${size}w`).join(', ')}

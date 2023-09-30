@@ -29,7 +29,7 @@ async function parseMarkdown(source: string) {
 				const srcset = [414, 700, 1000];
 				const sizes = '100vw';
 				// @ts-expect-error SSR svelte types are incorrect
-				const { css, html } = LayoutImage.render({ image, srcset, sizes });
+				const { css, html } = LayoutImage.render({ image, srcset, sizes, useSSR: true });
 				token.text = `${html}<style>${css.code}</style>`;
 			}
 		},
