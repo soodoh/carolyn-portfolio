@@ -87,7 +87,7 @@
 		background-color: var(--dark-color);
 		color: var(--light-text);
 		width: calc(100% - (2 * var(--padding)));
-		max-width: 1000px;
+		max-width: 800px;
 		padding: var(--padding);
 		box-sizing: border-box;
 		box-shadow: 0.5rem 0.5rem 0.5rem rgba(var(--dark-color-rgb), 0.75);
@@ -146,9 +146,9 @@
 			background-color: var(--dark-color);
 			color: var(--light-color);
 			border: 1px solid var(--light-color);
-			padding: 0.5rem;
-			width: 18rem;
-			margin-top: 1rem;
+			padding: 1rem 4rem;
+			font-size: 0.9rem;
+			margin-top: 1.5rem;
 			@media (--md-viewport) {
 				& {
 					width: 100%;
