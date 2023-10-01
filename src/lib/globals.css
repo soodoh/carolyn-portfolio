@@ -24,6 +24,9 @@ body {
 	font-family: var(--body-font);
 	color: var(--dark-color);
 }
+button {
+	font-family: var(--body-font);
+}
 
 h1,
 h2,

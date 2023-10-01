@@ -121,7 +121,7 @@
 			align-items: center;
 			width: 25rem;
 			margin: 2rem auto;
-			@media (--md-viewport) {
+			@media (--sm-viewport) {
 				& {
 					width: 100%;
 				}
@@ -146,10 +146,9 @@
 			background-color: var(--dark-color);
 			color: var(--light-color);
 			border: 1px solid var(--light-color);
-			padding: 1rem 4rem;
-			font-size: 0.9rem;
+			padding: 0.7rem 6rem;
 			margin-top: 1.5rem;
-			@media (--md-viewport) {
+			@media (--sm-viewport) {
 				& {
 					width: 100%;
 				}
