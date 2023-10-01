@@ -43,10 +43,10 @@ function assetIdentity(asset: unknown) {
 	return asset as ContentfulAsset;
 }
 
-export async function formatProject(item: Entry, useBase = false) {
+export async function formatBaseProject(item: Entry): Promise<BaseProject> {
 	const coverImageAsset = assetIdentity(item.fields.coverImage);
 	const coverImage = await formatImage(coverImageAsset);
-	const baseProject: BaseProject = {
+	return {
 		id: String(item.sys.id),
 		title: String(item.fields.title),
 		slug: String(item.fields.slug),
@@ -54,17 +54,17 @@ export async function formatProject(item: Entry, useBase = false) {
 		projectType: item.fields.projectType as ProjectType[],
 		summary: String(item.fields.summary)
 	};
-	if (useBase) {
-		return baseProject;
-	}
-	const project: Project = {
+}
+
+export async function formatExtendedProject(item: Entry): Promise<Project> {
+	const baseProject = await formatBaseProject(item);
+	return {
 		...baseProject,
 		role: item.fields.role ? String(item.fields.role) : null,
 		description: await parseMarkdown(String(item.fields.description)),
 		videoLink: getLink(item.fields.videoLink),
 		password: item.fields.password ? String(item.fields.password) : null
 	};
-	return project;
 }
 
 export default async function getProjects(): Promise<BaseProject[]> {
@@ -72,6 +72,6 @@ export default async function getProjects(): Promise<BaseProject[]> {
 		content_type: 'project',
 		order: ['fields.order']
 	});
-	const promises = projectData.items.map((project) => () => formatProject(project, true))
+	const promises = projectData.items.map((project) => () => formatBaseProject(project));
 	return pAll(promises, { concurrency: 10 });
 }

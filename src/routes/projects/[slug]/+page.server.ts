@@ -2,7 +2,7 @@ import { error } from '@sveltejs/kit';
 import type { Project } from '$lib/types';
 import type { PageServerLoad } from './$types';
 import { client } from '$lib/server/contentful';
-import { formatProject } from '$lib/server/getProjects';
+import { formatExtendedProject } from '$lib/server/getProjects';
 
 export const load: PageServerLoad<{ project: Project }> = async ({ params }) => {
 	const projectData = await client.getEntries({
@@ -13,6 +13,6 @@ export const load: PageServerLoad<{ project: Project }> = async ({ params }) => 
 		throw error(404, 'Not found');
 	}
 
-	const project = await formatProject(projectData.items[0]);
+	const project = await formatExtendedProject(projectData.items[0]);
 	return { project };
 };
