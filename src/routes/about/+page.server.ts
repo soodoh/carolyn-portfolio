@@ -6,7 +6,7 @@ export async function load() {
 	const aboutData = await client.getEntries({ content_type: 'about' });
 	const aboutEntry = aboutData.items[0];
 	const bioString = String(aboutEntry.fields.bio);
-	marked.use({ mangle: false, headerIds: false });
+	marked.use();
 	const parsedBio: string = marked.parse(bioString);
 	const profilePicture = await formatImage(aboutEntry.fields.profilePicture as ContentfulAsset);
 

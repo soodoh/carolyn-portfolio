@@ -2434,6 +2434,7 @@ __metadata:
     eslint-plugin-svelte: ^2.33.2
     jimp: ^0.22.10
     marked: 9.0.3
+    p-all: ^5.0.0
     postcss: ^8.4.30
     postcss-flexbugs-fixes: ^5.0.2
     postcss-normalize: ^10.0.1
@@ -5719,6 +5720,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"p-all@npm:^5.0.0":
+  version: 5.0.0
+  resolution: "p-all@npm:5.0.0"
+  dependencies:
+    p-map: ^6.0.0
+  checksum: c9e1391871a106fdd7984cb0be6c2434793baf6e02599dbd50585738cff0388ee4204e7e09b8066126fa8bfb3f69636a5abd344c35ab2b4634c3815e06b68bab
+  languageName: node
+  linkType: hard
+
 "p-limit@npm:^2.2.0":
   version: 2.3.0
   resolution: "p-limit@npm:2.3.0"
@@ -5770,6 +5780,13 @@ __metadata:
   dependencies:
     aggregate-error: ^3.0.0
   checksum: cb0ab21ec0f32ddffd31dfc250e3afa61e103ef43d957cc45497afe37513634589316de4eb88abdfd969fe6410c22c0b93ab24328833b8eb1ccc087fc0442a1c
+  languageName: node
+  linkType: hard
+
+"p-map@npm:^6.0.0":
+  version: 6.0.0
+  resolution: "p-map@npm:6.0.0"
+  checksum: 41e20c30a08da664610ff1ed198519d8cb93567491392c819ce502f523dde1187afab23e75e4c0fe74310d424a6f74ceaebe73ad5496c9e27d91183184fedd37
   languageName: node
   linkType: hard
 

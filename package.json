@@ -56,6 +56,7 @@
 		"@fontsource/old-standard-tt": "^5.0.12",
 		"jimp": "^0.22.10",
 		"marked": "9.0.3",
+		"p-all": "^5.0.0",
 		"svelte-bricks": "^0.2.1"
 	},
 	"packageManager": "yarn@3.6.3"

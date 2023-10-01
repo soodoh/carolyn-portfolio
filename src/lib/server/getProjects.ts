@@ -1,4 +1,5 @@
 import { marked } from 'marked';
+import pAll from 'p-all';
 import { client, formatImage } from './contentful';
 import { createImage } from './images';
 import type { BaseProject, Project, ProjectType } from '$lib/types';
@@ -20,8 +21,6 @@ function getLink(rawLink: unknown): string | null {
 
 async function parseMarkdown(source: string) {
 	marked.use({
-		mangle: false,
-		headerIds: false,
 		async: true,
 		walkTokens: async (token) => {
 			if (token.type === 'image') {
@@ -34,19 +33,24 @@ async function parseMarkdown(source: string) {
 			}
 		},
 		renderer: {
-			image: (href, title, text) => String(text)
+			image: (_href, _title, text) => String(text)
 		}
 	});
 	return marked.parse(source);
 }
 
+function assetIdentity(asset: unknown) {
+	return asset as ContentfulAsset;
+}
+
 export async function formatProject(item: Entry, useBase = false) {
-	const coverImage = await formatImage(item.fields.coverImage as ContentfulAsset);
+	const coverImageAsset = assetIdentity(item.fields.coverImage);
+	const coverImage = await formatImage(coverImageAsset);
 	const baseProject: BaseProject = {
 		id: String(item.sys.id),
 		title: String(item.fields.title),
 		slug: String(item.fields.slug),
-		coverImage,
+		coverImage: coverImage,
 		projectType: item.fields.projectType as ProjectType[],
 		summary: String(item.fields.summary)
 	};
@@ -68,5 +72,6 @@ export default async function getProjects(): Promise<BaseProject[]> {
 		content_type: 'project',
 		order: ['fields.order']
 	});
-	return Promise.all(projectData.items.map((project) => formatProject(project, true)));
+	const promises = projectData.items.map((project) => () => formatProject(project, true))
+	return pAll(promises, { concurrency: 10 });
 }
