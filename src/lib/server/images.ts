@@ -9,7 +9,7 @@ async function fetchRetry(url: string, retries = maxRetries) {
 	try {
 		const response = await fetch(url);
 		return response;
-	} catch(_err) {
+	} catch (_err) {
 		retries--;
 		console.log(`RETRYING FETCH #${maxRetries - retries} ${url.split('/').pop()}`);
 		return fetchRetry(url, retries);
@@ -54,6 +54,6 @@ export async function createImage(baseUrl: string, title: string): Promise<Image
 		url,
 		width: image?.getWidth() || 100,
 		height: image?.getHeight() || 100,
-		placeholder,
+		placeholder
 	};
 }

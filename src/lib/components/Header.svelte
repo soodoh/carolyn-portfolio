@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { page } from '$app/stores';
-	import { transparentHeader } from '$lib/stores';
 	import MobileNav from '$lib/components/MobileNav.svelte';
+	import { transparentHeader } from '$lib/stores';
 
 	const links = [
 		{ name: 'About', path: '/about' },

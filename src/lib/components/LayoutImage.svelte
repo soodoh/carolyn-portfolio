@@ -1,6 +1,6 @@
 <script lang="ts">
-	import Image from '$lib/components/Image.svelte';
 	import type { ImageType } from '$lib/types';
+	import Image from '$lib/components/Image.svelte';
 	import { imageFormats } from '$lib/constants';
 
 	export let srcset: number[];

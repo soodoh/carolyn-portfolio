@@ -2,9 +2,9 @@
 	import Masonry from 'svelte-bricks';
 	import type { ImageType } from '$lib/types';
 	import Filter from '$lib/components/Filter.svelte';
+	import ImageGallery from '$lib/components/ImageGallery.svelte';
 	import LayoutContainer from '$lib/components/LayoutContainer.svelte';
 	import Image from '$lib/components/LayoutImage.svelte';
-	import ImageGallery from '$lib/components/ImageGallery.svelte';
 
 	export let data;
 	let currentAlbum = data.albums[0].name;

@@ -1,7 +1,7 @@
 <script lang="ts">
-	import Modal from '$lib/components/Modal.svelte';
 	import Image from './Image.svelte';
 	import type { ImageType } from '$lib/types';
+	import Modal from '$lib/components/Modal.svelte';
 
 	export let open = false;
 	export let images: ImageType[];

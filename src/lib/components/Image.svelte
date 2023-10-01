@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { onMount, afterUpdate } from 'svelte';
+	import { afterUpdate, onMount } from 'svelte';
 	import type { ImageType } from '$lib/types';
 	import { imageFormats } from '$lib/constants';
 
