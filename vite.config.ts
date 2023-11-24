@@ -1,6 +1,6 @@
 import { inlineSvg } from '@svelte-put/preprocess-inline-svg/vite';
 import { sveltekit } from '@sveltejs/kit/vite';
-import { defineConfig } from 'vitest/config';
+import { defineConfig } from 'vite';
 
 export default defineConfig({
 	plugins: [
@@ -15,8 +15,5 @@ export default defineConfig({
 			}
 		),
 		sveltekit()
-	],
-	test: {
-		include: ['src/**/*.{test,spec}.{js,ts}']
-	}
+	]
 });
