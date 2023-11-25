@@ -35,23 +35,25 @@
 <LayoutContainer>
 	<Filter options={projectTypes} current={currentProjectType} onChange={handleProjectChange} />
 
-	<Masonry items={currentProjects} minColWidth={250} maxColWidth={500} gap={50} let:item>
-		<a
-			aria-label={`${item.title} - ${item.summary}`}
-			href={`/projects/${item.slug}`}
-			class="project-container"
-		>
-			<div class="project-info">
-				<h2>{item.title}</h2>
-				<h3>{item.summary}</h3>
-			</div>
-			<LayoutImage
-				image={item.coverImage}
-				srcset={[100, 200, 300, 480]}
-				sizes="(max-width: 414px) 100vw, (max-width: 728px) 75vw, 25vw"
-			/>
-		</a>
-	</Masonry>
+	<div role="tabpanel">
+		<Masonry items={currentProjects} minColWidth={250} maxColWidth={500} gap={50} let:item>
+			<a
+				aria-label={`${item.title} - ${item.summary}`}
+				href={`/projects/${item.slug}`}
+				class="project-container"
+			>
+				<div role="tooltip" class="project-info">
+					<h2>{item.title}</h2>
+					<h3>{item.summary}</h3>
+				</div>
+				<LayoutImage
+					image={item.coverImage}
+					srcset={[100, 200, 300, 480]}
+					sizes="(max-width: 414px) 100vw, (max-width: 728px) 75vw, 25vw"
+				/>
+			</a>
+		</Masonry>
+	</div>
 </LayoutContainer>
 
 <style lang="postcss">

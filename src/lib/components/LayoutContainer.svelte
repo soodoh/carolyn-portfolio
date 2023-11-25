@@ -1,6 +1,6 @@
-<div class="container">
+<section class="container">
 	<slot />
-</div>
+</section>
 
 <style lang="postcss">
 	.container {

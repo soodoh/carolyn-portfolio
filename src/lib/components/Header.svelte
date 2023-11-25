@@ -20,7 +20,7 @@
 	<div class="brand">
 		<a aria-label="Home" href="/">
 			<svg inline-src="logo" />
-			<h1>Carolyn DiLoreto</h1>
+			<span class="brand-text">Carolyn DiLoreto</span>
 		</a>
 	</div>
 	<nav>
@@ -90,20 +90,24 @@
 			& svg {
 				height: 2rem;
 			}
-			& h1 {
-				font-size: 1.5rem;
-				line-height: 1.5rem;
-				margin-left: 0;
-			}
 		}
 	}
-	h1 {
+
+	.brand-text {
 		font-size: 1.5rem;
 		margin: 0;
 		font-size: 2rem;
 		font-weight: 100;
 		margin-left: 2rem;
 		line-height: 1.75rem;
+		font-family: var(--header-font);
+
+		@media (--sm-viewport) {
+			& {
+				line-height: 1.5rem;
+				margin-left: 0;
+			}
+		}
 	}
 
 	nav {

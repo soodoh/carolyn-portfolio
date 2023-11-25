@@ -1,7 +1,7 @@
 <script lang="ts">
 	import Footer from '$lib/components/Footer.svelte';
 	import Header from '$lib/components/Header.svelte';
-	import '@fontsource/karla';
+	import '@fontsource-variable/karla';
 	import '@fontsource/old-standard-tt';
 	import '$lib/globals.css';
 

@@ -42,15 +42,20 @@
 		onClose={() => (galleryOpen = false)}
 	/>
 
-	<Masonry items={galleryImages} minColWidth={250} maxColWidth={500} gap={50} let:item>
-		<button aria-label="View fullscreen photo" on:click={() => handleThumbnailClick(item)}>
-			<Image
-				image={item}
-				srcset={[100, 200, 300, 480]}
-				sizes="(max-width: 414px) 100vw, (max-width: 728px) 75vw, 25vw"
-			/>
-		</button>
-	</Masonry>
+	<div role="tabpanel">
+		<Masonry items={galleryImages} minColWidth={250} maxColWidth={500} gap={50} let:item>
+			<button
+				aria-label={`View fullscreen photo (${item.title})`}
+				on:click={() => handleThumbnailClick(item)}
+			>
+				<Image
+					image={item}
+					srcset={[100, 200, 300, 480]}
+					sizes="(max-width: 414px) 100vw, (max-width: 728px) 75vw, 25vw"
+				/>
+			</button>
+		</Masonry>
+	</div>
 </LayoutContainer>
 
 <style lang="postcss">

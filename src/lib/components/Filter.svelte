@@ -6,10 +6,11 @@
 	export let onChange: (name: string) => void;
 </script>
 
-<div class="container">
-	<div class="filter-buttons">
+<section class="container">
+	<div role="tablist" class="filter-buttons">
 		{#each options as name}
 			<button
+				role="tab"
 				aria-label={`Choose filter: ${name}`}
 				class:active={current === name}
 				class="filter"
@@ -22,7 +23,7 @@
 	<div class="filter-dropdown">
 		<Dropdown {current} {options} {onChange} />
 	</div>
-</div>
+</section>
 
 <style lang="postcss">
 	:root {

@@ -33,11 +33,16 @@
 		<h1>Password Protected</h1>
 		<p>Please enter a password to continue.</p>
 		<form on:submit={handleSubmit}>
-			<input type="password" class:password-error={showError} bind:value={passwordInput} />
+			<input
+				aria-label="Password"
+				type="password"
+				class:password-error={showError}
+				bind:value={passwordInput}
+			/>
 			{#if showError}
 				<span class="error-text">The password you entered is incorrect</span>
 			{/if}
-			<button aria-label="Enter password" type="submit">Enter</button>
+			<button aria-label="Submit password" type="submit">Enter</button>
 		</form>
 	</div>
 {:else}
