@@ -1,10 +1,9 @@
-import contentful from 'contentful';
-import { getPlaceholder, readImage } from './images';
+import { getPlaceholder } from './images';
 import type { Asset, ImageType } from '$lib/types';
-import type { AssetDetails, Asset as ContentfulAsset } from 'contentful';
+import { createClient, type AssetDetails, type Asset as ContentfulAsset } from 'contentful';
 import { CONTENTFUL_ACCESS_TOKEN, CONTENTFUL_SPACE_ID } from '$env/static/private';
 
-export const client = contentful.createClient({
+export const client = createClient({
 	space: CONTENTFUL_SPACE_ID,
 	accessToken: CONTENTFUL_ACCESS_TOKEN
 });
@@ -27,8 +26,7 @@ export async function formatImage(contentfulAsset: ContentfulAsset): Promise<Ima
 	const imageDetails = contentfulAsset.fields.file?.details as AssetDetails;
 	const width = imageDetails.image?.width ?? 0;
 	const height = imageDetails.image?.height ?? 0;
-	const image = await readImage(asset.url);
-	const placeholder = await getPlaceholder(image);
+	const placeholder = await getPlaceholder(asset.url);
 
 	return {
 		...asset,

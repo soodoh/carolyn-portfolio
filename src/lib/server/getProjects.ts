@@ -33,7 +33,9 @@ async function parseMarkdown(source: string) {
 			}
 		},
 		renderer: {
-			image: (_href, _title, text) => String(text)
+			image: ({ text }) => {
+				return text;
+			}
 		}
 	});
 	return marked.parse(source);
