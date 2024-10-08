@@ -61,5 +61,5 @@
     "p-all": "^5.0.0",
     "svelte-bricks": "^0.2.1"
   },
-  "packageManager": "yarn@4.0.2"
+  "packageManager": "yarn@4.5.0"
 }
