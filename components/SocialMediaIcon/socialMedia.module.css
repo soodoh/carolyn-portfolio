@@ -1,0 +1,24 @@
+.link {
+  border-radius: 50%;
+  text-decoration: none;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  padding: 0.5rem;
+  margin: 0 0.25rem;
+  transition: background-color 0.25s ease-in-out;
+
+  &:hover {
+    transition: background-color 0.25s ease-in-out;
+    background-color: rgba(var(--dark-color-rgb), 0.25);
+  }
+}
+
+.icon {
+  fill: var(--dark-color);
+  width: 100%;
+  height: 100%;
+}

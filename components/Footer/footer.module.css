@@ -1,0 +1,40 @@
+.footer {
+  display: flex;
+  justify-content: space-between;
+  padding: 1rem var(--padding);
+  flex-direction: row;
+
+  @media (--md-viewport) {
+    & {
+      flex-direction: column;
+      align-items: center;
+    }
+  }
+}
+
+.copyright {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  font-size: 0.75rem;
+  line-height: 1.25rem;
+
+  @media (--md-viewport) {
+    & {
+      align-items: center;
+    }
+  }
+}
+
+.socialMedia {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+
+  @media (--md-viewport) {
+    & {
+      margin-top: 1rem;
+    }
+  }
+}

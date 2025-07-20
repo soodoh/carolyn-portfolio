@@ -1,0 +1,12 @@
+.masonryGrid {
+  --grid-gap: 50px;
+  display: flex;
+  gap: var(--grid-gap);
+  width: auto;
+}
+
+.masonryGridColumn {
+  &>* {
+    margin-bottom: var(--grid-gap);
+  }
+}

@@ -1,0 +1,7 @@
+/* CSS extracted from /src/routes/photography/+page.svelte */
+button {
+	border: none;
+	background-color: transparent;
+	width: 100%;
+	cursor: pointer;
+}

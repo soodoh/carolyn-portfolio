@@ -1,0 +1,149 @@
+.container {
+  max-width: 1000px;
+  padding: 2rem var(--padding);
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.goBack {
+  align-self: flex-start;
+  transition: all 250ms ease-in-out;
+  background-color: transparent;
+  border: 1px solid rgba(var(--dark-color-rgb), 0.5);
+  color: var(--dark-color);
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  margin-bottom: 3rem;
+
+  &:hover {
+    background-color: rgba(var(--dark-color-rgb), 0.1);
+    border: 1px solid rgba(var(--dark-color-rgb), 1);
+    transition: all 250ms ease-in-out;
+  }
+
+  & svg {
+    margin-right: 0.2rem;
+    width: 1.5rem;
+    fill: var(--dark-color);
+  }
+}
+
+.viewMore {
+  background-color: var(--dark-color);
+  color: var(--light-text);
+  text-decoration: none;
+  margin: auto;
+  display: inline;
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  transition: all 250ms ease-in-out;
+
+  &:hover {
+    transition: all 250ms ease-in-out;
+    box-shadow: 0 0.2rem 0.3rem var(--dark-color);
+  }
+}
+
+.header {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+
+  @media (--md-viewport) {
+    & {
+      grid-template-columns: 1fr;
+    }
+  }
+}
+
+.videoHeader {
+  grid-template-columns: 1fr;
+
+  & .info {
+    text-align: center;
+  }
+
+  & h2 {
+    padding-bottom: 2rem;
+  }
+}
+
+.image {
+  width: 100%;
+
+  @media (--md-viewport) {
+    & {
+      grid-row-start: 1;
+      margin-bottom: 2rem;
+    }
+  }
+}
+
+.video {
+  position: relative;
+  padding-top: 56.25%;
+
+  & iframe {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: 100%;
+  }
+}
+
+.info {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  & h1 {
+    margin: 0;
+    font-size: 3.8rem;
+  }
+
+  & h2 {
+    margin: 0;
+    font-family: var(--body-font);
+  }
+}
+
+.descriptionContainer {
+  margin: 5rem 4rem 2rem 4rem;
+
+  & h1 {
+    text-align: center;
+    font-size: 2.25rem;
+  }
+
+  & a {
+    color: var(--light-color);
+  }
+
+  & p {
+    text-indent: 2rem;
+    text-align: left;
+    line-height: 2rem;
+    font-size: 1.25rem;
+    font-family: var(--body-font);
+    margin-bottom: 2rem;
+  }
+
+  & p> :first-child:is(img) {
+    margin-left: -2rem;
+  }
+
+  & div:has(img) {
+    margin-bottom: 0.5rem;
+  }
+
+  @media (--md-viewport) {
+    & {
+      margin: 5rem 1rem;
+    }
+  }
+}
