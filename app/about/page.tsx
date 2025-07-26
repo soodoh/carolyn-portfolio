@@ -14,12 +14,13 @@ export default async function About() {
     <div className={layoutStyles.container}>
       <Background fixed image={backgroundImage} />
       <div className={styles.container}>
-        <div className="info">
-          <ImageWrapper image={aboutData.profilePicture} />
-          <section className="info-details">
-            <span>{aboutData.location}</span>
-            <span>{aboutData.email}</span>
-          </section>
+        <div className={styles.info}>
+          <ImageWrapper
+            className={styles.image}
+            image={aboutData.profilePicture}
+          />
+          <span>{aboutData.location}</span>
+          <span>{aboutData.email}</span>
         </div>
         <div className={styles.bioContainer}>
           {documentToReactComponents(aboutData.bio)}

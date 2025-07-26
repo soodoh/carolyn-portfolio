@@ -18,7 +18,18 @@
   }
 }
 
+.image {
+  width: 100%;
+  height: auto;
+  border: 1.5rem solid var(--light-color);
+  box-sizing: border-box;
+  margin-bottom: 2rem;
+}
+
 .info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   color: var(--light-color);
   font-size: 1rem;
   line-height: 1.5rem;
@@ -30,27 +41,12 @@
   }
 }
 
-.infoDetails {
-  margin-top: 1rem;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
 .bioContainer {
   flex-grow: 1;
   color: var(--light-text);
   font-family: var(--header-font);
   font-size: 1.25rem;
   line-height: 2rem;
-
-  & img {
-    width: 100%;
-    border: 1.5rem solid var(--light-color);
-    box-sizing: border-box;
-    padding: 0;
-    margin-bottom: 1rem;
-  }
 
   & a {
     color: var(--light-color);

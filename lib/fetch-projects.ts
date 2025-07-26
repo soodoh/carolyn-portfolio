@@ -1,5 +1,10 @@
-import { client, formatImage } from "@/lib/contentful-utils";
+import {
+  client,
+  formatImage,
+  getImageAssetFromRichTextNode,
+} from "@/lib/contentful-utils";
 import { richTextFromMarkdown } from "@contentful/rich-text-from-markdown";
+import { BLOCKS } from "@contentful/rich-text-types";
 import pAll from "p-all";
 import type { Project, ProjectInfo, ProjectType } from "@/lib/types";
 import type { Asset as ContentfulAsset } from "contentful";
@@ -53,6 +58,17 @@ export async function getProjectInfo(slug: string): Promise<ProjectInfo> {
   );
   const descriptionDocument = await richTextFromMarkdown(
     String(projectItem.fields.description),
+    async (node) => {
+      const url = (node as unknown as { url: string }).url;
+      const alt = (node as unknown as { alt: string }).alt;
+      return {
+        nodeType: BLOCKS.EMBEDDED_ASSET,
+        content: [],
+        data: {
+          image: await getImageAssetFromRichTextNode(url, alt),
+        },
+      };
+    },
   );
 
   return {

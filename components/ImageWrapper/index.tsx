@@ -1,17 +1,21 @@
-"use client";
-
-import { imageLoader } from "@/lib/image-loader";
 import NextImage from "next/image";
-import React from "react";
+import styles from "./imageWrapper.module.css";
 import type { ImageType } from "@/lib/types";
 
 type Props = {
   image: ImageType;
   priority?: boolean;
+  sizes?: string;
+  className?: string;
+  onLoad?: () => void;
 };
 
-const ImageWrapper = ({ image, priority = false }: Props) => {
-  const sizes = [
+const ImageWrapper = ({
+  image,
+  priority = false,
+  className,
+  onLoad,
+  sizes = [
     "(max-width: 399px) 184px",
     "(max-width: 519px) 244px",
     "(max-width: 639px) 200px",
@@ -19,19 +23,20 @@ const ImageWrapper = ({ image, priority = false }: Props) => {
     "(max-width: 1023px) 220px",
     "(max-width: 1279px) 280px",
     "280px",
-  ].join(", ");
+  ].join(", "),
+}: Props) => {
   return (
     <NextImage
-      alt={image.description}
-      style={{ width: "100%", height: "auto" }}
-      blurDataURL={image.placeholder}
-      height={image.height}
-      loader={imageLoader}
-      placeholder="blur"
+      className={className ?? styles.image}
       priority={priority}
+      width={image.width}
+      height={image.height}
+      alt={image.description}
+      blurDataURL={image.placeholder}
+      placeholder="blur"
       sizes={sizes}
       src={image.url}
-      width={image.width}
+      onLoad={onLoad}
     />
   );
 };

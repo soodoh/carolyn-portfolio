@@ -10,7 +10,6 @@ export const metadata: Metadata = {
   title: "Carolyn DiLoreto: Portfolio",
   description: "",
   keywords: [],
-  icons: "/favicon.png",
 };
 
 export default async function Home() {

@@ -1,14 +1,14 @@
-import type { ImageLoaderProps } from 'next/image';
+import type { ImageLoaderProps } from "next/image";
 
-export const imageLoader = ({
+export default function contentfulImageLoader({
   src,
   width,
   quality = 100,
-}: ImageLoaderProps) => {
+}: ImageLoaderProps) {
   const searchParams = new URLSearchParams({
     w: `${width}`,
     q: `${quality}`,
-    fm: 'webp',
+    fm: "webp",
   });
   return `${src}?${searchParams.toString()}`;
-};
+}

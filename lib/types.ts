@@ -7,10 +7,12 @@ export type Asset = {
   url: string;
 };
 
+export type ImagePlaceholder = `data:image/${string}`;
+
 export type ImageType = Asset & {
   width: number;
   height: number;
-  placeholder: string;
+  placeholder: ImagePlaceholder;
   dominantColor?: string;
 };
 

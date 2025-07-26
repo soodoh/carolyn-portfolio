@@ -114,6 +114,8 @@
 
 .descriptionContainer {
   margin: 5rem 4rem 2rem 4rem;
+  font-size: 1.25rem;
+  font-family: var(--body-font);
 
   & h1 {
     text-align: center;
@@ -124,20 +126,18 @@
     color: var(--light-color);
   }
 
-  & p {
+  & li>p {
+    margin: 0;
+  }
+
+  &>p {
     text-indent: 2rem;
     text-align: left;
     line-height: 2rem;
-    font-size: 1.25rem;
-    font-family: var(--body-font);
     margin-bottom: 2rem;
   }
 
-  & p> :first-child:is(img) {
-    margin-left: -2rem;
-  }
-
-  & div:has(img) {
+  & img {
     margin-bottom: 0.5rem;
   }
 

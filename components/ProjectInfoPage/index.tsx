@@ -1,6 +1,7 @@
 import LeftArrowIcon from "@/components/icons/LeftArrowIcon";
 import ImageWrapper from "@/components/ImageWrapper";
 import { documentToReactComponents } from "@contentful/rich-text-react-renderer";
+import { BLOCKS } from "@contentful/rich-text-types";
 import classNames from "classnames/bind";
 import Link from "next/link";
 import styles from "./projectPage.module.css";
@@ -31,7 +32,7 @@ const ProjectInfo = ({ projectInfo }: { projectInfo: ProjectInfo }) => {
             <iframe
               src={projectInfo.videoLink}
               title="Video Player"
-              frameBorder="0"
+              // frameBorder="0"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; fullscreen; picture-in-picture; web-share"
               allowFullScreen
             />
@@ -39,7 +40,15 @@ const ProjectInfo = ({ projectInfo }: { projectInfo: ProjectInfo }) => {
         )}
       </section>
       <div className={styles.descriptionContainer}>
-        {documentToReactComponents(projectInfo.description)}
+        {documentToReactComponents(projectInfo.description, {
+          stripEmptyTrailingParagraph: true,
+          renderNode: {
+            [BLOCKS.TABLE]: () => null,
+            [BLOCKS.EMBEDDED_ASSET]: (node) => {
+              return <ImageWrapper sizes="100vw" image={node.data.image} />;
+            },
+          },
+        })}
       </div>
       <Link
         aria-label="View more work"

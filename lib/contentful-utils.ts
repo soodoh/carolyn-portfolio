@@ -1,4 +1,4 @@
-import { getPlaceholder } from "@/lib/image-utils";
+import { getPlaceholder, readImage } from "@/lib/image-utils";
 import {
   type AssetDetails,
   type Asset as ContentfulAsset,
@@ -25,19 +25,53 @@ export function formatAsset(asset: ContentfulAsset): Asset {
   };
 }
 
+const imageCache: Map<string, ImageType> = new Map();
+
 export async function formatImage(
   contentfulAsset: ContentfulAsset,
 ): Promise<ImageType> {
   const asset = formatAsset(contentfulAsset);
+  const cached = imageCache.get(asset.id);
+  if (cached) {
+    return cached;
+  }
+
   const imageDetails = contentfulAsset.fields.file?.details as AssetDetails;
   const width = imageDetails.image?.width ?? 0;
   const height = imageDetails.image?.height ?? 0;
-  const placeholder = await getPlaceholder(asset);
+  const placeholder = await getPlaceholder(asset.url);
 
-  return {
+  const image = {
     ...asset,
     width,
     height,
     placeholder,
   };
+  imageCache.set(asset.id, image);
+
+  return image;
 }
+
+export const getImageAssetFromRichTextNode = async (
+  rawUrl: string,
+  alt: string,
+): Promise<ImageType> => {
+  const url = formatUrl(rawUrl);
+  const cached = imageCache.get(url);
+  if (cached) {
+    return cached;
+  }
+
+  const image = await readImage(url);
+  const placeholder = await getPlaceholder(url);
+
+  return {
+    id: url,
+    title: alt,
+    description: alt,
+    url,
+    placeholder,
+    width: image.width,
+    height: image.height,
+  };
+};
