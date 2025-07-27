@@ -24,6 +24,7 @@ export default async function About() {
       <div className={styles.container}>
         <div className={styles.info}>
           <ImageWrapper
+            quality={50}
             className={styles.image}
             image={aboutData.profilePicture}
           />

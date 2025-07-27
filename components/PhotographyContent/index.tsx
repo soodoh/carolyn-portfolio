@@ -56,7 +56,7 @@ const PhotographyContent = ({ albums }: { albums: Album[] }) => {
               onClick={() => handleThumbnailClick(image)}
               className={styles.button}
             >
-              <ImageWrapper image={image} />
+              <ImageWrapper quality={50} image={image} />
             </button>
           ))}
         </Masonry>

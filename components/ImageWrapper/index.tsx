@@ -4,6 +4,7 @@ import type { ImageType } from "@/lib/types";
 
 type Props = {
   image: ImageType;
+  quality?: number;
   priority?: boolean;
   sizes?: string;
   className?: string;
@@ -12,6 +13,7 @@ type Props = {
 
 const ImageWrapper = ({
   image,
+  quality = 100,
   priority = false,
   className,
   onLoad,
@@ -36,6 +38,7 @@ const ImageWrapper = ({
       placeholder="blur"
       sizes={sizes}
       src={image.url}
+      quality={quality}
       onLoad={onLoad}
     />
   );

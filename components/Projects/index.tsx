@@ -58,7 +58,7 @@ const Projects = ({ projects }: { projects: Project[] }) => {
                 <h2>{item.title}</h2>
                 <h3>{item.summary}</h3>
               </div>
-              <ImageWrapper image={item.coverImage} />
+              <ImageWrapper image={item.coverImage} quality={50} />
             </Link>
           ))}
         </Masonry>
