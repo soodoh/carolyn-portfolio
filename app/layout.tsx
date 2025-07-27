@@ -5,7 +5,7 @@ import { getSocialMedia } from "@/lib/fetch-home-data";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Carolyn DiLoreto: Portfolio",
+  title: "CD Portfolio",
   description: "",
   keywords: [],
   icons: "/favicon.png",
@@ -19,6 +19,12 @@ export default async function RootLayout({
   const socialMedia = await getSocialMedia();
   return (
     <html lang="en">
+      <head>
+        <meta
+          name="google-site-verification"
+          content="mZWTxlscBqxebm-E7NiMf8dG-G2qbqKKODr0BoCUobQ"
+        />
+      </head>
       <body>
         <Header isLayout />
         {children}

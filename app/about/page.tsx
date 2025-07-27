@@ -5,6 +5,14 @@ import { getAboutData } from "@/lib/fetch-about-data";
 import { getBackgroundImage } from "@/lib/fetch-home-data";
 import { documentToReactComponents } from "@contentful/rich-text-react-renderer";
 import styles from "./page.module.css";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "About Carolyn",
+  description:
+    "Carolyn DiLoreto is a multi-media visual artist, dancer, and USC alumnus, with a Media Arts + Practice major and a double minor in Dance and Computer Programming.",
+  keywords: [],
+};
 
 export default async function About() {
   const backgroundImage = await getBackgroundImage();

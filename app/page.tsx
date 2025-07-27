@@ -6,8 +6,9 @@ import { getProjects } from "@/lib/fetch-projects";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Carolyn DiLoreto: Portfolio",
-  description: "",
+  title: "CD Portfolio",
+  description:
+    "Carolyn DiLoreto is a multi-media visual artist, dancer and USC alumnus. In this portfolio, view photo galleries, read about past projects, or even read her bio.",
   keywords: [],
 };
 
