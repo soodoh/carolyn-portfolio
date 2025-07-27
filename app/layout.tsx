@@ -7,6 +7,7 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "CD Portfolio",
   description: "",
+  robots: "index, follow",
   keywords: [],
   icons: "/favicon.png",
 };
