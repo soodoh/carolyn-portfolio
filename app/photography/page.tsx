@@ -3,6 +3,9 @@ import PhotographyContent from "@/components/PhotographyContent";
 import { getAlbums } from "@/lib/fetch-photos";
 import type { Metadata } from "next";
 
+// Statically generated at build time, will error if any Dynamic APIs are used
+export const dynamic = "error";
+
 export const metadata: Metadata = {
   title: "CD Photography",
   description:

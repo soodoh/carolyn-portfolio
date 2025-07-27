@@ -5,6 +5,9 @@ import { getBackgroundImage } from "@/lib/fetch-home-data";
 import { getProjects } from "@/lib/fetch-projects";
 import { Metadata } from "next";
 
+// Statically generated at build time, will error if any Dynamic APIs are used
+export const dynamic = "error";
+
 export const metadata: Metadata = {
   title: "CD Portfolio",
   description:

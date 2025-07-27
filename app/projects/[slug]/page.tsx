@@ -1,7 +1,10 @@
 import ProjectInfoPage from "@/components/ProjectInfoPage";
 import ProtectedProjectPage from "@/components/ProtectedProjectPage";
-import { getProjectInfo } from "@/lib/fetch-projects";
+import { getProjectInfo, getProjects } from "@/lib/fetch-projects";
 import { Metadata } from "next";
+
+// Statically generated at build time, will error if any Dynamic APIs are used
+export const dynamic = "error";
 
 export async function generateMetadata({
   params,
@@ -16,6 +19,13 @@ export async function generateMetadata({
     robots: projectData.password ? "noindex, nofollow" : "index, follow",
     keywords: [],
   };
+}
+
+export async function generateStaticParams() {
+  const projects = await getProjects();
+  return projects.map((project) => ({
+    slug: project.slug,
+  }));
 }
 
 export default async function ProjectPage({

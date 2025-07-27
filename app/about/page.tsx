@@ -7,6 +7,9 @@ import { documentToReactComponents } from "@contentful/rich-text-react-renderer"
 import styles from "./page.module.css";
 import type { Metadata } from "next";
 
+// Statically generated at build time, will error if any Dynamic APIs are used
+export const dynamic = "error";
+
 export const metadata: Metadata = {
   title: "About Carolyn",
   description:
