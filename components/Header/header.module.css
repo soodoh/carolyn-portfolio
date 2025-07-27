@@ -8,6 +8,10 @@
   height: var(--header-height);
   transition: all 250ms ease-in-out;
   z-index: 2;
+
+  & a {
+    text-decoration: none;
+  }
 }
 
 .headerMobileNavOpen {
@@ -65,7 +69,6 @@
   margin-left: 2rem;
   line-height: 1.75rem;
   font-family: var(--header-font);
-  text-decoration: none;
   color: var(--light-text);
 
   @media (--sm-viewport) {
@@ -94,7 +97,6 @@
 }
 
 .navLink {
-  text-decoration: none;
   color: var(--light-text);
 }
 

@@ -2,7 +2,6 @@ import "@/components/commonStyles/globals.css";
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
 import { getSocialMedia } from "@/lib/fetch-home-data";
-import styles from "./layout.module.css";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -21,8 +20,8 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body>
-        <Header />
-        <main className={styles.mainContent}>{children}</main>
+        <Header isLayout />
+        {children}
         <Footer socialMedia={socialMedia} />
       </body>
     </html>
