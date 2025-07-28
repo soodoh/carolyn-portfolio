@@ -19,7 +19,7 @@
     "@contentful/rich-text-react-renderer": "^16.1.0",
     "@headlessui/react": "^2.2.6",
     "classnames": "^2.5.1",
-    "contentful": "^11.7.13",
+    "contentful": "^11.7.14",
     "framer-motion": "^12.23.9",
     "jimp": "^1.6.0",
     "marked": "^16.1.1",

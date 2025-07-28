@@ -5483,7 +5483,7 @@ __metadata:
     "@types/node": "npm:24.1.0"
     "@types/react": "npm:^19.1.8"
     classnames: "npm:^2.5.1"
-    contentful: "npm:^11.7.13"
+    contentful: "npm:^11.7.14"
     cssnano: "npm:^7.1.0"
     eslint: "npm:^9.32.0"
     eslint-config-next: "npm:15.4.4"
@@ -5815,9 +5815,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"contentful@npm:^11.7.13":
-  version: 11.7.13
-  resolution: "contentful@npm:11.7.13"
+"contentful@npm:^11.7.14":
+  version: 11.7.14
+  resolution: "contentful@npm:11.7.14"
   dependencies:
     "@contentful/content-source-maps": "npm:^0.11.8"
     "@contentful/rich-text-types": "npm:^16.6.1"
@@ -5826,7 +5826,7 @@ __metadata:
     contentful-sdk-core: "npm:^9.0.1"
     json-stringify-safe: "npm:^5.0.1"
     type-fest: "npm:^4.0.0"
-  checksum: 10c0/e8e5287639c0c56770896e78c849e40c3a373bc69cf930226f3893c41e5179d1483e4538cbc04fee0593c06838e83ebebc8b2e57300451b684a81ec6fe4ed34a
+  checksum: 10c0/e53f5fc144d1b513c4a73bbcd3e5c710cd1bc8e0b62596646045e313caaacb86ce7b4667bcfb97e19449a2fcc1329b4c09d8437f24c24197b2f23cb164bf968c
   languageName: node
   linkType: hard
 
