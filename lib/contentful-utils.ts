@@ -63,6 +63,7 @@ export const getImageAssetFromRichTextNode = async (
   }
 
   const image = await readImage(url);
+  const imageMetadata = await image.metadata();
   const placeholder = await getPlaceholder(url);
 
   return {
@@ -71,7 +72,7 @@ export const getImageAssetFromRichTextNode = async (
     description: alt,
     url,
     placeholder,
-    width: image.width,
-    height: image.height,
+    width: imageMetadata.width,
+    height: imageMetadata.height,
   };
 };
