@@ -2702,6 +2702,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@tsconfig/next@npm:^2.0.3":
+  version: 2.0.3
+  resolution: "@tsconfig/next@npm:2.0.3"
+  checksum: 10c0/57aea3cf6ceedd3dae6713180559211b02a453668fd01f40e197759b6fc583eb11a3acc57a39d237c8c3e8e5fdcb243d3d761b9713c7ded45af071399fb34f11
+  languageName: node
+  linkType: hard
+
 "@tybys/wasm-util@npm:^0.9.0":
   version: 0.9.0
   resolution: "@tybys/wasm-util@npm:0.9.0"
@@ -3793,6 +3800,7 @@ __metadata:
     "@netlify/plugin-lighthouse": "npm:^6.0.3"
     "@netlify/plugin-nextjs": "npm:^5.12.0"
     "@playwright/test": "npm:^1.54.2"
+    "@tsconfig/next": "npm:^2.0.3"
     "@types/node": "npm:24.2.1"
     "@types/react": "npm:^19.1.10"
     classnames: "npm:^2.5.1"
