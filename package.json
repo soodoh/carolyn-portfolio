@@ -14,7 +14,7 @@
     "lint:fix": "eslint --fix ."
   },
   "dependencies": {
-    "@aws-sdk/client-ses": "^3.864.0",
+    "@aws-sdk/client-ses": "^3.872.0",
     "@contentful/rich-text-from-markdown": "^16.1.1",
     "@contentful/rich-text-react-renderer": "^16.1.0",
     "@headlessui/react": "^2.2.7",
@@ -22,7 +22,7 @@
     "contentful": "^11.7.15",
     "framer-motion": "^12.23.12",
     "marked": "^16.2.0",
-    "next": "^15.4.7",
+    "next": "^15.5.0",
     "p-all": "^5.0.0",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
@@ -37,14 +37,14 @@
     "@contentful/rich-text-types": "^17.1.0",
     "@csstools/postcss-global-data": "^3.0.0",
     "@netlify/plugin-lighthouse": "^6.0.3",
-    "@netlify/plugin-nextjs": "^5.12.0",
-    "@playwright/test": "^1.54.2",
+    "@netlify/plugin-nextjs": "^5.12.1",
+    "@playwright/test": "^1.55.0",
     "@tsconfig/next": "^2.0.3",
     "@types/node": "24.3.0",
     "@types/react": "^19.1.10",
     "cssnano": "^7.1.0",
     "eslint": "^9.33.0",
-    "eslint-config-next": "15.4.7",
+    "eslint-config-next": "15.5.0",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-import": "^2.32.0",
     "eslint-plugin-no-relative-import-paths": "^1.6.1",
@@ -72,5 +72,5 @@
     "type": "git",
     "url": "git+https://github.com/sudopseudocode/carolyn-portfolio.git"
   },
-  "packageManager": "yarn@4.9.2"
+  "packageManager": "yarn@4.9.3"
 }
