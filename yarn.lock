@@ -710,16 +710,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@contentful/rich-text-from-markdown@npm:^16.1.1":
-  version: 16.1.1
-  resolution: "@contentful/rich-text-from-markdown@npm:16.1.1"
+"@contentful/rich-text-from-markdown@npm:^16.1.2":
+  version: 16.1.2
+  resolution: "@contentful/rich-text-from-markdown@npm:16.1.2"
   dependencies:
     "@contentful/rich-text-types": "npm:^17.1.0"
     lodash: "npm:^4.17.11"
     remark-gfm: "npm:^1.0.0"
     remark-parse: "npm:^9.0.0"
     unified: "npm:^9.0.0"
-  checksum: 10c0/228e1137afac12d7be8c56d3629f18c974706e69b439a701ac3c277f167559c25f3933ebacedbb5633bea000b4bc1c474e6d2fc59208eb79fd5c954cd599ca00
+  checksum: 10c0/14a0f51ad763c5410abd95ea60058ee934638aea82df2f31ef1b088e78d68aba7daef2240c1af2975ae2f4b62df11e40a3ddd1fc80aee5b2ae245b8565316a43
   languageName: node
   linkType: hard
 
@@ -3822,7 +3822,7 @@ __metadata:
     "@commitlint/cli": "npm:^19.8.1"
     "@commitlint/config-conventional": "npm:^19.8.1"
     "@commitlint/types": "npm:^19.8.1"
-    "@contentful/rich-text-from-markdown": "npm:^16.1.1"
+    "@contentful/rich-text-from-markdown": "npm:^16.1.2"
     "@contentful/rich-text-react-renderer": "npm:^16.1.0"
     "@contentful/rich-text-types": "npm:^17.1.0"
     "@csstools/postcss-global-data": "npm:^3.1.0"
