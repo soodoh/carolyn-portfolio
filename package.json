@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "@aws-sdk/client-ses": "^3.873.0",
-    "@contentful/rich-text-from-markdown": "^16.1.1",
+    "@contentful/rich-text-from-markdown": "^16.1.2",
     "@contentful/rich-text-react-renderer": "^16.1.0",
     "@headlessui/react": "^2.2.7",
     "classnames": "^2.5.1",
@@ -72,5 +72,5 @@
     "type": "git",
     "url": "git+https://github.com/sudopseudocode/carolyn-portfolio.git"
   },
-  "packageManager": "yarn@4.9.3"
+  "packageManager": "yarn@4.9.4"
 }
