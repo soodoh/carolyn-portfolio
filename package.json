@@ -27,8 +27,7 @@
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
     "react-masonry-css": "^1.0.16",
-    "sharp": "^0.34.3",
-    "swiper": "^12.0.1"
+    "sharp": "^0.34.3"
   },
   "devDependencies": {
     "@commitlint/cli": "^19.8.1",
