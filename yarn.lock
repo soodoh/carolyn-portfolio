@@ -4138,7 +4138,7 @@ __metadata:
     react-dom: "npm:^19.1.1"
     react-masonry-css: "npm:^1.0.16"
     sharp: "npm:^0.34.3"
-    swiper: "npm:^11.2.10"
+    swiper: "npm:^12.0.1"
     typescript: "npm:^5.9.2"
   languageName: unknown
   linkType: soft
@@ -10624,10 +10624,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"swiper@npm:^11.2.10":
-  version: 11.2.10
-  resolution: "swiper@npm:11.2.10"
-  checksum: 10c0/b7e3a7c79d92ccc62af77744edc376c9aefc771a0abd50c4adf07b5e3450b5da9ca7f84f5809e275ff65e1bc9d4500d930628e84a76fc7f2db403291c69b7fac
+"swiper@npm:^12.0.1":
+  version: 12.0.1
+  resolution: "swiper@npm:12.0.1"
+  checksum: 10c0/6b7e4ab71fb4d6cacac371869690c005caf1d15c48e75fb1fb1969e2869f99644071a5ee79e96f4461d4aac649e3e1ec72c4246815813ec49bd913d0d54c4ee7
   languageName: node
   linkType: hard
 
