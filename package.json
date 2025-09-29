@@ -14,7 +14,7 @@
     "lint:fix": "eslint --fix ."
   },
   "dependencies": {
-    "@aws-sdk/client-ses": "^3.896.0",
+    "@aws-sdk/client-ses": "^3.899.0",
     "@contentful/rich-text-from-markdown": "^16.1.7",
     "@contentful/rich-text-react-renderer": "^16.1.5",
     "@headlessui/react": "^2.2.9",
@@ -39,8 +39,8 @@
     "@netlify/plugin-nextjs": "^5.13.3",
     "@playwright/test": "^1.55.1",
     "@tsconfig/next": "^2.0.3",
-    "@types/node": "24.5.2",
-    "@types/react": "^19.1.14",
+    "@types/node": "24.6.0",
+    "@types/react": "^19.1.15",
     "cssnano": "^7.1.1",
     "eslint": "^9.36.0",
     "eslint-config-next": "15.5.4",
