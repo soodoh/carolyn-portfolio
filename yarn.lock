@@ -2122,10 +2122,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@netlify/plugin-nextjs@npm:^5.13.4":
-  version: 5.13.4
-  resolution: "@netlify/plugin-nextjs@npm:5.13.4"
-  checksum: 10c0/8090bcfa42604ce8be70bdec1817990fad518762ed4d24ffaa6e07c6b587087cb197b08d2c74e03e388a7bf8490b69c7423b0e117e34b6feb9a42adb414c4c3b
+"@netlify/plugin-nextjs@npm:^5.13.5":
+  version: 5.13.5
+  resolution: "@netlify/plugin-nextjs@npm:5.13.5"
+  checksum: 10c0/e777446494e15b2b320db8f11886b65c47a02f463f7fbfd9efd67bbcd600ed625b73d5a27cfcb339945eaf5b7d3064f52b27768a4517eaf8ee4e3e1c62f6f58c
   languageName: node
   linkType: hard
 
@@ -2271,14 +2271,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@playwright/test@npm:^1.55.1":
-  version: 1.55.1
-  resolution: "@playwright/test@npm:1.55.1"
+"@playwright/test@npm:^1.56.0":
+  version: 1.56.0
+  resolution: "@playwright/test@npm:1.56.0"
   dependencies:
-    playwright: "npm:1.55.1"
+    playwright: "npm:1.56.0"
   bin:
     playwright: cli.js
-  checksum: 10c0/23fa213844bc594b03c0a907ef69da7e26a6c3295ee602b1567d26a473d30253468b832698779b02a304b71ae14aa0875645c526678227cc0675324dbf77e118
+  checksum: 10c0/9e1461bb309275c436454f5d2e6d68ca2ccf2477bdb6f95c2d35b705b6c69a615d099f144cd66a99f132de7a19b1ca486f666b252f0c84625bcf82d2fd4cddf4
   languageName: node
   linkType: hard
 
@@ -3101,21 +3101,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:24.6.2":
-  version: 24.6.2
-  resolution: "@types/node@npm:24.6.2"
+"@types/node@npm:24.7.0":
+  version: 24.7.0
+  resolution: "@types/node@npm:24.7.0"
   dependencies:
-    undici-types: "npm:~7.13.0"
-  checksum: 10c0/d029757711be85ec468686f66cd8eca78f5996d7e2b1a5b818436e0299b19925b0fb4f7509a6b62750abdc72d66f5750ce22fb8b55559baca86df89a9c44722e
+    undici-types: "npm:~7.14.0"
+  checksum: 10c0/f036c78062cb3a0d5c6586bf2dac347ed3f4af121cef4ab92c85c44e32be1c50aab5ba96955842b7f8165f0e0f1c8066d1813ae259372df6c0fa9fadb1116a3e
   languageName: node
   linkType: hard
 
-"@types/react@npm:^19.2.0":
-  version: 19.2.0
-  resolution: "@types/react@npm:19.2.0"
+"@types/react@npm:^19.2.2":
+  version: 19.2.2
+  resolution: "@types/react@npm:19.2.2"
   dependencies:
     csstype: "npm:^3.0.2"
-  checksum: 10c0/a280e146df2abd3b06eaa2f5332dade9f7ebe916334a40699ee11139c5f22aeb49b5b78b6de8c55b53ef2fa94285e1bc2feaf4fbce6fe259a7de92dc1bf67b17
+  checksum: 10c0/f830b1204aca4634ce3c6cb3477b5d3d066b80a4dd832a4ee0069acb504b6debd2416548a43a11c1407c12bc60e2dc6cf362934a18fe75fe06a69c0a98cba8ab
   languageName: node
   linkType: hard
 
@@ -4157,13 +4157,13 @@ __metadata:
     "@csstools/postcss-global-data": "npm:^3.1.0"
     "@headlessui/react": "npm:^2.2.9"
     "@netlify/plugin-lighthouse": "npm:^6.0.3"
-    "@netlify/plugin-nextjs": "npm:^5.13.4"
-    "@playwright/test": "npm:^1.55.1"
+    "@netlify/plugin-nextjs": "npm:^5.13.5"
+    "@playwright/test": "npm:^1.56.0"
     "@tsconfig/next": "npm:^2.0.3"
-    "@types/node": "npm:24.6.2"
-    "@types/react": "npm:^19.2.0"
+    "@types/node": "npm:24.7.0"
+    "@types/react": "npm:^19.2.2"
     classnames: "npm:^2.5.1"
-    contentful: "npm:^11.8.4"
+    contentful: "npm:^11.8.5"
     cssnano: "npm:^7.1.1"
     eslint: "npm:^9.37.0"
     eslint-config-next: "npm:15.5.4"
@@ -4173,7 +4173,7 @@ __metadata:
     eslint-plugin-prettier: "npm:^5.5.4"
     framer-motion: "npm:^12.23.22"
     husky: "npm:^9.1.7"
-    marked: "npm:^16.3.0"
+    marked: "npm:^16.4.0"
     next: "npm:^15.5.4"
     p-all: "npm:^5.0.1"
     postcss: "npm:^8.5.6"
@@ -4499,9 +4499,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"contentful@npm:^11.8.4":
-  version: 11.8.4
-  resolution: "contentful@npm:11.8.4"
+"contentful@npm:^11.8.5":
+  version: 11.8.5
+  resolution: "contentful@npm:11.8.5"
   dependencies:
     "@contentful/content-source-maps": "npm:^0.11.33"
     "@contentful/rich-text-types": "npm:^16.6.1"
@@ -4510,7 +4510,7 @@ __metadata:
     contentful-sdk-core: "npm:^9.0.1"
     json-stringify-safe: "npm:^5.0.1"
     type-fest: "npm:^4.0.0"
-  checksum: 10c0/a762422fe165de2397df8d42d2eb2ab3a169fe18bd1dc4072ad4d3093105a839d8c0622a7adb631d7a418b12bfe9681ebe53c5d2246620c238a109e83dc3c7dd
+  checksum: 10c0/085fc2fa4506eb96b7fb5352b81e8fe052c5e960e113c255d7001cfaf2216015c2043edfbd448d39f8eadff0f5eff99221cb5f6487c1fb329d89da75765ed4bd
   languageName: node
   linkType: hard
 
@@ -7637,12 +7637,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"marked@npm:^16.3.0":
-  version: 16.3.0
-  resolution: "marked@npm:16.3.0"
+"marked@npm:^16.4.0":
+  version: 16.4.0
+  resolution: "marked@npm:16.4.0"
   bin:
     marked: bin/marked.js
-  checksum: 10c0/5a3d7da93d7692014c8764c31dc741fa6ee16d8573788a3b28d041c440e79177c46d786ad7c1fc2b3f5e301d6db32e22da45efd4c00ddbc31caf87bd8e9a673b
+  checksum: 10c0/5d5e34a913e888b3ec42b9ad69409cc674d3fb91c75fd66749280c5f0c6cf69de9f3a2076af2a952ca577dd226f05b2f3d00d6850df71c37e662f3492377a582
   languageName: node
   linkType: hard
 
@@ -8716,27 +8716,27 @@ __metadata:
   languageName: node
   linkType: hard
 
-"playwright-core@npm:1.55.1":
-  version: 1.55.1
-  resolution: "playwright-core@npm:1.55.1"
+"playwright-core@npm:1.56.0":
+  version: 1.56.0
+  resolution: "playwright-core@npm:1.56.0"
   bin:
     playwright-core: cli.js
-  checksum: 10c0/39837a8c1232ec27486eac8c3fcacc0b090acc64310f7f9004b06715370fc426f944e3610fe8c29f17cd3d68280ed72c75f660c02aa5b5cf0eb34bab0031308f
+  checksum: 10c0/2ebf6138feb49722edd6d2df4afceb509309ebb3aadc24dcba2023a4d89c7a1d248c0b03b9e8fa9e31d51a8f72e909a271b98c9e48a82b94ce3ef1314d17a743
   languageName: node
   linkType: hard
 
-"playwright@npm:1.55.1":
-  version: 1.55.1
-  resolution: "playwright@npm:1.55.1"
+"playwright@npm:1.56.0":
+  version: 1.56.0
+  resolution: "playwright@npm:1.56.0"
   dependencies:
     fsevents: "npm:2.3.2"
-    playwright-core: "npm:1.55.1"
+    playwright-core: "npm:1.56.0"
   dependenciesMeta:
     fsevents:
       optional: true
   bin:
     playwright: cli.js
-  checksum: 10c0/b84a97b0d764403df512f5bbb10c7343974e151a28202cc06f90883a13e8a45f4491a0597f0ae5fb03a026746cbc0d200f0f32195bfaa381aee5ca5770626771
+  checksum: 10c0/54294c71169859c74a7335ce3ae2586e86e9c72845e0f894fd1672fc66f8c2b92488b6ac654a7a2ea79d79cdc5dc23c7b59ceed4907e442a672e7e67337e1f1e
   languageName: node
   linkType: hard
 
@@ -11128,10 +11128,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"undici-types@npm:~7.13.0":
-  version: 7.13.0
-  resolution: "undici-types@npm:7.13.0"
-  checksum: 10c0/44bbb0935425291351bfd8039571f017295b5d6dc5727045d0a4fea8c6ffe73a6703b48ce010f9cb539b9041a75b463f8cfe1e7309cab7486452505fb0d66151
+"undici-types@npm:~7.14.0":
+  version: 7.14.0
+  resolution: "undici-types@npm:7.14.0"
+  checksum: 10c0/e7f3214b45d788f03c51ceb33817be99c65dae203863aa9386b3ccc47201a245a7955fc721fb581da9c888b6ebad59fa3f53405214afec04c455a479908f0f14
   languageName: node
   linkType: hard
 
