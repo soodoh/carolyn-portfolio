@@ -71,5 +71,5 @@
     "type": "git",
     "url": "git+https://github.com/sudopseudocode/carolyn-portfolio.git"
   },
-  "packageManager": "pnpm@9.15.4"
+  "packageManager": "pnpm@10.27.0"
 }
