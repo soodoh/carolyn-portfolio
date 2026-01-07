@@ -1,9 +1,13 @@
 import noRelativeImportPaths from "eslint-plugin-no-relative-import-paths";
 import prettierRecommended from "eslint-plugin-prettier/recommended";
 import { defineConfig, globalIgnores } from "eslint/config";
+import next from "eslint-config-next";
 import nextVitals from "eslint-config-next/core-web-vitals";
+import nextTypescript from "eslint-config-next/typescript";
 
 const eslintConfig = defineConfig([
+  ...next,
+  ...nextTypescript,
   ...nextVitals,
   // Override default ignores of eslint-config-next.
   globalIgnores([
