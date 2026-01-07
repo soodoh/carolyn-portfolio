@@ -6,6 +6,7 @@ const config: NextConfig = {
   images: {
     loader: "custom",
     loaderFile: "./lib/image-loader.ts",
+    qualities: [50, 75, 100],
   },
   output: "standalone",
 };
