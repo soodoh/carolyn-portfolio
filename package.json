@@ -14,13 +14,13 @@
     "lint:fix": "eslint --fix ."
   },
   "dependencies": {
-    "@aws-sdk/client-ses": "^3.962.0",
+    "@aws-sdk/client-ses": "^3.965.0",
     "@contentful/rich-text-from-markdown": "^16.1.8",
     "@contentful/rich-text-react-renderer": "^16.1.6",
     "@headlessui/react": "^2.2.9",
     "classnames": "^2.5.1",
     "contentful": "^11.10.1",
-    "framer-motion": "^12.24.0",
+    "framer-motion": "^12.24.10",
     "marked": "^17.0.1",
     "next": "^16.1.1",
     "p-all": "^5.0.1",
@@ -71,5 +71,5 @@
     "type": "git",
     "url": "git+https://github.com/soodoh/carolyn-portfolio.git"
   },
-  "packageManager": "pnpm@9.15.4"
+  "packageManager": "pnpm@9.15.9"
 }
