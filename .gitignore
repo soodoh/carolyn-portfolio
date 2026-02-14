@@ -2,7 +2,7 @@
 
 # dependencies
 /node_modules
-pnpm-debug.log*
+bun-debug.log*
 
 # testing
 /coverage

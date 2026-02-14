@@ -19,7 +19,7 @@
     "aws",
     "serverless"
   ],
-  "packageManager": "pnpm@9.15.9",
+  "packageManager": "bun@1.2.4",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -70,5 +70,8 @@
     "prettier": "^3.8.1",
     "prettier-eslint": "^16.4.2",
     "typescript": "^5.9.3"
-  }
+  },
+  "trustedDependencies": [
+    "unrs-resolver"
+  ]
 }
