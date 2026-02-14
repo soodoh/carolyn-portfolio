@@ -23,6 +23,8 @@ const eslintConfig = defineConfig([
       "no-relative-import-paths": noRelativeImportPaths,
     },
     rules: {
+      // This rule targets Pages Router; it's a false positive in App Router
+      "@next/next/no-page-custom-font": "off",
       "no-relative-import-paths/no-relative-import-paths": [
         "error",
         { allowSameFolder: true, rootDir: "./", prefix: "@" },

@@ -1,16 +1,12 @@
-import DropdownIcon from "@/components/icons/DropdownIcon";
-import { useState } from "react";
-import styles from "./dropdown.module.css";
+"use client";
 
-// TODO implement close on document click
-//
-// const close = (event: MouseEvent | TouchEvent) => {
-// 	if (event.target instanceof HTMLElement && !event.target.closest('.dropdown')) {
-// 		dropdownOpen = false;
-// 	}
-// };
-//
-// <svelte:document on:click={close} on:touchstart={close} />
+import DropdownIcon from "@/components/icons/DropdownIcon";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 const Dropdown = <T extends string>({
   current,
@@ -21,35 +17,27 @@ const Dropdown = <T extends string>({
   options: T[];
   onChange: (option: T) => void;
 }) => {
-  const [open, setOpen] = useState(false);
-
   return (
-    <div className={styles.dropdown}>
-      <button
-        className={styles.menuButton}
-        aria-label="Choose a filter"
-        aria-haspopup="true"
-        aria-expanded={open}
-        onClick={() => setOpen(!open)}
-      >
+    <DropdownMenu>
+      <DropdownMenuTrigger className="mt-2 pb-2 flex items-center cursor-pointer border-none bg-transparent font-body text-base leading-7 text-dark">
         {current}
-        <DropdownIcon />
-      </button>
-      <div className={styles.dropdownMenu} role="menu" aria-hidden={!open}>
+        <DropdownIcon className="fill-dark ml-2 w-4 h-4" />
+      </DropdownMenuTrigger>
+      <DropdownMenuContent
+        className="bg-white text-dark shadow-[0_0_0.5rem_rgba(var(--color-dark-rgb),0.25)] z-10"
+        align="start"
+      >
         {options.map((option, index) => (
-          <button
+          <DropdownMenuItem
             key={`option-${index}-${option}`}
-            aria-label={`Choose filter: ${option}`}
-            onClick={() => {
-              onChange(option);
-              setOpen(false);
-            }}
+            className="cursor-pointer px-8 py-4 text-base"
+            onClick={() => onChange(option)}
           >
             {option}
-          </button>
+          </DropdownMenuItem>
         ))}
-      </div>
-    </div>
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 };
 

@@ -4,9 +4,9 @@ import Filter from "@/components/Filter";
 import ImageGallery from "@/components/ImageGallery";
 import ImageWrapper from "@/components/ImageWrapper";
 import Masonry from "@/components/Masonry";
+import { Button } from "@/components/ui/button";
 import { Album, ImageType } from "@/lib/types";
 import { useMemo, useState } from "react";
-import styles from "./photographyContent.module.css";
 
 const PhotographyContent = ({ albums }: { albums: Album[] }) => {
   const albumNames: string[] = useMemo(() => {
@@ -41,8 +41,7 @@ const PhotographyContent = ({ albums }: { albums: Album[] }) => {
 
       <ImageGallery
         open={galleryOpen}
-        index={currentPhotoIndex}
-        setIndex={setCurrentPhotoIndex}
+        initialIndex={currentPhotoIndex}
         images={galleryImages}
         onClose={() => setGalleryOpen(false)}
       />
@@ -50,14 +49,15 @@ const PhotographyContent = ({ albums }: { albums: Album[] }) => {
       <div role="tabpanel">
         <Masonry>
           {galleryImages.map((image) => (
-            <button
+            <Button
               key={`image-${image.id}`}
+              variant="ghost"
               aria-label={`View fullscreen photo (${image.title})`}
               onClick={() => handleThumbnailClick(image)}
-              className={styles.button}
+              className="h-auto w-full p-0 rounded-none hover:bg-transparent"
             >
               <ImageWrapper quality={50} image={image} />
-            </button>
+            </Button>
           ))}
         </Masonry>
       </div>

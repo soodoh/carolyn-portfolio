@@ -1,5 +1,4 @@
 import NextImage from "next/image";
-import styles from "./imageWrapper.module.css";
 import type { ImageType } from "@/lib/types";
 
 type Props = {
@@ -29,7 +28,7 @@ const ImageWrapper = ({
 }: Props) => {
   return (
     <NextImage
-      className={className ?? styles.image}
+      className={className ?? "w-full h-auto object-contain"}
       priority={priority}
       width={image.width}
       height={image.height}

@@ -1,11 +1,8 @@
 "use client";
 
 import ImageWrapper from "@/components/ImageWrapper";
-import classNames from "classnames/bind";
-import styles from "./background.module.css";
+import { cn } from "@/lib/utils";
 import type { ImageType } from "@/lib/types";
-
-const cx = classNames.bind(styles);
 
 const Background = ({
   fixed = false,
@@ -15,9 +12,11 @@ const Background = ({
   image: ImageType;
 }) => {
   return (
-    <div className={cx({ container: true, fixed })}>
+    <div
+      className={cn("bg-dark h-screen absolute inset-0 -z-1", fixed && "fixed")}
+    >
       <ImageWrapper
-        className={styles.image}
+        className="w-full h-full object-cover"
         priority
         image={image}
         sizes="100vw"

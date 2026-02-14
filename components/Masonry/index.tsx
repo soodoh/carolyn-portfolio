@@ -1,5 +1,4 @@
 import Masonry from "react-masonry-css";
-import styles from "./masonry.module.css";
 import type { ReactNode } from "react";
 
 const MasonryContainer = ({ children }: { children: ReactNode }) => {
@@ -12,8 +11,8 @@ const MasonryContainer = ({ children }: { children: ReactNode }) => {
         962: 2,
         660: 1,
       }}
-      className={styles.masonryGrid}
-      columnClassName={styles.masonryGridColumn}
+      className="masonry-grid"
+      columnClassName="masonry-grid-column"
     >
       {children}
     </Masonry>

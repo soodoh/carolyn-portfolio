@@ -1,13 +1,10 @@
 "use client";
 
 import ImageWrapper from "@/components/ImageWrapper";
-import classNames from "classnames/bind";
+import { cn } from "@/lib/utils";
 import NextImage from "next/image";
 import { useState } from "react";
-import styles from "./modalImage.module.css";
 import type { ImageType } from "@/lib/types";
-
-const cx = classNames.bind(styles);
 
 type Props = {
   image: ImageType;
@@ -22,7 +19,7 @@ const ModalImage = ({ image }: Props) => {
     <>
       {!loaded && (
         <NextImage
-          className={styles.image}
+          className="w-full h-full object-contain"
           priority
           width={image.width}
           height={image.height}
@@ -31,7 +28,7 @@ const ModalImage = ({ image }: Props) => {
         />
       )}
       <ImageWrapper
-        className={cx({ image: true, loading: !loaded })}
+        className={cn("w-full h-full object-contain", !loaded && "hidden")}
         priority
         image={image}
         onLoad={() => setLoaded(true)}
