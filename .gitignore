@@ -30,3 +30,6 @@ bun-debug.log*
 
 # Local Netlify folder
 .netlify
+
+# Generated auth manifest
+lib/project-auth-manifest.json

@@ -57,6 +57,8 @@ export type ProjectInfo = {
   password: string | null;
 };
 
+export type ProjectInfoPublic = Omit<ProjectInfo, "password">;
+
 export type AboutData = {
   profilePicture: ImageType;
   bio: Document;

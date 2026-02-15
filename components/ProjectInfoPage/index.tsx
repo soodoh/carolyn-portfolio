@@ -4,9 +4,9 @@ import { cn } from "@/lib/utils";
 import { documentToReactComponents } from "@contentful/rich-text-react-renderer";
 import { BLOCKS } from "@contentful/rich-text-types";
 import Link from "next/link";
-import type { ProjectInfo } from "@/lib/types";
+import type { ProjectInfoPublic } from "@/lib/types";
 
-const ProjectInfo = ({ projectInfo }: { projectInfo: ProjectInfo }) => {
+const ProjectInfo = ({ projectInfo }: { projectInfo: ProjectInfoPublic }) => {
   return (
     <div className="max-w-[1000px] px-(--spacing-padding) py-8 mx-auto flex flex-col items-center">
       <Link
