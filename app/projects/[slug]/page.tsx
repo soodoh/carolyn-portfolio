@@ -1,5 +1,4 @@
 import ProjectInfoPage from "@/components/ProjectInfoPage";
-import ProtectedProjectPage from "@/components/ProtectedProjectPage";
 import { getProjectInfo, getProjects } from "@/lib/fetch-projects";
 import { Metadata } from "next";
 
@@ -35,9 +34,8 @@ export default async function ProjectPage({
 }) {
   const { slug } = await params;
   const projectData = await getProjectInfo(slug);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { password, ...publicData } = projectData;
 
-  if (projectData.password) {
-    return <ProtectedProjectPage projectInfo={projectData} />;
-  }
-  return <ProjectInfoPage projectInfo={projectData} />;
+  return <ProjectInfoPage projectInfo={publicData} />;
 }

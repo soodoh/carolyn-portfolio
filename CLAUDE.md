@@ -37,7 +37,7 @@ bunx playwright test tests/home.test.ts # Run single test file
 
 ### Static Generation
 
-Every page uses `export const dynamic = "error"` to enforce static generation. There are **no API routes, no server actions, and no runtime CMS calls**. All data is fetched at build time via React Server Components.
+Every page uses `export const dynamic = "error"` to enforce static generation. All content is fetched at build time via React Server Components. The only server action is for password-protected project authentication.
 
 ### Routes
 
@@ -46,7 +46,8 @@ Every page uses `export const dynamic = "error"` to enforce static generation. T
 | `/` | Home | Background image, hero, project previews |
 | `/about` | About | Bio, profile picture |
 | `/projects` | Projects | Filterable masonry grid |
-| `/projects/[slug]` | Project detail | Dynamic, client-side password protection |
+| `/projects/[slug]` | Project detail | Middleware-gated password protection |
+| `/projects/[slug]/auth` | Password form | Only for protected projects |
 | `/photography` | Photography | Album filtering, image gallery |
 | `/resume` | — | Permanent redirect to Contentful-hosted PDF |
 
@@ -56,6 +57,14 @@ Every page uses `export const dynamic = "error"` to enforce static generation. T
 2. **Image processing**: `lib/contentful-utils.ts` → `formatImage()` generates blur placeholders via Sharp, caches in-memory
 3. **RSC pages** call fetch functions, pass data as props to client components
 4. **Client interactivity** is limited to: filter state, modal/gallery state, scroll-based header transparency
+
+### Password Protection
+
+Protected projects use server-side auth via middleware + server action:
+- `scripts/generate-auth-manifest.ts` — Prebuild script that bcrypt-hashes passwords from Contentful into `lib/project-auth-manifest.json` (gitignored)
+- `middleware.ts` — Checks auth cookies for protected `/projects/[slug]` routes, rewrites to auth page if unauthenticated
+- `app/projects/[slug]/auth/actions.ts` — Server action that validates passwords and sets HTTP-only cookies
+- `lib/password-utils.ts` — HMAC-SHA256 token signing/verification (Web Crypto API, Edge Runtime compatible)
 
 ### Key Files
 
@@ -67,9 +76,10 @@ Every page uses `export const dynamic = "error"` to enforce static generation. T
 
 ### Environment Variables
 
-Required in `.env`:
+Required in `.env` (see `.env.example`):
 - `NEXT_PUBLIC_CONTENTFUL_SPACE_ID`
 - `NEXT_PUBLIC_CONTENTFUL_ACCESS_TOKEN`
+- `PROJECT_AUTH_SECRET` — HMAC signing key for auth cookies (generate with `openssl rand -hex 32`)
 
 ## Design Tokens
 
