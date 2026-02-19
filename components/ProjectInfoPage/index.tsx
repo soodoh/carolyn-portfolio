@@ -1,4 +1,4 @@
-import LeftArrowIcon from "@/components/icons/LeftArrowIcon";
+import LeftArrowIcon from "@/components/icons/left-arrow-icon";
 import ImageWrapper from "@/components/ImageWrapper";
 import { cn } from "@/lib/utils";
 import { documentToReactComponents } from "@contentful/rich-text-react-renderer";
@@ -6,7 +6,11 @@ import { BLOCKS } from "@contentful/rich-text-types";
 import Link from "next/link";
 import type { ProjectInfoPublic } from "@/lib/types";
 
-const ProjectInfo = ({ projectInfo }: { projectInfo: ProjectInfoPublic }) => {
+const ProjectInfo = ({
+  projectInfo,
+}: {
+  projectInfo: ProjectInfoPublic;
+}): JSX.Element => {
   return (
     <div className="max-w-[1000px] px-(--spacing-padding) py-8 mx-auto flex flex-col items-center">
       <Link
@@ -28,18 +32,19 @@ const ProjectInfo = ({ projectInfo }: { projectInfo: ProjectInfoPublic }) => {
           <h1>{projectInfo.title}</h1>
           {projectInfo.role && <h2>{projectInfo.role}</h2>}
         </div>
-        {!projectInfo.videoLink ? (
-          <div className="w-full max-md:row-start-1 max-md:mb-8">
-            <ImageWrapper image={projectInfo.coverImage} />
-          </div>
-        ) : (
+        {projectInfo.videoLink ? (
           <div className="relative pt-[56.25%] [&_iframe]:absolute [&_iframe]:top-0 [&_iframe]:w-full [&_iframe]:h-full">
             <iframe
               src={projectInfo.videoLink}
               title="Video Player"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; fullscreen; picture-in-picture; web-share"
+              sandbox="allow-scripts allow-presentation allow-popups"
               allowFullScreen
             />
+          </div>
+        ) : (
+          <div className="w-full max-md:row-start-1 max-md:mb-8">
+            <ImageWrapper image={projectInfo.coverImage} />
           </div>
         )}
       </section>

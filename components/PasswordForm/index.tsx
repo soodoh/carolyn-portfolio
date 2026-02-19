@@ -1,20 +1,18 @@
 "use client";
 
-import {
-  type AuthState,
-  verifyProjectPassword,
-} from "@/app/projects/[slug]/auth/actions";
-import LeftArrowIcon from "@/components/icons/LeftArrowIcon";
+import { verifyProjectPassword } from "@/app/projects/[slug]/auth/actions";
+import type { AuthState } from "@/app/projects/[slug]/auth/actions";
+import LeftArrowIcon from "@/components/icons/left-arrow-icon";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { useActionState } from "react";
 
-const PasswordForm = ({ slug }: { slug: string }) => {
+const PasswordForm = ({ slug }: { slug: string }): JSX.Element => {
   const boundAction = verifyProjectPassword.bind(null, slug);
   const [state, formAction, isPending] = useActionState<AuthState, FormData>(
     boundAction,
-    { error: null },
+    {},
   );
 
   return (

@@ -4,7 +4,7 @@ import Header from "@/components/Header";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 
-const HomePageContent = () => {
+const HomePageContent = (): JSX.Element => {
   const homePageRef = useRef<HTMLDivElement>(null);
   const headerRef = useRef<HTMLElement>(null);
   const [isTransparent, setTransparent] = useState(true);

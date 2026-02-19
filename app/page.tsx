@@ -3,7 +3,7 @@ import HomePageContent from "@/components/HomePageContent";
 import Projects from "@/components/Projects";
 import { getBackgroundImage } from "@/lib/fetch-home-data";
 import { getProjects } from "@/lib/fetch-projects";
-import { Metadata } from "next";
+import type { Metadata } from "next";
 
 // Statically generated at build time, will error if any Dynamic APIs are used
 export const dynamic = "error";
@@ -15,7 +15,7 @@ export const metadata: Metadata = {
   keywords: [],
 };
 
-export default async function Home() {
+export default async function Home(): Promise<JSX.Element> {
   const backgroundImage = await getBackgroundImage();
   const projects = await getProjects();
 

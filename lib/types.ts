@@ -51,10 +51,10 @@ export type ProjectInfo = {
   coverImage: ImageType;
   projectType: ProjectType[];
   summary: string;
-  role: string | null;
+  role?: string;
   description: Document;
-  videoLink: string | null;
-  password: string | null;
+  videoLink?: string;
+  password?: string;
 };
 
 export type ProjectInfoPublic = Omit<ProjectInfo, "password">;

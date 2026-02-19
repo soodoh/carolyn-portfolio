@@ -31,7 +31,7 @@ const ImageGallery = ({
   images: ImageType[];
   initialIndex: number;
   onClose: () => void;
-}) => {
+}): JSX.Element => {
   const [api, setApi] = useState<CarouselApi>();
   const [currentIndex, setCurrentIndex] = useState(0);
 
@@ -49,7 +49,7 @@ const ImageGallery = ({
 
   // Track current slide index
   useEffect(() => {
-    if (!api) return;
+    if (!api) {return;}
 
     const onSelect = () => {
       setCurrentIndex(api.selectedScrollSnap());

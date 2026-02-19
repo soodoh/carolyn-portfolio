@@ -1,5 +1,5 @@
-import InstagramIcon from "@/components/icons/InstagramIcon";
-import LinkedInIcon from "@/components/icons/LinkedInIcon";
+import InstagramIcon from "@/components/icons/instagram-icon";
+import LinkedInIcon from "@/components/icons/linked-in-icon";
 import Link from "next/link";
 import type { SocialMedia } from "@/lib/types";
 

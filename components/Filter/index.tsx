@@ -4,23 +4,26 @@ import Dropdown from "@/components/Dropdown";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
-const Filter = <T extends string>({
-  current,
-  options,
-  onChange,
-}: {
+type FilterProps<T extends string> = {
   current: T;
   options: T[];
   onChange: (name: T) => void;
-}) => {
+};
+
+function Filter<T extends string>({
+  current,
+  options,
+  onChange,
+}: FilterProps<T>): JSX.Element {
   return (
     <section className="sticky top-[var(--spacing-header-height)] mb-6 z-2 bg-white">
       <div role="tablist" className="max-md:hidden">
-        {options.map((name, index) => (
+        {options.map((name) => (
           <Button
-            key={`filter-${index}-${name}`}
+            key={`filter-${name}`}
             variant="ghost"
             role="tab"
+            aria-selected={current === name}
             aria-label={`Choose filter: ${name}`}
             className={cn(
               "text-dark font-body text-base leading-7 rounded-none px-8 py-4 h-auto hover:bg-transparent hover:text-dark",
@@ -37,6 +40,6 @@ const Filter = <T extends string>({
       </div>
     </section>
   );
-};
+}
 
 export default Filter;

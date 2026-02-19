@@ -1,3 +1,4 @@
+// eslint-disable-next-line import/no-unassigned-import
 import "@/components/commonStyles/globals.css";
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
@@ -16,7 +17,7 @@ export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
-}) {
+}): Promise<JSX.Element> {
   const socialMedia = await getSocialMedia();
   return (
     <html lang="en">

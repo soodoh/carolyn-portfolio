@@ -1,5 +1,5 @@
 import { containerClass } from "@/lib/utils";
-import { Metadata } from "next";
+import type { Metadata } from "next";
 
 // Statically generated at build time, will error if any Dynamic APIs are used
 export const dynamic = "error";
@@ -11,7 +11,7 @@ export const metadata: Metadata = {
   keywords: [],
 };
 
-export default function NotFound() {
+export default function NotFound(): JSX.Element {
   return (
     <div className={containerClass}>
       <div className="flex flex-col items-center justify-center pt-8">

@@ -1,6 +1,6 @@
 import ProjectInfoPage from "@/components/ProjectInfoPage";
 import { getProjectInfo, getProjects } from "@/lib/fetch-projects";
-import { Metadata } from "next";
+import type { Metadata } from "next";
 
 // Statically generated at build time, will error if any Dynamic APIs are used
 export const dynamic = "error";
@@ -20,7 +20,7 @@ export async function generateMetadata({
   };
 }
 
-export async function generateStaticParams() {
+export async function generateStaticParams(): Promise<Array<{ slug: string }>> {
   const projects = await getProjects();
   return projects.map((project) => ({
     slug: project.slug,
@@ -31,7 +31,7 @@ export default async function ProjectPage({
   params,
 }: {
   params: Promise<{ slug: string }>;
-}) {
+}): Promise<JSX.Element> {
   const { slug } = await params;
   const projectData = await getProjectInfo(slug);
   const { password, ...publicData } = projectData;

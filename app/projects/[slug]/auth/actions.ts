@@ -2,14 +2,14 @@
 
 import { COOKIE_MAX_AGE, signToken } from "@/lib/password-utils";
 import manifest from "@/lib/project-auth-manifest.json";
-import bcrypt from "bcryptjs";
+import { compare } from "bcryptjs";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
 const protectedSlugs = manifest as Record<string, string>;
 
 export type AuthState = {
-  error: string | null;
+  error?: string;
 };
 
 export async function verifyProjectPassword(
@@ -27,7 +27,7 @@ export async function verifyProjectPassword(
     return { error: "This project is not password protected." };
   }
 
-  const valid = await bcrypt.compare(password, hash);
+  const valid = await compare(password, hash);
   if (!valid) {
     return { error: "The password you entered is incorrect." };
   }

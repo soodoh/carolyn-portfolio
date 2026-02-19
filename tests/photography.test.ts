@@ -14,7 +14,7 @@ test.describe("Photography page", () => {
     const thumbnails = page.getByRole("tabpanel").getByRole("button");
     await expect(page.getByRole("tablist")).toBeVisible();
     const count = await tabButtons.count();
-    for (let i = 0; i < count; i++) {
+    for (let i = 0; i < count; i += 1) {
       await tabButtons.nth(i).click();
       const currentCount = await thumbnails.count();
       expect(currentCount).toBeGreaterThan(0);
@@ -29,7 +29,6 @@ test.describe("Photography page", () => {
     const prevButton = page.getByRole("button", { name: "previous photo" });
     const nextButton = page.getByRole("button", { name: "next photo" });
     const closeButton = page.getByRole("button", { name: "close image modal" });
-    console.log(await photos.count());
     await photos.first().click();
     await expect(page.getByRole("dialog")).toBeVisible();
     await expect(prevButton).toBeHidden();

@@ -1,4 +1,8 @@
-const InstagramIcon = ({ className = "" }: { className?: string }) => (
+const InstagramIcon = ({
+  className = "",
+}: {
+  className?: string;
+}): JSX.Element => (
   <svg
     className={className}
     width="24"

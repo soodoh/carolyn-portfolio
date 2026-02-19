@@ -4,7 +4,7 @@ import { permanentRedirect } from "next/navigation";
 // Statically generated at build time, will error if any Dynamic APIs are used
 export const dynamic = "error";
 
-export default async function Resume() {
+export default async function Resume(): Promise<never> {
   const resumeUrl = await getResumeUrl();
   permanentRedirect(resumeUrl);
 }

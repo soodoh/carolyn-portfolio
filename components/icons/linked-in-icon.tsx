@@ -1,4 +1,4 @@
-const LinkedInIcon = ({ className = "" }: { className?: string }) => (
+const LinkedInIcon = ({ className = "" }: { className?: string }): JSX.Element => (
   <svg
     className={className}
     width="24"

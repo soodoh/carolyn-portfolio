@@ -1,6 +1,6 @@
 "use client";
 
-import DropdownIcon from "@/components/icons/DropdownIcon";
+import DropdownIcon from "@/components/icons/dropdown-icon";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -8,15 +8,17 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-const Dropdown = <T extends string>({
-  current,
-  options,
-  onChange,
-}: {
+type DropdownProps<T extends string> = {
   current: T;
   options: T[];
   onChange: (option: T) => void;
-}) => {
+};
+
+function Dropdown<T extends string>({
+  current,
+  options,
+  onChange,
+}: DropdownProps<T>): JSX.Element {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger className="mt-2 pb-2 flex items-center cursor-pointer border-none bg-transparent font-body text-base leading-7 text-dark">
@@ -27,9 +29,9 @@ const Dropdown = <T extends string>({
         className="bg-white text-dark shadow-[0_0_0.5rem_rgba(var(--color-dark-rgb),0.25)] z-10"
         align="start"
       >
-        {options.map((option, index) => (
+        {options.map((option) => (
           <DropdownMenuItem
-            key={`option-${index}-${option}`}
+            key={`option-${option}`}
             className="cursor-pointer px-8 py-4 text-base"
             onClick={() => onChange(option)}
           >
@@ -39,6 +41,6 @@ const Dropdown = <T extends string>({
       </DropdownMenuContent>
     </DropdownMenu>
   );
-};
+}
 
 export default Dropdown;

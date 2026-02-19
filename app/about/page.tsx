@@ -16,7 +16,7 @@ export const metadata: Metadata = {
   keywords: [],
 };
 
-export default async function About() {
+export default async function About(): Promise<JSX.Element> {
   const backgroundImage = await getBackgroundImage();
   const aboutData = await getAboutData();
 

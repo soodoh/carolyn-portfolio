@@ -25,7 +25,7 @@ const ImageWrapper = ({
     "(max-width: 1279px) 280px",
     "280px",
   ].join(", "),
-}: Props) => {
+}: Props): JSX.Element => {
   return (
     <NextImage
       className={className ?? "w-full h-auto object-contain"}

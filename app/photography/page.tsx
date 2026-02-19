@@ -1,5 +1,5 @@
 import PhotographyContent from "@/components/PhotographyContent";
-import { getAlbums } from "@/lib/fetch-photos";
+import getAlbums from "@/lib/fetch-photos";
 import { containerClass } from "@/lib/utils";
 import type { Metadata } from "next";
 
@@ -13,7 +13,7 @@ export const metadata: Metadata = {
   keywords: [],
 };
 
-export default async function PhotographyPage() {
+export default async function PhotographyPage(): Promise<JSX.Element> {
   const albums = await getAlbums();
   return (
     <div className={containerClass}>

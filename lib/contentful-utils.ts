@@ -1,9 +1,6 @@
 import { getPlaceholder, readImage } from "@/lib/image-utils";
-import {
-  type AssetDetails,
-  type Asset as ContentfulAsset,
-  createClient,
-} from "contentful";
+import { createClient } from "contentful";
+import type { AssetDetails, Asset as ContentfulAsset } from "contentful";
 import type { Asset, ImageType } from "@/lib/types";
 
 export const client = createClient({
@@ -11,7 +8,7 @@ export const client = createClient({
   accessToken: process.env.NEXT_PUBLIC_CONTENTFUL_ACCESS_TOKEN as string,
 });
 
-export function formatUrl(baseUrl: string) {
+export function formatUrl(baseUrl: string): string {
   return `https:${baseUrl}`;
 }
 
@@ -25,7 +22,7 @@ export function formatAsset(asset: ContentfulAsset): Asset {
   };
 }
 
-const imageCache: Map<string, ImageType> = new Map();
+const imageCache = new Map<string, ImageType>();
 
 export async function formatImage(
   contentfulAsset: ContentfulAsset,

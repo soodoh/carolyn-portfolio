@@ -1,7 +1,7 @@
 import Masonry from "react-masonry-css";
 import type { ReactNode } from "react";
 
-const MasonryContainer = ({ children }: { children: ReactNode }) => {
+const MasonryContainer = ({ children }: { children: ReactNode }): JSX.Element => {
   return (
     <Masonry
       breakpointCols={{

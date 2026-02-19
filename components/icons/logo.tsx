@@ -1,4 +1,4 @@
-const Logo = ({ className = "" }: { className?: string }) => (
+const Logo = ({ className = "" }: { className?: string }): JSX.Element => (
   <svg
     className={className}
     viewBox="0 0 2048 1536"

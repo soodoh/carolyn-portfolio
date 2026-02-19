@@ -27,7 +27,7 @@ test.describe("Projects page", () => {
     // Other sections should all have less than "All" projects
     const otherTabs = tabButtons.filter({ hasNotText: "all" });
     const count = await otherTabs.count();
-    for (let i = 0; i < count; i++) {
+    for (let i = 0; i < count; i += 1) {
       await otherTabs.nth(i).click();
       // Wait for thumbnail count to change since there is masonry animation
       // And locator.count() does not retry

@@ -1,7 +1,7 @@
 import PasswordForm from "@/components/PasswordForm";
 import { getProjects } from "@/lib/fetch-projects";
 import manifest from "@/lib/project-auth-manifest.json";
-import { Metadata } from "next";
+import type { Metadata } from "next";
 
 export const dynamic = "error";
 
@@ -12,7 +12,7 @@ export const metadata: Metadata = {
   robots: "noindex, nofollow",
 };
 
-export async function generateStaticParams() {
+export async function generateStaticParams(): Promise<Array<{ slug: string }>> {
   const projects = await getProjects();
   return projects
     .filter((p) => protectedSlugs.has(p.slug))
@@ -23,7 +23,7 @@ export default async function AuthPage({
   params,
 }: {
   params: Promise<{ slug: string }>;
-}) {
+}): Promise<JSX.Element> {
   const { slug } = await params;
   return <PasswordForm slug={slug} />;
 }

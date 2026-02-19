@@ -8,18 +8,15 @@ import Link from "next/link";
 import { useMemo, useState } from "react";
 import type { Project, ProjectType } from "@/lib/types";
 
-const Projects = ({ projects }: { projects: Project[] }) => {
+const Projects = ({ projects }: { projects: Project[] }): JSX.Element => {
   const projectTypes: ProjectType[] = useMemo(() => {
-    return Array.from(
-      new Set(
-        projects.reduce(
-          (typeList, project) => {
-            return typeList.concat(project.projectType);
-          },
-          ["All"] as ProjectType[],
-        ),
-      ),
-    );
+    const uniqueTypes = new Set<ProjectType>(["All"]);
+    for (const project of projects) {
+      for (const projectType of project.projectType) {
+        uniqueTypes.add(projectType);
+      }
+    }
+    return [...uniqueTypes];
   }, [projects]);
 
   const [projectType, setProjectType] = useState<ProjectType>("All");

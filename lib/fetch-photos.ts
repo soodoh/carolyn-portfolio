@@ -3,7 +3,7 @@ import { client, formatImage } from "./contentful-utils";
 import type { Album, ImageType } from "./types";
 import type { Asset } from "contentful";
 
-export async function getAlbums(): Promise<Album[]> {
+export default async function getAlbums(): Promise<Album[]> {
   const photoData = await client.getEntries({
     content_type: "photos",
     order: ["fields.order"],
@@ -11,7 +11,7 @@ export async function getAlbums(): Promise<Album[]> {
 
   const albums: Album[] = await Promise.all(
     photoData.items.map(async (item) => {
-      const imagePromises: (() => Promise<ImageType>)[] = Array.isArray(
+      const imagePromises: Array<() => Promise<ImageType>> = Array.isArray(
         item.fields.photos,
       )
         ? item.fields.photos.map((photo) => () => formatImage(photo as Asset))

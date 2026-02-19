@@ -5,10 +5,10 @@ import ImageGallery from "@/components/ImageGallery";
 import ImageWrapper from "@/components/ImageWrapper";
 import Masonry from "@/components/Masonry";
 import { Button } from "@/components/ui/button";
-import { Album, ImageType } from "@/lib/types";
+import type { Album, ImageType } from "@/lib/types";
 import { useMemo, useState } from "react";
 
-const PhotographyContent = ({ albums }: { albums: Album[] }) => {
+const PhotographyContent = ({ albums }: { albums: Album[] }): JSX.Element => {
   const albumNames: string[] = useMemo(() => {
     return albums.map((album) => album.name);
   }, [albums]);
@@ -27,7 +27,7 @@ const PhotographyContent = ({ albums }: { albums: Album[] }) => {
   }
 
   const handleThumbnailClick = (image: ImageType) => {
-    setCurrentPhotoIndex(galleryImages.findIndex((cur) => cur === image));
+    setCurrentPhotoIndex(galleryImages.indexOf(image));
     setGalleryOpen(true);
   };
 

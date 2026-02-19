@@ -1,6 +1,6 @@
 "use client";
 
-import Logo from "@/components/icons/Logo";
+import Logo from "@/components/icons/logo";
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
@@ -12,7 +12,8 @@ import { cn } from "@/lib/utils";
 import { MenuIcon, XIcon } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { type RefObject, useState } from "react";
+import { useState } from "react";
+import type { RefObject } from "react";
 
 const links = [
   { name: "About", path: "/about" },
@@ -26,17 +27,17 @@ const Header = ({
   isLayout = false,
   isTransparent = false,
 }: {
-  ref?: RefObject<HTMLElement | null>;
+  ref?: RefObject<HTMLElement>;
   isLayout?: boolean;
   isTransparent?: boolean;
-}) => {
+}): JSX.Element | undefined => {
   const route = usePathname();
   const [mobileNavOpen, setMobileNav] = useState(false);
 
   // Home page has it's own Header instance to handle transparency state changes
   // when intersecting with the Projects section
   if (isLayout && route === "/") {
-    return null;
+    return undefined;
   }
 
   return (

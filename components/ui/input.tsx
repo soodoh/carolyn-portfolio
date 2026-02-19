@@ -1,7 +1,11 @@
 import { cn } from "@/lib/utils";
 import * as React from "react";
 
-function Input({ className, type, ...props }: React.ComponentProps<"input">) {
+function Input({
+  className,
+  type,
+  ...props
+}: React.ComponentProps<"input">): JSX.Element {
   return (
     <input
       type={type}
@@ -17,4 +21,4 @@ function Input({ className, type, ...props }: React.ComponentProps<"input">) {
   );
 }
 
-export { Input };
+export default Input;

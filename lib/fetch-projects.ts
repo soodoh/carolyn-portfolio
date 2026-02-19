@@ -9,8 +9,10 @@ import pAll from "p-all";
 import type { Project, ProjectInfo, ProjectType } from "@/lib/types";
 import type { Asset as ContentfulAsset } from "contentful";
 
-function getLink(rawLink: unknown): string | null {
-  if (!rawLink) return null;
+function getLink(rawLink: unknown): string | undefined {
+  if (!rawLink) {
+    return undefined;
+  }
   const link = String(rawLink);
   if (/vimeo/gi.test(link)) {
     return `${link}?title=0&byline=0&portrait=0`;
@@ -28,7 +30,7 @@ export async function getProjects(): Promise<Project[]> {
     order: ["fields.order"],
   });
 
-  const promises: (() => Promise<Project>)[] = projectData.items.map(
+  const promises: Array<() => Promise<Project>> = projectData.items.map(
     (item) => async () => {
       const coverImage = await formatImage(
         item.fields.coverImage as ContentfulAsset,
@@ -78,11 +80,11 @@ export async function getProjectInfo(slug: string): Promise<ProjectInfo> {
     slug: String(projectItem.fields.slug),
     coverImage: coverImage,
     projectType: projectItem.fields.projectType as ProjectType[],
-    role: projectItem.fields.role ? String(projectItem.fields.role) : null,
+    role: projectItem.fields.role ? String(projectItem.fields.role) : undefined,
     description: descriptionDocument,
     videoLink: getLink(projectItem.fields.videoLink),
     password: projectItem.fields.password
       ? String(projectItem.fields.password)
-      : null,
+      : undefined,
   };
 }

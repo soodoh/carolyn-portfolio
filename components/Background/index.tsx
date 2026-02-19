@@ -10,7 +10,7 @@ const Background = ({
 }: {
   fixed?: boolean;
   image: ImageType;
-}) => {
+}): JSX.Element => {
   return (
     <div
       className={cn("bg-dark h-screen absolute inset-0 -z-1", fixed && "fixed")}

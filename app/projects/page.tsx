@@ -12,7 +12,7 @@ export const metadata: Metadata = {
   keywords: [],
 };
 
-export default async function ProjectsPage() {
+export default async function ProjectsPage(): Promise<JSX.Element> {
   const projects = await getProjects();
   return <Projects projects={projects} />;
 }

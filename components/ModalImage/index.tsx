@@ -12,7 +12,7 @@ type Props = {
 
 // This component is a workaround for the Next.js Image component
 // not behaving as expected with blur placeholders with object-fit contain
-const ModalImage = ({ image }: Props) => {
+const ModalImage = ({ image }: Props): JSX.Element => {
   const [loaded, setLoaded] = useState(false);
 
   return (
