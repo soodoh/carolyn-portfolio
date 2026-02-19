@@ -1,9 +1,9 @@
 "use client";
 
-import Filter from "@/components/Filter";
-import ImageGallery from "@/components/ImageGallery";
-import ImageWrapper from "@/components/ImageWrapper";
-import Masonry from "@/components/Masonry";
+import Filter from "@/components/filter";
+import ImageGallery from "@/components/image-gallery";
+import ImageWrapper from "@/components/image-wrapper";
+import Masonry from "@/components/masonry";
 import { Button } from "@/components/ui/button";
 import type { Album, ImageType } from "@/lib/types";
 import type { JSX } from "react";

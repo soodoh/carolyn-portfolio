@@ -1,8 +1,8 @@
 "use client";
 
-import Filter from "@/components/Filter";
-import ImageWrapper from "@/components/ImageWrapper";
-import Masonry from "@/components/Masonry";
+import Filter from "@/components/filter";
+import ImageWrapper from "@/components/image-wrapper";
+import Masonry from "@/components/masonry";
 import { containerClass } from "@/lib/utils";
 import Link from "next/link";
 import type { JSX } from "react";

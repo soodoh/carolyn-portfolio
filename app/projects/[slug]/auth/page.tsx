@@ -1,4 +1,4 @@
-import PasswordForm from "@/components/PasswordForm";
+import PasswordForm from "@/components/password-form";
 import { getProjects } from "@/lib/fetch-projects";
 import manifest from "@/lib/project-auth-manifest.json";
 import type { Metadata } from "next";

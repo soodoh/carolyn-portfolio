@@ -1,6 +1,6 @@
 "use client";
 
-import ModalImage from "@/components/ModalImage";
+import ModalImage from "@/components/modal-image";
 import { Button } from "@/components/ui/button";
 import {
   Carousel,

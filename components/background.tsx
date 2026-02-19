@@ -1,6 +1,6 @@
 "use client";
 
-import ImageWrapper from "@/components/ImageWrapper";
+import ImageWrapper from "@/components/image-wrapper";
 import { cn } from "@/lib/utils";
 import type { ImageType } from "@/lib/types";
 import type { JSX } from "react";

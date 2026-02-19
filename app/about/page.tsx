@@ -1,5 +1,5 @@
-import Background from "@/components/Background";
-import ImageWrapper from "@/components/ImageWrapper";
+import Background from "@/components/background";
+import ImageWrapper from "@/components/image-wrapper";
 import { getAboutData } from "@/lib/fetch-about-data";
 import { getBackgroundImage } from "@/lib/fetch-home-data";
 import { containerClass } from "@/lib/utils";

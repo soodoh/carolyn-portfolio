@@ -1,6 +1,6 @@
 "use client";
 
-import Dropdown from "@/components/Dropdown";
+import Dropdown from "@/components/dropdown";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import type { JSX } from "react";

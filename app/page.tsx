@@ -1,6 +1,6 @@
-import Background from "@/components/Background";
-import HomePageContent from "@/components/HomePageContent";
-import Projects from "@/components/Projects";
+import Background from "@/components/background";
+import HomePageContent from "@/components/home-page-content";
+import Projects from "@/components/projects";
 import { getBackgroundImage } from "@/lib/fetch-home-data";
 import { getProjects } from "@/lib/fetch-projects";
 import type { Metadata } from "next";

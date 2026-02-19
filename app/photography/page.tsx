@@ -1,4 +1,4 @@
-import PhotographyContent from "@/components/PhotographyContent";
+import PhotographyContent from "@/components/photography-content";
 import getAlbums from "@/lib/fetch-photos";
 import { containerClass } from "@/lib/utils";
 import type { Metadata } from "next";

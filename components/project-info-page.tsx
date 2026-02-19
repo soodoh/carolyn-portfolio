@@ -1,5 +1,5 @@
 import LeftArrowIcon from "@/components/icons/left-arrow-icon";
-import ImageWrapper from "@/components/ImageWrapper";
+import ImageWrapper from "@/components/image-wrapper";
 import { cn } from "@/lib/utils";
 import { documentToReactComponents } from "@contentful/rich-text-react-renderer";
 import { BLOCKS } from "@contentful/rich-text-types";

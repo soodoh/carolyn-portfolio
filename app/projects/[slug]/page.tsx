@@ -1,4 +1,4 @@
-import ProjectInfoPage from "@/components/ProjectInfoPage";
+import ProjectInfoPage from "@/components/project-info-page";
 import { getProjectInfo, getProjects } from "@/lib/fetch-projects";
 import type { Metadata } from "next";
 import type { JSX } from "react";

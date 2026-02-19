@@ -1,7 +1,7 @@
 // eslint-disable-next-line import/no-unassigned-import
 import "@/components/commonStyles/globals.css";
-import Footer from "@/components/Footer";
-import Header from "@/components/Header";
+import Footer from "@/components/footer";
+import Header from "@/components/header";
 import { getSocialMedia } from "@/lib/fetch-home-data";
 import type { Metadata } from "next";
 import type { JSX } from "react";

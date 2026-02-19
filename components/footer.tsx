@@ -1,4 +1,4 @@
-import SocialMediaIcon from "@/components/SocialMediaIcon";
+import SocialMediaIcon from "@/components/social-media-icon";
 import type { SocialMedia } from "@/lib/types";
 import type { JSX } from "react";
 
