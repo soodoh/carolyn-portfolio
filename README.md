@@ -73,8 +73,8 @@ Same as dev, the auth manifest is regenerated before each build.
 | `bun dev` | Start dev server (generates auth manifest first) |
 | `bun run build` | Production build (generates auth manifest first) |
 | `bun start` | Serve the production build locally |
-| `bun run lint` | Run ESLint |
-| `bun run lint:fix` | Run ESLint with auto-fix |
+| `bun run lint` | Run Oxlint |
+| `bun run lint:fix` | Run Oxlint with auto-fix |
 
 ## Architecture
 

@@ -13,7 +13,7 @@
 - `bun dev`: generate auth manifest, then start local dev server (`http://localhost:3000`).
 - `bun run build`: generate auth manifest, then create production build.
 - `bun start`: run the production server locally.
-- `bun run lint`: run ESLint checks.
+- `bun run lint`: run Oxlint checks.
 - `bun run lint:fix`: apply automatic lint fixes.
 - `bunx playwright install`: install Playwright browsers (first-time setup).
 - `bunx playwright test`: run all end-to-end/visual tests.
@@ -21,7 +21,7 @@
 
 ## Coding Style & Naming Conventions
 - Use TypeScript and functional React components.
-- Follow ESLint + Prettier rules in `eslint.config.mjs`; run lint before opening a PR.
+- Follow Oxlint + Prettier rules in `oxlint.config.ts`; run lint before opening a PR.
 - Prefer `@/` alias imports for cross-directory references; relative imports are only allowed within the same folder.
 - Keep imports grouped and alphabetized per configured `import/order` and `sort-imports` rules.
 - Use `PascalCase` for component names/folders and descriptive lowercase names for utilities (example: `fetch-projects.ts`).

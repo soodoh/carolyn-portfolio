@@ -34,8 +34,8 @@ export default async function ProjectPage({
 }) {
   const { slug } = await params;
   const projectData = await getProjectInfo(slug);
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { password, ...publicData } = projectData;
+  void password;
 
   return <ProjectInfoPage projectInfo={publicData} />;
 }
