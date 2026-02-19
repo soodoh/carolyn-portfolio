@@ -3,6 +3,7 @@
 import ImageWrapper from "@/components/ImageWrapper";
 import { cn } from "@/lib/utils";
 import NextImage from "next/image";
+import type { JSX } from "react";
 import { useState } from "react";
 import type { ImageType } from "@/lib/types";
 

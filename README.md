@@ -44,11 +44,11 @@ Copy the example env file and fill in the values:
 cp .env.example .env
 ```
 
-| Variable | Description | Where to find it |
-|----------|-------------|------------------|
-| `NEXT_PUBLIC_CONTENTFUL_SPACE_ID` | Contentful space identifier | Contentful dashboard: Settings > API keys |
-| `NEXT_PUBLIC_CONTENTFUL_ACCESS_TOKEN` | Content Delivery API access token | Contentful dashboard: Settings > API keys > Content delivery / preview tokens |
-| `PROJECT_AUTH_SECRET` | HMAC signing key for password-protected project cookies | Generate locally with `openssl rand -hex 32` |
+| Variable                              | Description                                             | Where to find it                                                              |
+| ------------------------------------- | ------------------------------------------------------- | ----------------------------------------------------------------------------- |
+| `NEXT_PUBLIC_CONTENTFUL_SPACE_ID`     | Contentful space identifier                             | Contentful dashboard: Settings > API keys                                     |
+| `NEXT_PUBLIC_CONTENTFUL_ACCESS_TOKEN` | Content Delivery API access token                       | Contentful dashboard: Settings > API keys > Content delivery / preview tokens |
+| `PROJECT_AUTH_SECRET`                 | HMAC signing key for password-protected project cookies | Generate locally with `openssl rand -hex 32`                                  |
 
 ### 4. Start the dev server
 
@@ -68,13 +68,13 @@ Same as dev, the auth manifest is regenerated before each build.
 
 ## Available Scripts
 
-| Command | Description |
-|---------|-------------|
-| `bun dev` | Start dev server (generates auth manifest first) |
-| `bun run build` | Production build (generates auth manifest first) |
-| `bun start` | Serve the production build locally |
-| `bun run lint` | Run Oxlint |
-| `bun run lint:fix` | Run Oxlint with auto-fix |
+| Command            | Description                                      |
+| ------------------ | ------------------------------------------------ |
+| `bun dev`          | Start dev server (generates auth manifest first) |
+| `bun run build`    | Production build (generates auth manifest first) |
+| `bun start`        | Serve the production build locally               |
+| `bun run lint`     | Run Oxlint                                       |
+| `bun run lint:fix` | Run Oxlint with auto-fix                         |
 
 ## Architecture
 
@@ -84,14 +84,14 @@ Every page uses `export const dynamic = "error"` to enforce full static generati
 
 ### Routes
 
-| Route | Description |
-|-------|-------------|
-| `/` | Home page with background image, hero, and project previews |
-| `/about` | Bio and profile picture |
-| `/projects` | Filterable masonry grid of all projects |
-| `/projects/[slug]` | Individual project detail page |
-| `/photography` | Photo albums with image gallery |
-| `/resume` | Permanent redirect to Contentful-hosted PDF |
+| Route              | Description                                                 |
+| ------------------ | ----------------------------------------------------------- |
+| `/`                | Home page with background image, hero, and project previews |
+| `/about`           | Bio and profile picture                                     |
+| `/projects`        | Filterable masonry grid of all projects                     |
+| `/projects/[slug]` | Individual project detail page                              |
+| `/photography`     | Photo albums with image gallery                             |
+| `/resume`          | Permanent redirect to Contentful-hosted PDF                 |
 
 ### Password Protection
 

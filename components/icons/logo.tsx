@@ -1,3 +1,5 @@
+import type { JSX } from "react";
+
 const Logo = ({ className = "" }: { className?: string }): JSX.Element => (
   <svg
     className={className}

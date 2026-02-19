@@ -10,15 +10,21 @@ export async function middleware(request: NextRequest): Promise<NextResponse> {
 
   // Match /projects/{slug} but not /projects/{slug}/auth
   const match = pathname.match(/^\/projects\/([^/]+)$/);
-  if (!match) {return NextResponse.next();}
+  if (!match) {
+    return NextResponse.next();
+  }
 
   const slug = match[1];
-  if (!protectedSlugs.has(slug)) {return NextResponse.next();}
+  if (!protectedSlugs.has(slug)) {
+    return NextResponse.next();
+  }
 
   const cookie = request.cookies.get(`project-auth-${slug}`);
   if (cookie) {
     const valid = await verifyToken(cookie.value, slug);
-    if (valid) {return NextResponse.next();}
+    if (valid) {
+      return NextResponse.next();
+    }
   }
 
   // Rewrite to auth page (URL stays the same for the user)

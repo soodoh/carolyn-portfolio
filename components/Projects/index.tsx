@@ -5,6 +5,7 @@ import ImageWrapper from "@/components/ImageWrapper";
 import Masonry from "@/components/Masonry";
 import { containerClass } from "@/lib/utils";
 import Link from "next/link";
+import type { JSX } from "react";
 import { useMemo, useState } from "react";
 import type { Project, ProjectType } from "@/lib/types";
 

@@ -4,6 +4,7 @@ import Footer from "@/components/Footer";
 import Header from "@/components/Header";
 import { getSocialMedia } from "@/lib/fetch-home-data";
 import type { Metadata } from "next";
+import type { JSX } from "react";
 
 export const metadata: Metadata = {
   title: "CD Portfolio",

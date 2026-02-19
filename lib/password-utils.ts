@@ -50,14 +50,22 @@ export async function verifyToken(
   slug: string,
 ): Promise<boolean> {
   const parts = token.split(":");
-  if (parts.length !== 3) {return false;}
+  if (parts.length !== 3) {
+    return false;
+  }
   const [tokenSlug, timestamp, signature] = parts;
-  if (tokenSlug !== slug) {return false;}
+  if (tokenSlug !== slug) {
+    return false;
+  }
 
   const ts = Number.parseInt(timestamp, 10);
-  if (Number.isNaN(ts)) {return false;}
+  if (Number.isNaN(ts)) {
+    return false;
+  }
   const now = Math.floor(Date.now() / 1000);
-  if (now - ts > TOKEN_TTL_SECONDS) {return false;}
+  if (now - ts > TOKEN_TTL_SECONDS) {
+    return false;
+  }
 
   return hmacVerify(`${tokenSlug}:${timestamp}`, signature);
 }

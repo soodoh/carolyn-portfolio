@@ -17,6 +17,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { XIcon } from "lucide-react";
+import type { JSX } from "react";
 import { useCallback, useEffect, useState } from "react";
 import type { CarouselApi } from "@/components/ui/carousel";
 import type { ImageType } from "@/lib/types";
@@ -49,7 +50,9 @@ const ImageGallery = ({
 
   // Track current slide index
   useEffect(() => {
-    if (!api) {return;}
+    if (!api) {
+      return;
+    }
 
     const onSelect = () => {
       setCurrentIndex(api.selectedScrollSnap());

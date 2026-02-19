@@ -6,6 +6,7 @@ import LeftArrowIcon from "@/components/icons/left-arrow-icon";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
+import type { JSX } from "react";
 import { useActionState } from "react";
 
 const PasswordForm = ({ slug }: { slug: string }): JSX.Element => {

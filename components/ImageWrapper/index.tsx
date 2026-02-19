@@ -1,5 +1,6 @@
 import NextImage from "next/image";
 import type { ImageType } from "@/lib/types";
+import type { JSX } from "react";
 
 type Props = {
   image: ImageType;

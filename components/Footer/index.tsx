@@ -1,7 +1,12 @@
 import SocialMediaIcon from "@/components/SocialMediaIcon";
 import type { SocialMedia } from "@/lib/types";
+import type { JSX } from "react";
 
-const Footer = ({ socialMedia }: { socialMedia: SocialMedia[] }): JSX.Element => {
+const Footer = ({
+  socialMedia,
+}: {
+  socialMedia: SocialMedia[];
+}): JSX.Element => {
   return (
     <footer className="flex justify-between px-(--spacing-padding) py-4 max-md:flex-col max-md:items-center">
       <div className="flex flex-col justify-center text-xs leading-5 max-md:items-center">

@@ -3,6 +3,7 @@
 import ImageWrapper from "@/components/ImageWrapper";
 import { cn } from "@/lib/utils";
 import type { ImageType } from "@/lib/types";
+import type { JSX } from "react";
 
 const Background = ({
   fixed = false,

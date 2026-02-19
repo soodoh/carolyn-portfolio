@@ -6,6 +6,7 @@ import ImageWrapper from "@/components/ImageWrapper";
 import Masonry from "@/components/Masonry";
 import { Button } from "@/components/ui/button";
 import type { Album, ImageType } from "@/lib/types";
+import type { JSX } from "react";
 import { useMemo, useState } from "react";
 
 const PhotographyContent = ({ albums }: { albums: Album[] }): JSX.Element => {

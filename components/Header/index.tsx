@@ -13,7 +13,7 @@ import { MenuIcon, XIcon } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
-import type { RefObject } from "react";
+import type { JSX, RefObject } from "react";
 
 const links = [
   { name: "About", path: "/about" },

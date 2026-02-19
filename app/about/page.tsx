@@ -5,6 +5,7 @@ import { getBackgroundImage } from "@/lib/fetch-home-data";
 import { containerClass } from "@/lib/utils";
 import { documentToReactComponents } from "@contentful/rich-text-react-renderer";
 import type { Metadata } from "next";
+import type { JSX } from "react";
 
 // Statically generated at build time, will error if any Dynamic APIs are used
 export const dynamic = "error";

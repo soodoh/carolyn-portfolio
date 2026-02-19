@@ -1,4 +1,10 @@
-const LeftArrowIcon = ({ className = "" }: { className?: string }): JSX.Element => (
+import type { JSX } from "react";
+
+const LeftArrowIcon = ({
+  className = "",
+}: {
+  className?: string;
+}): JSX.Element => (
   <svg
     className={className}
     width="29"

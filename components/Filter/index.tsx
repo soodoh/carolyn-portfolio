@@ -3,6 +3,7 @@
 import Dropdown from "@/components/Dropdown";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import type { JSX } from "react";
 
 type FilterProps<T extends string> = {
   current: T;

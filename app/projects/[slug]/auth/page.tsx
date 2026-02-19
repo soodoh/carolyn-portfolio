@@ -2,6 +2,7 @@ import PasswordForm from "@/components/PasswordForm";
 import { getProjects } from "@/lib/fetch-projects";
 import manifest from "@/lib/project-auth-manifest.json";
 import type { Metadata } from "next";
+import type { JSX } from "react";
 
 export const dynamic = "error";
 

@@ -2,6 +2,7 @@ import PhotographyContent from "@/components/PhotographyContent";
 import getAlbums from "@/lib/fetch-photos";
 import { containerClass } from "@/lib/utils";
 import type { Metadata } from "next";
+import type { JSX } from "react";
 
 // Statically generated at build time, will error if any Dynamic APIs are used
 export const dynamic = "error";

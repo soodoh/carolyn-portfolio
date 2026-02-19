@@ -5,6 +5,7 @@ import { documentToReactComponents } from "@contentful/rich-text-react-renderer"
 import { BLOCKS } from "@contentful/rich-text-types";
 import Link from "next/link";
 import type { ProjectInfoPublic } from "@/lib/types";
+import type { JSX } from "react";
 
 const ProjectInfo = ({
   projectInfo,

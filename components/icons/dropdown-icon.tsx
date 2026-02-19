@@ -1,4 +1,10 @@
-const DropdownIcon = ({ className = "" }: { className?: string }): JSX.Element => (
+import type { JSX } from "react";
+
+const DropdownIcon = ({
+  className = "",
+}: {
+  className?: string;
+}): JSX.Element => (
   <svg
     className={className}
     width="800px"
