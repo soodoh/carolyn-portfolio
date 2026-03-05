@@ -1,10 +1,11 @@
 import pAll from "p-all";
 import { client, formatImage } from "./contentful-utils";
+import type { PhotosSkeleton } from "@/lib/contentful-types";
 import type { Album, ImageType } from "./types";
 import type { Asset } from "contentful";
 
 export default async function getAlbums(): Promise<Album[]> {
-  const photoData = await client.getEntries({
+  const photoData = await client.getEntries<PhotosSkeleton>({
     content_type: "photos",
     order: ["fields.order"],
   });
@@ -14,7 +15,9 @@ export default async function getAlbums(): Promise<Album[]> {
       const imagePromises: Array<() => Promise<ImageType>> = Array.isArray(
         item.fields.photos,
       )
-        ? item.fields.photos.map((photo) => () => formatImage(photo as Asset))
+        ? item.fields.photos.map(
+            (photo) => async () => formatImage(photo as Asset),
+          )
         : [];
       return {
         name: String(item.fields.album),

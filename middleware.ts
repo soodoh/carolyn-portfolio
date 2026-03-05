@@ -3,7 +3,7 @@ import manifest from "@/lib/project-auth-manifest.json";
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 
-const protectedSlugs = new Set(Object.keys(manifest));
+const protectedSlugs = new Set(Object.keys(manifest as Record<string, string>));
 
 export async function middleware(request: NextRequest): Promise<NextResponse> {
   const { pathname } = request.nextUrl;

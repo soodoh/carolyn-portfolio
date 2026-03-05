@@ -4,8 +4,8 @@ import type { AssetDetails, Asset as ContentfulAsset } from "contentful";
 import type { Asset, ImageType } from "@/lib/types";
 
 export const client = createClient({
-  space: process.env.NEXT_PUBLIC_CONTENTFUL_SPACE_ID as string,
-  accessToken: process.env.NEXT_PUBLIC_CONTENTFUL_ACCESS_TOKEN as string,
+  space: process.env.NEXT_PUBLIC_CONTENTFUL_SPACE_ID!,
+  accessToken: process.env.NEXT_PUBLIC_CONTENTFUL_ACCESS_TOKEN!,
 });
 
 export function formatUrl(baseUrl: string): string {
@@ -13,11 +13,14 @@ export function formatUrl(baseUrl: string): string {
 }
 
 export function formatAsset(asset: ContentfulAsset): Asset {
-  const assetUrl = formatUrl(String(asset.fields.file?.url));
+  const fileUrl = asset.fields.file?.url;
+  const assetUrl = formatUrl(typeof fileUrl === "string" ? fileUrl : "");
+  const title = asset.fields.title;
+  const description = asset.fields.description;
   return {
     id: asset.sys.id,
-    title: String(asset.fields.title),
-    description: String(asset.fields.description),
+    title: typeof title === "string" ? title : "",
+    description: typeof description === "string" ? description : "",
     url: assetUrl,
   };
 }

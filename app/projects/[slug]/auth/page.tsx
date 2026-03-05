@@ -6,7 +6,7 @@ import type { JSX } from "react";
 
 export const dynamic = "error";
 
-const protectedSlugs = new Set(Object.keys(manifest));
+const protectedSlugs = new Set(Object.keys(manifest as Record<string, string>));
 
 export const metadata: Metadata = {
   title: "CD Projects - Password Protected",

@@ -34,13 +34,15 @@ function DialogOverlay({
   className,
   ...props
 }: ComponentProps<typeof DialogPrimitive.Overlay>): JSX.Element {
+  const classes: string = cn(
+    "data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-50 bg-black/50",
+    className,
+  );
+
   return (
     <DialogPrimitive.Overlay
       data-slot="dialog-overlay"
-      className={cn(
-        "data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-50 bg-black/50",
-        className,
-      )}
+      className={classes}
       {...props}
     />
   );
@@ -54,15 +56,17 @@ function DialogContent({
 }: ComponentProps<typeof DialogPrimitive.Content> & {
   showCloseButton?: boolean;
 }): JSX.Element {
+  const classes: string = cn(
+    "bg-background data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 fixed top-[50%] left-[50%] z-50 grid w-full max-w-[calc(100%-2rem)] translate-x-[-50%] translate-y-[-50%] gap-4 rounded-lg border p-6 shadow-lg duration-200 outline-none sm:max-w-lg",
+    className,
+  );
+
   return (
     <DialogPortal data-slot="dialog-portal">
       <DialogOverlay />
       <DialogPrimitive.Content
         data-slot="dialog-content"
-        className={cn(
-          "bg-background data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 fixed top-[50%] left-[50%] z-50 grid w-full max-w-[calc(100%-2rem)] translate-x-[-50%] translate-y-[-50%] gap-4 rounded-lg border p-6 shadow-lg duration-200 outline-none sm:max-w-lg",
-          className,
-        )}
+        className={classes}
         {...props}
       >
         {children}
@@ -84,13 +88,12 @@ function DialogHeader({
   className,
   ...props
 }: ComponentProps<"div">): JSX.Element {
-  return (
-    <div
-      data-slot="dialog-header"
-      className={cn("flex flex-col gap-2 text-center sm:text-left", className)}
-      {...props}
-    />
+  const classes: string = cn(
+    "flex flex-col gap-2 text-center sm:text-left",
+    className,
   );
+
+  return <div data-slot="dialog-header" className={classes} {...props} />;
 }
 
 function DialogFooter({
@@ -101,15 +104,13 @@ function DialogFooter({
 }: ComponentProps<"div"> & {
   showCloseButton?: boolean;
 }): JSX.Element {
+  const classes: string = cn(
+    "flex flex-col-reverse gap-2 sm:flex-row sm:justify-end",
+    className,
+  );
+
   return (
-    <div
-      data-slot="dialog-footer"
-      className={cn(
-        "flex flex-col-reverse gap-2 sm:flex-row sm:justify-end",
-        className,
-      )}
-      {...props}
-    >
+    <div data-slot="dialog-footer" className={classes} {...props}>
       {children}
       {showCloseButton && (
         <DialogPrimitive.Close asChild>
@@ -124,10 +125,12 @@ function DialogTitle({
   className,
   ...props
 }: ComponentProps<typeof DialogPrimitive.Title>): JSX.Element {
+  const classes: string = cn("text-lg leading-none font-semibold", className);
+
   return (
     <DialogPrimitive.Title
       data-slot="dialog-title"
-      className={cn("text-lg leading-none font-semibold", className)}
+      className={classes}
       {...props}
     />
   );
@@ -137,10 +140,12 @@ function DialogDescription({
   className,
   ...props
 }: ComponentProps<typeof DialogPrimitive.Description>): JSX.Element {
+  const classes: string = cn("text-muted-foreground text-sm", className);
+
   return (
     <DialogPrimitive.Description
       data-slot="dialog-description"
-      className={cn("text-muted-foreground text-sm", className)}
+      className={classes}
       {...props}
     />
   );

@@ -17,6 +17,7 @@ bun-debug.log*
 # misc
 .DS_Store
 *.pem
+*.tsbuildinfo
 
 # local env files
 .env

@@ -30,8 +30,9 @@ async function hmacVerify(data: string, signature: string): Promise<boolean> {
   }
   // Keep deterministic work across every character to avoid early-exit timing leaks.
   let mismatchCount = 0;
-  for (const [index, value] of [...expected].entries()) {
-    if (value !== signature[index]) {
+  for (let i = 0; i < expected.length; i += 1) {
+    const value = expected[i];
+    if (value !== signature[i]) {
       mismatchCount += 1;
     }
   }

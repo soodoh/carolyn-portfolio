@@ -6,7 +6,7 @@ test.describe("Mobile screenshots", () => {
   test("should match Home page & navigation menu", async ({ page }) => {
     await page.goto("/");
     // Make sure gifs don't animate and cause pixel mismatches
-    page.route(/ctfassets.*gif/, async (request, response) => {
+    await page.route(/ctfassets.*gif/, async (request, response) => {
       const staticImgUrl = response.url().replace(/fm=\w+/, "fm=jpg");
       const staticResponse = await request.fetch({ url: staticImgUrl });
       return staticResponse;
@@ -42,7 +42,7 @@ test.describe("Mobile screenshots", () => {
   test("should match Projects page", async ({ page }) => {
     await page.goto("/projects");
     // Make sure gifs don't animate and cause pixel mismatches
-    page.route(/ctfassets.*gif/, async (request, response) => {
+    await page.route(/ctfassets.*gif/, async (request, response) => {
       const staticImgUrl = response.url().replace(/fm=\w+/, "fm=jpg");
       const staticResponse = await request.fetch({ url: staticImgUrl });
       return staticResponse;

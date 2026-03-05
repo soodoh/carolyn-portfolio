@@ -7,7 +7,7 @@ import { useEffect, useRef, useState } from "react";
 
 const HomePageContent = (): JSX.Element => {
   const homePageRef = useRef<HTMLDivElement>(null);
-  const headerRef = useRef<HTMLElement>(null);
+  const headerRef = useRef<HTMLDivElement>(null);
   const [isTransparent, setTransparent] = useState(true);
 
   useEffect(() => {

@@ -142,11 +142,13 @@ function Carousel({
     ],
   );
 
+  const classes: string = cn("relative", className);
+
   return (
     <CarouselContext.Provider value={contextValue}>
       <div
         onKeyDownCapture={handleKeyDown}
-        className={cn("relative", className)}
+        className={classes}
         role="region"
         aria-roledescription="carousel"
         data-slot="carousel"
@@ -163,6 +165,11 @@ function CarouselContent({
   ...props
 }: React.ComponentProps<"div">): JSX.Element {
   const { carouselRef, orientation } = useCarousel();
+  const classes: string = cn(
+    "flex",
+    orientation === "horizontal" ? "-ml-4" : "-mt-4 flex-col",
+    className,
+  );
 
   return (
     <div
@@ -170,14 +177,7 @@ function CarouselContent({
       className="h-full overflow-hidden"
       data-slot="carousel-content"
     >
-      <div
-        className={cn(
-          "flex",
-          orientation === "horizontal" ? "-ml-4" : "-mt-4 flex-col",
-          className,
-        )}
-        {...props}
-      />
+      <div className={classes} {...props} />
     </div>
   );
 }
@@ -187,17 +187,18 @@ function CarouselItem({
   ...props
 }: React.ComponentProps<"div">): JSX.Element {
   const { orientation } = useCarousel();
+  const classes: string = cn(
+    "min-w-0 shrink-0 grow-0 basis-full",
+    orientation === "horizontal" ? "pl-4" : "pt-4",
+    className,
+  );
 
   return (
     <div
       role="group"
       aria-roledescription="slide"
       data-slot="carousel-item"
-      className={cn(
-        "min-w-0 shrink-0 grow-0 basis-full",
-        orientation === "horizontal" ? "pl-4" : "pt-4",
-        className,
-      )}
+      className={classes}
       {...props}
     />
   );
@@ -210,19 +211,20 @@ function CarouselPrevious({
   ...props
 }: React.ComponentProps<typeof Button>): JSX.Element {
   const { orientation, scrollPrev, canScrollPrev } = useCarousel();
+  const classes: string = cn(
+    "absolute size-8",
+    orientation === "horizontal"
+      ? "top-1/2 -left-12 -translate-y-1/2"
+      : "-top-12 left-1/2 -translate-x-1/2 rotate-90",
+    className,
+  );
 
   return (
     <Button
       data-slot="carousel-previous"
       variant={variant}
       size={size}
-      className={cn(
-        "absolute size-8",
-        orientation === "horizontal"
-          ? "top-1/2 -left-12 -translate-y-1/2"
-          : "-top-12 left-1/2 -translate-x-1/2 rotate-90",
-        className,
-      )}
+      className={classes}
       disabled={!canScrollPrev}
       onClick={scrollPrev}
       {...props}
@@ -240,19 +242,20 @@ function CarouselNext({
   ...props
 }: React.ComponentProps<typeof Button>): JSX.Element {
   const { orientation, scrollNext, canScrollNext } = useCarousel();
+  const classes: string = cn(
+    "absolute size-8",
+    orientation === "horizontal"
+      ? "top-1/2 -right-12 -translate-y-1/2"
+      : "-bottom-12 left-1/2 -translate-x-1/2 rotate-90",
+    className,
+  );
 
   return (
     <Button
       data-slot="carousel-next"
       variant={variant}
       size={size}
-      className={cn(
-        "absolute size-8",
-        orientation === "horizontal"
-          ? "top-1/2 -right-12 -translate-y-1/2"
-          : "-bottom-12 left-1/2 -translate-x-1/2 rotate-90",
-        className,
-      )}
+      className={classes}
       disabled={!canScrollNext}
       onClick={scrollNext}
       {...props}

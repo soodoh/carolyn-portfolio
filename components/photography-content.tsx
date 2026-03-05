@@ -19,7 +19,7 @@ const PhotographyContent = ({ albums }: { albums: Album[] }): JSX.Element => {
   const [currentPhotoIndex, setCurrentPhotoIndex] = useState(0);
 
   const galleryImages = useMemo(
-    () => albums.find((album) => album.name === albumName)?.photos || [],
+    () => albums.find((album) => album.name === albumName)?.photos ?? [],
     [albums, albumName],
   );
 

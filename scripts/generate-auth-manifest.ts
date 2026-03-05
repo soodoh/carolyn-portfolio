@@ -1,5 +1,15 @@
 import { hash } from "bcryptjs";
+import type { EntryFieldTypes, EntrySkeletonType } from "contentful";
 import { createClient } from "contentful";
+import { writeFile } from "node:fs/promises";
+
+type AuthProjectSkeleton = EntrySkeletonType<
+  {
+    slug: EntryFieldTypes.Text;
+    password: EntryFieldTypes.Text;
+  },
+  "project"
+>;
 
 const BCRYPT_ROUNDS = 10;
 
@@ -13,7 +23,7 @@ async function main(): Promise<void> {
   }
 
   const client = createClient({ space, accessToken });
-  const entries = await client.getEntries({
+  const entries = await client.getEntries<AuthProjectSkeleton>({
     content_type: "project",
     select: ["fields.slug", "fields.password"],
   });
@@ -29,7 +39,7 @@ async function main(): Promise<void> {
   }
 
   const outPath = new URL("../lib/project-auth-manifest.json", import.meta.url);
-  await Bun.write(outPath.pathname, `${JSON.stringify(manifest, null, 2)}\n`);
+  await writeFile(outPath.pathname, `${JSON.stringify(manifest, null, 2)}\n`);
   process.stdout.write(
     `Auth manifest written with ${Object.keys(manifest).length} protected project(s)\n`,
   );

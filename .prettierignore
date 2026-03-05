@@ -1,3 +1,4 @@
 dist
 .output
+.serena
 node_modules

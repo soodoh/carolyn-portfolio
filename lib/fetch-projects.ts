@@ -3,17 +3,18 @@ import {
   formatImage,
   getImageAssetFromRichTextNode,
 } from "@/lib/contentful-utils";
+import type { ProjectSkeleton } from "@/lib/contentful-types";
 import { richTextFromMarkdown } from "@contentful/rich-text-from-markdown";
 import { BLOCKS } from "@contentful/rich-text-types";
 import pAll from "p-all";
 import type { Project, ProjectInfo, ProjectType } from "@/lib/types";
 import type { Asset as ContentfulAsset } from "contentful";
 
-function getLink(rawLink: unknown): string | undefined {
+function getLink(rawLink: string | undefined): string | undefined {
   if (!rawLink) {
     return undefined;
   }
-  const link = String(rawLink);
+  const link = rawLink;
   if (/vimeo/gi.test(link)) {
     return `${link}?title=0&byline=0&portrait=0`;
   }
@@ -25,7 +26,7 @@ function getLink(rawLink: unknown): string | undefined {
 }
 
 export async function getProjects(): Promise<Project[]> {
-  const projectData = await client.getEntries({
+  const projectData = await client.getEntries<ProjectSkeleton>({
     content_type: "project",
     order: ["fields.order"],
   });
@@ -49,7 +50,7 @@ export async function getProjects(): Promise<Project[]> {
 }
 
 export async function getProjectInfo(slug: string): Promise<ProjectInfo> {
-  const projectQuery = await client.getEntries({
+  const projectQuery = await client.getEntries<ProjectSkeleton>({
     content_type: "project",
     "fields.slug[match]": slug,
     include: 1,

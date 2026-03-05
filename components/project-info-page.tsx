@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils";
 import { documentToReactComponents } from "@contentful/rich-text-react-renderer";
 import { BLOCKS } from "@contentful/rich-text-types";
 import Link from "next/link";
-import type { ProjectInfoPublic } from "@/lib/types";
+import type { ImageType, ProjectInfoPublic } from "@/lib/types";
 import type { JSX } from "react";
 
 const ProjectInfo = ({
@@ -55,7 +55,12 @@ const ProjectInfo = ({
           renderNode: {
             [BLOCKS.TABLE]: () => null,
             [BLOCKS.EMBEDDED_ASSET]: (node) => {
-              return <ImageWrapper sizes="100vw" image={node.data.image} />;
+              return (
+                <ImageWrapper
+                  sizes="100vw"
+                  image={node.data.image as ImageType}
+                />
+              );
             },
           },
         })}

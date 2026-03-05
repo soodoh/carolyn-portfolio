@@ -13,7 +13,7 @@ import { MenuIcon, XIcon } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
-import type { JSX, RefObject } from "react";
+import type { JSX, Ref } from "react";
 
 const links = [
   { name: "About", path: "/about" },
@@ -27,7 +27,7 @@ const Header = ({
   isLayout = false,
   isTransparent = false,
 }: {
-  ref?: RefObject<HTMLElement>;
+  ref?: Ref<HTMLDivElement>;
   isLayout?: boolean;
   isTransparent?: boolean;
 }): JSX.Element | undefined => {

@@ -3,7 +3,7 @@ import { expect, test } from "@playwright/test";
 test.describe("Home page", () => {
   test("should match screenshot", async ({ page }) => {
     // Make sure gifs don't animate and cause pixel mismatches
-    page.route(/ctfassets.*gif/, async (request, response) => {
+    await page.route(/ctfassets.*gif/, async (request, response) => {
       const staticImgUrl = response.url().replace(/fm=\w+/, "fm=jpg");
       const staticResponse = await request.fetch({ url: staticImgUrl });
       return staticResponse;
