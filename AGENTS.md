@@ -38,7 +38,7 @@
 
 ## Commit & Pull Request Guidelines
 
-- Commits are enforced by Husky + commitlint and must follow Conventional Commits.
+- Commits are enforced by lefthook + commitlint and must follow Conventional Commits.
 - Use `type: summary` format with no scope (example: `feat: add project password gate`).
 - Keep commits focused, with passing lint/tests where applicable.
 - PRs should include a short description, linked issue (if relevant), and screenshots for visual changes.
