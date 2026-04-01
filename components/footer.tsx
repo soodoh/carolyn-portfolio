@@ -1,26 +1,26 @@
+import type { JSX } from "react";
 import SocialMediaIcon from "@/components/social-media-icon";
 import type { SocialMedia } from "@/lib/types";
-import type { JSX } from "react";
 
 const Footer = ({
-  socialMedia,
+	socialMedia,
 }: {
-  socialMedia: SocialMedia[];
+	socialMedia: SocialMedia[];
 }): JSX.Element => {
-  return (
-    <footer className="flex justify-between px-(--spacing-padding) py-4 max-md:flex-col max-md:items-center">
-      <div className="flex flex-col justify-center text-xs leading-5 max-md:items-center">
-        <span>Copyright © {new Date().getFullYear()} Carolyn DiLoreto</span>
-        <span>Designed by Carolyn DiLoreto</span>
-        <span>Developed by Paul DiLoreto</span>
-      </div>
-      <div className="flex items-center justify-center max-md:mt-4">
-        {socialMedia.map((icon) => (
-          <SocialMediaIcon key={`social-media-${icon.id}`} icon={icon} />
-        ))}
-      </div>
-    </footer>
-  );
+	return (
+		<footer className="flex justify-between px-(--spacing-padding) py-4 max-md:flex-col max-md:items-center">
+			<div className="flex flex-col justify-center text-xs leading-5 max-md:items-center">
+				<span>Copyright © {new Date().getFullYear()} Carolyn DiLoreto</span>
+				<span>Designed by Carolyn DiLoreto</span>
+				<span>Developed by Paul DiLoreto</span>
+			</div>
+			<div className="flex items-center justify-center max-md:mt-4">
+				{socialMedia.map((icon) => (
+					<SocialMediaIcon key={`social-media-${icon.id}`} icon={icon} />
+				))}
+			</div>
+		</footer>
+	);
 };
 
 export default Footer;

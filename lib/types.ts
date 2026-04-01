@@ -1,67 +1,67 @@
 import type { Document } from "@contentful/rich-text-types";
 
 export type Asset = {
-  id: string;
-  title: string;
-  description: string;
-  url: string;
+	id: string;
+	title: string;
+	description: string;
+	url: string;
 };
 
 export type ImagePlaceholder = `data:image/${string}`;
 
 export type ImageType = Asset & {
-  width: number;
-  height: number;
-  placeholder: ImagePlaceholder;
-  dominantColor?: string;
+	width: number;
+	height: number;
+	placeholder: ImagePlaceholder;
+	dominantColor?: string;
 };
 
 export type Album = {
-  name: string;
-  photos: ImageType[];
+	name: string;
+	photos: ImageType[];
 };
 
 export type IconType = "instagram" | "linkedin";
 export type ProjectType =
-  | "All"
-  | "Design"
-  | "Film"
-  | "Interactive"
-  | "Animation";
+	| "All"
+	| "Design"
+	| "Film"
+	| "Interactive"
+	| "Animation";
 
 export type SocialMedia = {
-  id: string;
-  title: IconType;
-  link: string;
+	id: string;
+	title: IconType;
+	link: string;
 };
 
 export type Project = {
-  id: string;
-  title: string;
-  slug: string;
-  coverImage: ImageType;
-  projectType: ProjectType[];
-  summary: string;
+	id: string;
+	title: string;
+	slug: string;
+	coverImage: ImageType;
+	projectType: ProjectType[];
+	summary: string;
 };
 
 export type ProjectInfo = {
-  id: string;
-  title: string;
-  slug: string;
-  coverImage: ImageType;
-  projectType: ProjectType[];
-  summary: string;
-  role?: string;
-  description: Document;
-  videoLink?: string;
-  password?: string;
+	id: string;
+	title: string;
+	slug: string;
+	coverImage: ImageType;
+	projectType: ProjectType[];
+	summary: string;
+	role?: string;
+	description: Document;
+	videoLink?: string;
+	password?: string;
 };
 
 export type ProjectInfoPublic = Omit<ProjectInfo, "password">;
 
 export type AboutData = {
-  profilePicture: ImageType;
-  bio: Document;
-  location: string;
-  email: string;
+	profilePicture: ImageType;
+	bio: Document;
+	location: string;
+	email: string;
 };

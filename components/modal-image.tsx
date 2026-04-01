@@ -1,42 +1,42 @@
 "use client";
 
-import ImageWrapper from "@/components/image-wrapper";
-import { cn } from "@/lib/utils";
 import NextImage from "next/image";
 import type { JSX } from "react";
 import { useState } from "react";
+import ImageWrapper from "@/components/image-wrapper";
 import type { ImageType } from "@/lib/types";
+import { cn } from "@/lib/utils";
 
 type Props = {
-  image: ImageType;
+	image: ImageType;
 };
 
 // This component is a workaround for the Next.js Image component
 // not behaving as expected with blur placeholders with object-fit contain
 const ModalImage = ({ image }: Props): JSX.Element => {
-  const [loaded, setLoaded] = useState(false);
+	const [loaded, setLoaded] = useState(false);
 
-  return (
-    <>
-      {!loaded && (
-        <NextImage
-          className="w-full h-full object-contain"
-          priority
-          width={image.width}
-          height={image.height}
-          alt={image.description}
-          src={image.placeholder}
-        />
-      )}
-      <ImageWrapper
-        className={cn("w-full h-full object-contain", !loaded && "hidden")}
-        priority
-        image={image}
-        onLoad={() => setLoaded(true)}
-        sizes="100vw"
-      />
-    </>
-  );
+	return (
+		<>
+			{!loaded && (
+				<NextImage
+					className="w-full h-full object-contain"
+					priority
+					width={image.width}
+					height={image.height}
+					alt={image.description}
+					src={image.placeholder}
+				/>
+			)}
+			<ImageWrapper
+				className={cn("w-full h-full object-contain", !loaded && "hidden")}
+				priority
+				image={image}
+				onLoad={() => setLoaded(true)}
+				sizes="100vw"
+			/>
+		</>
+	);
 };
 
 export default ModalImage;

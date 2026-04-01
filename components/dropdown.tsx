@@ -1,47 +1,47 @@
 "use client";
 
+import type { JSX } from "react";
 import DropdownIcon from "@/components/icons/dropdown-icon";
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
+	DropdownMenu,
+	DropdownMenuContent,
+	DropdownMenuItem,
+	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import type { JSX } from "react";
 
 type DropdownProps<T extends string> = {
-  current: T;
-  options: T[];
-  onChange: (option: T) => void;
+	current: T;
+	options: T[];
+	onChange: (option: T) => void;
 };
 
 function Dropdown<T extends string>({
-  current,
-  options,
-  onChange,
+	current,
+	options,
+	onChange,
 }: DropdownProps<T>): JSX.Element {
-  return (
-    <DropdownMenu>
-      <DropdownMenuTrigger className="mt-2 pb-2 flex items-center cursor-pointer border-none bg-transparent font-body text-base leading-7 text-dark">
-        {current}
-        <DropdownIcon className="fill-dark ml-2 w-4 h-4" />
-      </DropdownMenuTrigger>
-      <DropdownMenuContent
-        className="bg-white text-dark shadow-[0_0_0.5rem_rgba(var(--color-dark-rgb),0.25)] z-10"
-        align="start"
-      >
-        {options.map((option) => (
-          <DropdownMenuItem
-            key={`option-${option}`}
-            className="cursor-pointer px-8 py-4 text-base"
-            onClick={() => onChange(option)}
-          >
-            {option}
-          </DropdownMenuItem>
-        ))}
-      </DropdownMenuContent>
-    </DropdownMenu>
-  );
+	return (
+		<DropdownMenu>
+			<DropdownMenuTrigger className="mt-2 pb-2 flex items-center cursor-pointer border-none bg-transparent font-body text-base leading-7 text-dark">
+				{current}
+				<DropdownIcon className="fill-dark ml-2 w-4 h-4" />
+			</DropdownMenuTrigger>
+			<DropdownMenuContent
+				className="bg-white text-dark shadow-[0_0_0.5rem_rgba(var(--color-dark-rgb),0.25)] z-10"
+				align="start"
+			>
+				{options.map((option) => (
+					<DropdownMenuItem
+						key={`option-${option}`}
+						className="cursor-pointer px-8 py-4 text-base"
+						onClick={() => onChange(option)}
+					>
+						{option}
+					</DropdownMenuItem>
+				))}
+			</DropdownMenuContent>
+		</DropdownMenu>
+	);
 }
 
 export default Dropdown;

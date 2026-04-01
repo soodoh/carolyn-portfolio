@@ -1,30 +1,30 @@
+import type { Metadata } from "next";
+import type { JSX } from "react";
 import PasswordForm from "@/components/password-form";
 import { getProjects } from "@/lib/fetch-projects";
 import manifest from "@/lib/project-auth-manifest.json";
-import type { Metadata } from "next";
-import type { JSX } from "react";
 
 export const dynamic = "error";
 
 const protectedSlugs = new Set(Object.keys(manifest as Record<string, string>));
 
 export const metadata: Metadata = {
-  title: "CD Projects - Password Protected",
-  robots: "noindex, nofollow",
+	title: "CD Projects - Password Protected",
+	robots: "noindex, nofollow",
 };
 
 export async function generateStaticParams(): Promise<Array<{ slug: string }>> {
-  const projects = await getProjects();
-  return projects
-    .filter((p) => protectedSlugs.has(p.slug))
-    .map((p) => ({ slug: p.slug }));
+	const projects = await getProjects();
+	return projects
+		.filter((p) => protectedSlugs.has(p.slug))
+		.map((p) => ({ slug: p.slug }));
 }
 
 export default async function AuthPage({
-  params,
+	params,
 }: {
-  params: Promise<{ slug: string }>;
+	params: Promise<{ slug: string }>;
 }): Promise<JSX.Element> {
-  const { slug } = await params;
-  return <PasswordForm slug={slug} />;
+	const { slug } = await params;
+	return <PasswordForm slug={slug} />;
 }

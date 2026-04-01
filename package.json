@@ -1,81 +1,78 @@
 {
-  "name": "carolyn-portfolio",
-  "version": "0.2.0",
-  "homepage": "https://carolyndiloreto.com",
-  "private": true,
-  "type": "module",
-  "author": "Paul DiLoreto <soodohh@pm.me>",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/soodoh/carolyn-portfolio/issues"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/soodoh/carolyn-portfolio.git"
-  },
-  "keywords": [
-    "nextjs",
-    "contentful",
-    "react",
-    "aws",
-    "serverless"
-  ],
-  "packageManager": "bun@1.2.4",
-  "scripts": {
-    "prebuild": "bun run scripts/generate-auth-manifest.ts",
-    "predev": "bun run scripts/generate-auth-manifest.ts",
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "oxlint && prettier --check .",
-    "lint:fix": "oxlint --fix && prettier --write .",
-    "prepare": "lefthook install"
-  },
-  "dependencies": {
-    "@aws-sdk/client-ses": "^3.1022.0",
-    "@contentful/rich-text-from-markdown": "^16.1.8",
-    "@contentful/rich-text-react-renderer": "^16.1.6",
-    "@tailwindcss/postcss": "^4.2.2",
-    "bcryptjs": "^3.0.3",
-    "class-variance-authority": "^0.7.1",
-    "clsx": "^2.1.1",
-    "contentful": "^11.12.0",
-    "embla-carousel-react": "^8.6.0",
-    "lucide-react": "^1.7.0",
-    "marked": "^17.0.5",
-    "next": "^16.2.2",
-    "p-all": "^5.0.1",
-    "radix-ui": "^1.4.3",
-    "react": "^19.2.4",
-    "react-dom": "^19.2.4",
-    "react-masonry-css": "^1.0.16",
-    "sharp": "^0.34.5",
-    "tailwind-merge": "^3.5.0",
-    "tailwindcss": "^4.2.2"
-  },
-  "devDependencies": {
-    "@commitlint/cli": "^20.5.0",
-    "@commitlint/config-conventional": "^20.5.0",
-    "@commitlint/types": "^20.5.0",
-    "@contentful/rich-text-types": "^17.2.5",
-    "@netlify/plugin-lighthouse": "^6.0.4",
-    "@netlify/plugin-nextjs": "^5.15.9",
-    "@playwright/test": "^1.59.1",
-    "@standard-config/oxlint": "^1.6.2",
-    "@tsconfig/next": "^2.0.6",
-    "@types/bcryptjs": "^3.0.0",
-    "@types/node": "25.5.0",
-    "@types/react": "^19.2.14",
-    "lefthook": "^2.1.4",
-    "oxlint": "^1.58.0",
-    "oxlint-tsgolint": "^0.19.0",
-    "postcss": "^8.5.8",
-    "prettier": "^3.8.1",
-    "shadcn": "^4.1.2",
-    "tw-animate-css": "^1.4.0",
-    "typescript": "^6.0.2"
-  },
-  "trustedDependencies": [
-    "unrs-resolver"
-  ]
+	"name": "carolyn-portfolio",
+	"version": "0.2.0",
+	"homepage": "https://carolyndiloreto.com",
+	"private": true,
+	"type": "module",
+	"author": "Paul DiLoreto <soodohh@pm.me>",
+	"license": "MIT",
+	"bugs": {
+		"url": "https://github.com/soodoh/carolyn-portfolio/issues"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/soodoh/carolyn-portfolio.git"
+	},
+	"keywords": [
+		"nextjs",
+		"contentful",
+		"react",
+		"aws",
+		"serverless"
+	],
+	"packageManager": "bun@1.2.4",
+	"scripts": {
+		"prebuild": "bun run scripts/generate-auth-manifest.ts",
+		"predev": "bun run scripts/generate-auth-manifest.ts",
+		"dev": "next dev",
+		"build": "next build",
+		"start": "next start",
+		"lint": "biome check .",
+		"lint:fix": "biome check --write .",
+		"prepare": "lefthook install"
+	},
+	"dependencies": {
+		"@aws-sdk/client-ses": "^3.1022.0",
+		"@contentful/rich-text-from-markdown": "^16.1.8",
+		"@contentful/rich-text-react-renderer": "^16.1.6",
+		"@tailwindcss/postcss": "^4.2.2",
+		"bcryptjs": "^3.0.3",
+		"class-variance-authority": "^0.7.1",
+		"clsx": "^2.1.1",
+		"contentful": "^11.12.0",
+		"embla-carousel-react": "^8.6.0",
+		"lucide-react": "^1.7.0",
+		"marked": "^17.0.5",
+		"next": "^16.2.2",
+		"p-all": "^5.0.1",
+		"radix-ui": "^1.4.3",
+		"react": "^19.2.4",
+		"react-dom": "^19.2.4",
+		"react-masonry-css": "^1.0.16",
+		"sharp": "^0.34.5",
+		"tailwind-merge": "^3.5.0",
+		"tailwindcss": "^4.2.2"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "^2.4.10",
+		"@commitlint/cli": "^20.5.0",
+		"@commitlint/config-conventional": "^20.5.0",
+		"@commitlint/types": "^20.5.0",
+		"@contentful/rich-text-types": "^17.2.5",
+		"@netlify/plugin-lighthouse": "^6.0.4",
+		"@netlify/plugin-nextjs": "^5.15.9",
+		"@playwright/test": "^1.59.1",
+		"@tsconfig/next": "^2.0.6",
+		"@types/bcryptjs": "^3.0.0",
+		"@types/node": "25.5.0",
+		"@types/react": "^19.2.14",
+		"lefthook": "^2.1.4",
+		"postcss": "^8.5.8",
+		"shadcn": "^4.1.2",
+		"tw-animate-css": "^1.4.0",
+		"typescript": "^6.0.2"
+	},
+	"trustedDependencies": [
+		"unrs-resolver"
+	]
 }

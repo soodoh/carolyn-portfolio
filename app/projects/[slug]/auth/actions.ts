@@ -1,46 +1,46 @@
 "use server";
 
-import { COOKIE_MAX_AGE, signToken } from "@/lib/password-utils";
-import manifest from "@/lib/project-auth-manifest.json";
 import { compare } from "bcryptjs";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import { COOKIE_MAX_AGE, signToken } from "@/lib/password-utils";
+import manifest from "@/lib/project-auth-manifest.json";
 
 const protectedSlugs = manifest as Record<string, string>;
 
 export type AuthState = {
-  error?: string;
+	error?: string;
 };
 
 export async function verifyProjectPassword(
-  slug: string,
-  _prevState: AuthState,
-  formData: FormData,
+	slug: string,
+	_prevState: AuthState,
+	formData: FormData,
 ): Promise<AuthState> {
-  const password = formData.get("password");
-  if (typeof password !== "string" || !password) {
-    return { error: "Please enter a password." };
-  }
+	const password = formData.get("password");
+	if (typeof password !== "string" || !password) {
+		return { error: "Please enter a password." };
+	}
 
-  const hash = protectedSlugs[slug];
-  if (!hash) {
-    return { error: "This project is not password protected." };
-  }
+	const hash = protectedSlugs[slug];
+	if (!hash) {
+		return { error: "This project is not password protected." };
+	}
 
-  const valid = await compare(password, hash);
-  if (!valid) {
-    return { error: "The password you entered is incorrect." };
-  }
+	const valid = await compare(password, hash);
+	if (!valid) {
+		return { error: "The password you entered is incorrect." };
+	}
 
-  const token = await signToken(slug);
-  const cookieStore = await cookies();
-  cookieStore.set(`project-auth-${slug}`, token, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "strict",
-    path: `/projects/${slug}`,
-    maxAge: COOKIE_MAX_AGE,
-  });
+	const token = await signToken(slug);
+	const cookieStore = await cookies();
+	cookieStore.set(`project-auth-${slug}`, token, {
+		httpOnly: true,
+		secure: process.env.NODE_ENV === "production",
+		sameSite: "strict",
+		path: `/projects/${slug}`,
+		maxAge: COOKIE_MAX_AGE,
+	});
 
-  redirect(`/projects/${slug}`);
+	redirect(`/projects/${slug}`);
 }
