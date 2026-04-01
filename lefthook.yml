@@ -1,0 +1,15 @@
+pre-commit:
+  commands:
+    lint-js:
+      glob: "*.{js,jsx,ts,tsx}"
+      run: bunx oxlint --fix {staged_files} && prettier --write {staged_files}
+      stage_fixed: true
+    lint-other:
+      glob: "*.{css,html,json,md,mdx,yaml,yml}"
+      run: bunx prettier --write {staged_files}
+      stage_fixed: true
+
+commit-msg:
+  commands:
+    commitlint:
+      run: bunx commitlint --edit {1}

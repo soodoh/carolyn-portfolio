@@ -29,15 +29,7 @@
     "start": "next start",
     "lint": "oxlint && prettier --check .",
     "lint:fix": "oxlint --fix && prettier --write .",
-    "lint-staged": "lint-staged",
-    "prepare": "husky"
-  },
-  "lint-staged": {
-    "*.{js,jsx,ts,tsx}": [
-      "oxlint --fix",
-      "prettier --write"
-    ],
-    "*.{css,html,json,md,mdx,yaml,yml}": "prettier --write"
+    "prepare": "lefthook install"
   },
   "dependencies": {
     "@aws-sdk/client-ses": "^3.1022.0",
@@ -74,8 +66,7 @@
     "@types/bcryptjs": "^3.0.0",
     "@types/node": "25.5.0",
     "@types/react": "^19.2.14",
-    "husky": "^9.1.7",
-    "lint-staged": "^16.4.0",
+    "lefthook": "^2.1.4",
     "oxlint": "^1.58.0",
     "oxlint-tsgolint": "^0.19.0",
     "postcss": "^8.5.8",
