@@ -6,6 +6,9 @@
 		"useIgnoreFile": true,
 		"defaultBranch": "main"
 	},
+	"files": {
+		"includes": ["**", "!src/routeTree.gen.ts"]
+	},
 	"assist": {
 		"actions": {
 			"source": {
