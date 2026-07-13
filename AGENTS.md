@@ -2,7 +2,7 @@
 
 ## Project Structure & Module Organization
 
-- `app/` contains Next.js App Router routes; each route folder defines `page.tsx` (for example, `app/projects/[slug]/page.tsx` and `app/projects/[slug]/auth/page.tsx`).
+- `src/routes/` contains TanStack Start file-based routes (for example, `projects.$slug.tsx` and `projects.$slug.auth.tsx`); `src/routes/__root.tsx` defines the document shell.
 - `components/` holds reusable React UI, grouped by feature (`Header/`, `Projects/`, `PhotographyContent/`, `ui/`). Most component folders export from `index.tsx`.
 - `lib/` includes data fetching and shared utilities (`fetch-*.ts`, Contentful helpers, image utilities, type definitions).
 - `tests/` contains Playwright specs and visual baselines (`*.test.ts` and `*-snapshots/`).

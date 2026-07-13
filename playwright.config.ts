@@ -42,7 +42,7 @@ export default defineConfig({
 		trace: "retain-on-failure",
 	},
 	webServer: {
-		command: `PLAYWRIGHT_TEST=true PROJECT_AUTH_SECRET=playwright-secret bun run dev --webpack --hostname 127.0.0.1 --port ${port}`,
+		command: `PLAYWRIGHT_TEST=true PROJECT_AUTH_SECRET=playwright-secret bun run dev --host 127.0.0.1 --port ${port}`,
 		url: `http://127.0.0.1:${port}`,
 		reuseExistingServer: false,
 		timeout: 180_000,

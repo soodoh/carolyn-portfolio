@@ -15,6 +15,6 @@ docker run --rm --init --ipc=host \
 	--env "CI=${CI:-}" \
 	--mount "type=bind,source=${ROOT_DIR},target=/work" \
 	--mount "type=volume,source=carolyn-portfolio-playwright-node-modules,target=/work/node_modules" \
-	--mount "type=volume,source=carolyn-portfolio-playwright-next,target=/work/.next" \
+	--mount "type=volume,source=carolyn-portfolio-playwright-output,target=/work/.output" \
 	"${IMAGE_NAME}" \
 	bash -lc 'PLAYWRIGHT_CONTAINER=true bun install --frozen-lockfile && bunx playwright test "$@"' bash "$@"

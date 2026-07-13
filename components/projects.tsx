@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import { Link } from "@tanstack/react-router";
 import type { JSX } from "react";
 import { useMemo, useState } from "react";
 import Filter from "@/components/filter";
@@ -48,7 +48,8 @@ const Projects = ({ projects }: { projects: Project[] }): JSX.Element => {
 						<Link
 							key={item.id}
 							aria-label={`${item.title} - ${item.summary}`}
-							href={`/projects/${item.slug}`}
+							to="/projects/$slug"
+							params={{ slug: item.slug }}
 							className="relative flex text-dark no-underline group [&_h2]:m-0 [&_h2]:p-0 [&_h2]:inline [&_h2]:text-center [&_h2]:font-body [&_h2]:text-2xl [&_h2]:mb-2 [&_h3]:m-0 [&_h3]:p-0 [&_h3]:inline [&_h3]:text-center [&_h3]:font-body [&_h3]:text-base"
 						>
 							<div className="transition-all duration-[250ms] ease-in-out opacity-0 invisible absolute inset-0 flex flex-col justify-center items-center z-1 group-hover:opacity-100 group-hover:visible group-hover:bg-white/90">

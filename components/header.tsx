@@ -1,8 +1,7 @@
 "use client";
 
+import { Link, useLocation } from "@tanstack/react-router";
 import { MenuIcon, XIcon } from "lucide-react";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
 import type { JSX, Ref } from "react";
 import { useState } from "react";
 import Logo from "@/components/icons/logo";
@@ -20,7 +19,7 @@ const links = [
 	{ name: "Projects", path: "/projects" },
 	{ name: "Photography", path: "/photography" },
 	{ name: "Resume", path: "/resume" },
-];
+] as const;
 
 const Header = ({
 	ref,
@@ -31,7 +30,7 @@ const Header = ({
 	isLayout?: boolean;
 	isTransparent?: boolean;
 }): JSX.Element | undefined => {
-	const route = usePathname();
+	const route = useLocation({ select: (location) => location.pathname });
 	const [mobileNavOpen, setMobileNav] = useState(false);
 
 	// Home page has it's own Header instance to handle transparency state changes
@@ -56,7 +55,7 @@ const Header = ({
 						"invisible transition-all duration-[250ms] ease-in-out",
 				)}
 				aria-label="Home"
-				href="/"
+				to="/"
 			>
 				<Logo />
 				<span className="text-3xl font-[100] ml-8 font-header text-light-text max-sm:text-2xl max-sm:ml-0">
@@ -73,7 +72,7 @@ const Header = ({
 							route === link.path && "text-light",
 						)}
 						aria-label={link.name}
-						href={link.path}
+						to={link.path}
 					>
 						{`${link.name}.`}
 					</Link>
@@ -116,7 +115,7 @@ const Header = ({
 										route === link.path && "text-light",
 									)}
 									aria-label={link.name}
-									href={link.path}
+									to={link.path}
 								>
 									{`${link.name}.`}
 								</Link>

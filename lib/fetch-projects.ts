@@ -11,6 +11,13 @@ import {
 import type { Project, ProjectInfo, ProjectType } from "@/lib/types";
 import { contentfulFixture } from "@/tests/fixtures/contentful";
 
+export class ProjectNotFoundError extends Error {
+	constructor(slug: string) {
+		super(`Project not found: ${slug}`);
+		this.name = "ProjectNotFoundError";
+	}
+}
+
 function getLink(rawLink: string | undefined): string | undefined {
 	if (!rawLink) {
 		return undefined;
@@ -58,7 +65,7 @@ export async function getProjectInfo(slug: string): Promise<ProjectInfo> {
 	if (process.env.PLAYWRIGHT_TEST === "true") {
 		const project = contentfulFixture.projectInfo[slug];
 		if (!project) {
-			throw new Error(`Missing project fixture for ${slug}`);
+			throw new ProjectNotFoundError(slug);
 		}
 		return project;
 	}
@@ -69,6 +76,9 @@ export async function getProjectInfo(slug: string): Promise<ProjectInfo> {
 		include: 1,
 	});
 	const projectItem = projectQuery.items[0];
+	if (!projectItem) {
+		throw new ProjectNotFoundError(slug);
+	}
 	const coverImage = await formatImage(
 		projectItem.fields.coverImage as ContentfulAsset,
 	);

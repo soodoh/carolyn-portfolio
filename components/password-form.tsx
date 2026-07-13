@@ -1,27 +1,38 @@
-"use client";
-
-import Link from "next/link";
-import type { JSX } from "react";
-import { useActionState } from "react";
-import type { AuthState } from "@/app/projects/[slug]/auth/actions";
-import { verifyProjectPassword } from "@/app/projects/[slug]/auth/actions";
+import { Link } from "@tanstack/react-router";
+import type { FormEvent, JSX } from "react";
+import { useState, useTransition } from "react";
 import LeftArrowIcon from "@/components/icons/left-arrow-icon";
 import { Button } from "@/components/ui/button";
+import { verifyProjectPassword } from "@/lib/server-functions";
 import { cn } from "@/lib/utils";
 
 const PasswordForm = ({ slug }: { slug: string }): JSX.Element => {
-	const boundAction = verifyProjectPassword.bind(null, slug);
-	const [state, formAction, isPending] = useActionState<AuthState, FormData>(
-		boundAction,
-		{},
-	);
+	const [error, setError] = useState<string>();
+	const [isPending, startTransition] = useTransition();
+
+	const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
+		event.preventDefault();
+		const formData = new FormData(event.currentTarget);
+		const password = formData.get("password");
+		startTransition(async () => {
+			const result = await verifyProjectPassword({
+				data: { slug, password: typeof password === "string" ? password : "" },
+			});
+			if (result.error) {
+				setError(result.error);
+				return;
+			}
+			setError(undefined);
+			window.location.reload();
+		});
+	};
 
 	return (
 		<div className="flex flex-1 flex-col justify-center">
 			<div className="mx-auto flex w-[calc(100%-3rem)] max-w-[560px] flex-col bg-dark p-(--spacing-padding) text-light-text">
 				<Link
 					aria-label="Go back"
-					href="/projects"
+					to="/projects"
 					className="flex items-center self-start text-lg text-light underline [&_svg]:mr-4 [&_svg]:w-8 [&_svg]:fill-light"
 				>
 					<LeftArrowIcon />
@@ -34,7 +45,7 @@ const PasswordForm = ({ slug }: { slug: string }): JSX.Element => {
 					Please enter a password to continue.
 				</p>
 				<form
-					action={formAction}
+					onSubmit={handleSubmit}
 					className="mx-auto mt-10 mb-8 flex w-[300px] flex-col items-center max-sm:w-full"
 				>
 					<input
@@ -43,12 +54,12 @@ const PasswordForm = ({ slug }: { slug: string }): JSX.Element => {
 						type="password"
 						className={cn(
 							"h-9 w-full rounded-lg border-none bg-light-text px-4 text-lg text-dark shadow-[inset_0px_1px_4px_0px_rgba(0,0,0,0.25)] focus:outline-1 focus:outline-light",
-							state.error && "outline-1 outline-error",
+							error && "outline-1 outline-error",
 						)}
 					/>
-					{state.error && (
-						<span className="mt-2 text-xs text-error">{state.error}</span>
-					)}
+					{error ? (
+						<span className="mt-2 text-xs text-error">{error}</span>
+					) : null}
 					<Button
 						variant="outline"
 						aria-label="Submit password"

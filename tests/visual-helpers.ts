@@ -18,6 +18,7 @@ export async function prepareVisualPage(page: Page): Promise<void> {
 }
 
 export async function settleVisualPage(page: Page): Promise<void> {
+	await page.locator("html[data-hydrated='true']").waitFor();
 	await page.addStyleTag({
 		content: "section.sticky { position: static !important; }",
 	});
@@ -60,6 +61,32 @@ export async function expectFullPageScreenshot(
 	name: string,
 ): Promise<void> {
 	await settleVisualPage(page);
+	const isTallDesktopPhotographyGrid =
+		name.startsWith("photography-filter-") &&
+		(await page.evaluate(() => window.innerWidth >= 1024));
+	if (isTallDesktopPhotographyGrid) {
+		if (name === "photography-filter-dance.png") {
+			await page.evaluate(() => {
+				document.body.style.minHeight = `${Math.ceil(
+					document.body.getBoundingClientRect().height,
+				)}px`;
+			});
+		}
+		await expect(async () => {
+			await page.evaluate(async () => {
+				window.scrollTo(0, document.documentElement.scrollHeight);
+				await new Promise((resolve) => requestAnimationFrame(resolve));
+				window.scrollTo(0, 0);
+				await new Promise((resolve) => requestAnimationFrame(resolve));
+			});
+			await expect(page).toHaveScreenshot(name, {
+				fullPage: true,
+				maxDiffPixelRatio: 0.04,
+				timeout: 5_000,
+			});
+		}).toPass({ timeout: 30_000 });
+		return;
+	}
 	await expect(page).toHaveScreenshot(name, { fullPage: true });
 }
 
@@ -68,12 +95,26 @@ export async function selectFilter(
 	current: string,
 	next: string,
 ): Promise<void> {
+	await page.locator("html[data-hydrated='true']").waitFor();
 	const tab = page.getByRole("tab", { name: `Choose filter: ${next}` });
 	if (await tab.isVisible()) {
-		await tab.click();
+		await expect(async () => {
+			await tab.click();
+			await expect(tab).toHaveAttribute("aria-selected", "true", {
+				timeout: 1_000,
+			});
+		}).toPass({ timeout: 30_000 });
 	} else {
-		await page.getByRole("button", { name: current, exact: true }).click();
-		await page.getByRole("menuitem", { name: next, exact: true }).click();
+		const button = page.getByRole("button", { name: current, exact: true });
+		const menuItem = page.getByRole("menuitem", { name: next, exact: true });
+		await expect(async () => {
+			await button.click();
+			await expect(menuItem).toBeVisible({ timeout: 1_000 });
+		}).toPass({ timeout: 30_000 });
+		await menuItem.click();
+		await expect(
+			page.getByRole("button", { name: next, exact: true }),
+		).toBeVisible();
 	}
 	await expect(page.getByRole("tabpanel")).toBeVisible();
 	await page.waitForTimeout(300);

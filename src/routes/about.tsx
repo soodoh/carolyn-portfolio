@@ -1,26 +1,28 @@
 import { documentToReactComponents } from "@contentful/rich-text-react-renderer";
-import type { Metadata } from "next";
+import { createFileRoute } from "@tanstack/react-router";
 import type { JSX } from "react";
 import Background from "@/components/background";
 import ImageWrapper from "@/components/image-wrapper";
-import { getAboutData } from "@/lib/fetch-about-data";
-import { getBackgroundImage } from "@/lib/fetch-home-data";
+import { getAboutPageData } from "@/lib/server-functions";
 import { containerClass } from "@/lib/utils";
 
-// Statically generated at build time, will error if any Dynamic APIs are used
-export const dynamic = "error";
+export const Route = createFileRoute("/about")({
+	loader: () => getAboutPageData(),
+	head: () => ({
+		meta: [
+			{ title: "About Carolyn" },
+			{
+				name: "description",
+				content:
+					"Carolyn DiLoreto is a multi-media visual artist, dancer, and USC alumnus, with a Media Arts + Practice major and a double minor in Dance and Computer Programming.",
+			},
+		],
+	}),
+	component: About,
+});
 
-export const metadata: Metadata = {
-	title: "About Carolyn",
-	description:
-		"Carolyn DiLoreto is a multi-media visual artist, dancer, and USC alumnus, with a Media Arts + Practice major and a double minor in Dance and Computer Programming.",
-	keywords: [],
-};
-
-export default async function About(): Promise<JSX.Element> {
-	const backgroundImage = await getBackgroundImage();
-	const aboutData = await getAboutData();
-
+function About(): JSX.Element {
+	const { backgroundImage, aboutData } = Route.useLoaderData();
 	return (
 		<div className={containerClass}>
 			<Background fixed image={backgroundImage} />

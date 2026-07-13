@@ -43,14 +43,14 @@ export async function signToken(slug: string): Promise<string> {
 	const timestamp = Math.floor(Date.now() / 1000).toString();
 	const data = `${slug}:${timestamp}`;
 	const signature = await hmacSign(data);
-	return `${data}:${signature}`;
+	return `${slug}.${timestamp}.${signature}`;
 }
 
 export async function verifyToken(
 	token: string,
 	slug: string,
 ): Promise<boolean> {
-	const parts = token.split(":");
+	const parts = token.split(".");
 	if (parts.length !== 3) {
 		return false;
 	}

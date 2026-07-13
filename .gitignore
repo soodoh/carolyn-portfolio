@@ -9,12 +9,13 @@ bun-debug.log*
 /playwright-report/
 /test-results/
 
-# next.js
-/.next/
-/out/
+# TanStack Start
+/.output/
+/src/routeTree.gen.ts
 
 # production
 /build
+/dist
 
 # misc
 .DS_Store

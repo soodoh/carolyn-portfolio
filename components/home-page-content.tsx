@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link";
+import { Link } from "@tanstack/react-router";
 import type { JSX } from "react";
 import { useEffect, useRef, useState } from "react";
 import Header from "@/components/header";
@@ -41,14 +41,14 @@ const HomePageContent = (): JSX.Element => {
 				<div className="flex justify-between mt-8 w-[28rem] max-md:flex-col max-md:items-center max-md:w-auto">
 					<Link
 						aria-label="View Photography"
-						href="/photography"
+						to="/photography"
 						className="flex justify-center text-base text-light no-underline border border-light p-2 w-40 transition-colors duration-200 ease-in-out hover:bg-light hover:text-black max-md:mb-4"
 					>
 						View Photography
 					</Link>
 					<Link
 						aria-label="View Projects"
-						href="/projects"
+						to="/projects"
 						className="flex justify-center text-base text-light no-underline border border-light p-2 w-40 transition-colors duration-200 ease-in-out hover:bg-light hover:text-black"
 					>
 						View Projects

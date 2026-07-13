@@ -1,143 +1,111 @@
 # Carolyn DiLoreto Portfolio
 
-Portfolio website for a Film Editor / Graphic Designer / UX Engineer. Built with Next.js, powered by Contentful CMS, and deployed on Netlify.
+Portfolio website for a Film Editor / Graphic Designer / UX Engineer. Built with TanStack Start and powered by Contentful CMS.
 
 **Live site:** [carolyndiloreto.com](https://carolyndiloreto.com)
 
 ## Tech Stack
 
-- **Framework:** Next.js 16 (App Router, React Server Components)
+- **Framework:** TanStack Start with TanStack Router and React 19
+- **Images:** `@unpic/react` with Contentful image transforms
 - **Language:** TypeScript
-- **Styling:** Tailwind CSS v4 (CSS-first config, no `tailwind.config.js`)
+- **Styling:** Tailwind CSS v4
 - **UI Primitives:** shadcn/ui + Radix UI
 - **CMS:** Contentful
 - **Package Manager:** Bun
-- **Hosting:** Netlify
-- **Testing:** Playwright (visual regression)
+- **Testing:** Playwright visual regression
 
 ## Getting Started
 
 ### Prerequisites
 
-- [Bun](https://bun.sh) (v1.2+)
-- [Node.js](https://nodejs.org) (v18+, required by Next.js)
+- [Bun](https://bun.sh) v1.2+
 - Access to the Contentful space for this project
 
-### 1. Clone the repository
+### Install and configure
 
 ```bash
 git clone https://github.com/soodoh/carolyn-portfolio.git
 cd carolyn-portfolio
-```
-
-### 2. Install dependencies
-
-```bash
 bun install
-```
-
-### 3. Set up environment variables
-
-Copy the example env file and fill in the values:
-
-```bash
 cp .env.example .env
 ```
 
-| Variable                              | Description                                             | Where to find it                                                              |
-| ------------------------------------- | ------------------------------------------------------- | ----------------------------------------------------------------------------- |
-| `NEXT_PUBLIC_CONTENTFUL_SPACE_ID`     | Contentful space identifier                             | Contentful dashboard: Settings > API keys                                     |
-| `NEXT_PUBLIC_CONTENTFUL_ACCESS_TOKEN` | Content Delivery API access token                       | Contentful dashboard: Settings > API keys > Content delivery / preview tokens |
-| `PROJECT_AUTH_SECRET`                 | HMAC signing key for password-protected project cookies | Generate locally with `openssl rand -hex 32`                                  |
+| Variable                              | Description                                             |
+| ------------------------------------- | ------------------------------------------------------- |
+| `NEXT_PUBLIC_CONTENTFUL_SPACE_ID`     | Contentful space identifier                             |
+| `NEXT_PUBLIC_CONTENTFUL_ACCESS_TOKEN` | Content Delivery API access token                       |
+| `PROJECT_AUTH_SECRET`                 | HMAC signing key for protected project cookies          |
 
-### 4. Start the dev server
+Generate a local signing key with `openssl rand -hex 32`.
+
+### Development
 
 ```bash
 bun dev
 ```
 
-This automatically runs a prebuild step that generates the auth manifest (`lib/project-auth-manifest.json`) from Contentful before starting Next.js. The dev server will be available at `http://localhost:3000`.
+The predev step generates `lib/project-auth-manifest.json` from Contentful, then Vite starts the TanStack Start server at `http://localhost:3000`.
 
-### 5. Production build
+### Production
 
 ```bash
 bun run build
+bun start
 ```
 
-Same as dev, the auth manifest is regenerated before each build.
+Nitro emits the production server to `.output/`. The auth manifest is regenerated before every development and production build.
 
 ## Available Scripts
 
 | Command            | Description                                      |
 | ------------------ | ------------------------------------------------ |
-| `bun dev`          | Start dev server (generates auth manifest first) |
-| `bun run build`    | Production build (generates auth manifest first) |
-| `bun start`        | Serve the production build locally               |
-| `bun run lint`     | Run Oxlint                                       |
-| `bun run lint:fix` | Run Oxlint with auto-fix                         |
+| `bun dev`          | Start Vite dev server after generating auth data |
+| `bun run build`    | Create the TanStack Start production build       |
+| `bun start`        | Run the production server                        |
+| `bun run lint`     | Run Biome checks                                 |
+| `bun run lint:fix` | Apply safe Biome fixes                           |
+| `bun run test:visual` | Run Playwright in the canonical container     |
 
 ## Architecture
 
-### Static Generation
+### Routes and data
 
-Every page uses `export const dynamic = "error"` to enforce full static generation. All content is fetched from Contentful at build time via React Server Components. There are no runtime CMS calls.
+TanStack Start file routes live in `src/routes/`. Route loaders call server functions from `lib/server-functions.ts`; Contentful credentials, project passwords, and cookie validation remain server-only.
 
-### Routes
+| Route                     | Description                                      |
+| ------------------------- | ------------------------------------------------ |
+| `/`                       | Home hero and project previews                   |
+| `/about`                  | Bio and profile picture                          |
+| `/projects`               | Filterable masonry grid                          |
+| `/projects/$slug`         | Project detail or in-place password gate         |
+| `/projects/$slug/auth`    | Direct protected-project password form           |
+| `/photography`            | Photo albums and image gallery                   |
+| `/resume`                 | Permanent redirect to the Contentful PDF         |
 
-| Route              | Description                                                 |
-| ------------------ | ----------------------------------------------------------- |
-| `/`                | Home page with background image, hero, and project previews |
-| `/about`           | Bio and profile picture                                     |
-| `/projects`        | Filterable masonry grid of all projects                     |
-| `/projects/[slug]` | Individual project detail page                              |
-| `/photography`     | Photo albums with image gallery                             |
-| `/resume`          | Permanent redirect to Contentful-hosted PDF                 |
+### Password protection
 
-### Password Protection
+1. `scripts/generate-auth-manifest.ts` writes gitignored `slug -> bcrypt hash` data before dev/build.
+2. The project loader checks its project-specific HTTP-only cookie before fetching or returning protected content.
+3. Unauthorized projects render the password form at the requested project URL.
+4. A TanStack Start server function verifies the password, signs a token, and sets a secure, SameSite=strict cookie.
+5. The route loader is invalidated after authentication and then returns only password-free project data.
 
-Some projects are password-protected. This is implemented with server-side security:
+### Images
 
-1. A **prebuild script** (`scripts/generate-auth-manifest.ts`) fetches protected projects from Contentful and writes a manifest of `slug -> bcrypt hash` mappings to `lib/project-auth-manifest.json` (gitignored).
-2. **Middleware** intercepts requests to protected project pages and checks for a valid authentication cookie.
-3. Unauthenticated users are rewritten to a **password form page** (`/projects/[slug]/auth`). The protected project content is never served.
-4. A **server action** validates the submitted password against the bcrypt hash and sets an HTTP-only, secure, SameSite=strict cookie scoped to that project's path.
-5. Per-project cookies mean authenticating for one project does not grant access to another.
-
-### Data Flow
-
-1. **Contentful CMS** -> `lib/fetch-*.ts` functions (one per domain: home, about, projects, photos)
-2. **Image processing:** `lib/contentful-utils.ts` -> `formatImage()` generates blur placeholders via Sharp
-3. **RSC pages** call fetch functions, pass data as props to client components
-4. **Client interactivity** is limited to: filter state, modal/gallery state, scroll-based header transparency
+`components/image-wrapper.tsx` uses `@unpic/react` and Contentful's image CDN transformer to generate responsive sources with WebP output and the requested quality. Local Playwright fixture images retain deterministic query parameters for visual testing.
 
 ## Testing
 
-Visual regression tests use Playwright's `toHaveScreenshot()` and run in a pinned Linux ARM64 container so local and CI rendering is identical. An ARM64 Docker engine must be running.
+Visual tests run in a pinned Linux ARM64 Playwright container so local and CI rendering is identical. An ARM64 Docker engine must be running.
 
 ```bash
-# Run all visual tests in the canonical container
 bun run test:visual
-
-# Run a single test file
 bun run test:visual -- tests/home.test.ts
-
-# Intentionally update the canonical Linux baselines
 bun run test:visual:update
 ```
 
-Do not update snapshots with a native `bunx playwright test` run. The committed baselines are generated by `Dockerfile.playwright` and are shared by local development and CI.
-
-## Deployment
-
-The site is deployed on Netlify. On each deploy:
-
-1. The `prebuild` script generates the auth manifest from Contentful
-2. `next build` statically generates all pages
-3. Netlify serves the static output with middleware support for password-protected routes
-
-### Environment Variables on Netlify
-
-All three variables from `.env.example` must be configured in the Netlify dashboard under Site settings > Environment variables. Generate a separate `PROJECT_AUTH_SECRET` for production (do not reuse the local dev value).
+Do not update snapshots from a native Playwright run. Review image diffs before intentionally updating canonical baselines.
 
 ## License
 

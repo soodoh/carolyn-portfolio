@@ -1,6 +1,6 @@
 import { documentToReactComponents } from "@contentful/rich-text-react-renderer";
 import { BLOCKS } from "@contentful/rich-text-types";
-import Link from "next/link";
+import { Link } from "@tanstack/react-router";
 import type { JSX } from "react";
 import LeftArrowIcon from "@/components/icons/left-arrow-icon";
 import ImageWrapper from "@/components/image-wrapper";
@@ -16,7 +16,7 @@ const ProjectInfo = ({
 		<div className="max-w-[1000px] px-(--spacing-padding) py-8 mx-auto flex flex-col items-center">
 			<Link
 				aria-label="Go back"
-				href="/projects"
+				to="/projects"
 				className="self-start transition-all duration-[250ms] ease-in-out bg-transparent border border-dark/50 text-dark inline-flex items-center no-underline px-4 py-2 text-[0.9rem] mb-12 hover:bg-dark/10 hover:border-dark [&_svg]:mr-3 [&_svg]:w-6 [&_svg]:fill-dark"
 			>
 				<LeftArrowIcon />
@@ -67,7 +67,7 @@ const ProjectInfo = ({
 			</div>
 			<Link
 				aria-label="View more work"
-				href="/projects"
+				to="/projects"
 				className="bg-dark text-light-text no-underline mx-auto inline px-4 py-2 text-[0.9rem] transition-all duration-[250ms] ease-in-out hover:shadow-[0_0.2rem_0.3rem_var(--color-dark)]"
 			>
 				View More Work
