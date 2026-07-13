@@ -1,10 +1,15 @@
 import type { Asset } from "contentful";
 import pAll from "p-all";
 import type { PhotosSkeleton } from "@/lib/contentful-types";
+import { contentfulFixture } from "@/tests/fixtures/contentful";
 import { client, formatImage } from "./contentful-utils";
 import type { Album, ImageType } from "./types";
 
 export default async function getAlbums(): Promise<Album[]> {
+	if (process.env.PLAYWRIGHT_TEST === "true") {
+		return contentfulFixture.albums;
+	}
+
 	const photoData = await client.getEntries<PhotosSkeleton>({
 		content_type: "photos",
 		order: ["fields.order"],

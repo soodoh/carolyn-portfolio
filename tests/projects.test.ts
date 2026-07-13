@@ -1,80 +1,60 @@
 import { expect, test } from "@playwright/test";
+import {
+	expectFullPageScreenshot,
+	prepareVisualPage,
+	selectFilter,
+} from "@/tests/visual-helpers";
 
-test.describe("Projects page", () => {
-	test("should match screenshot", async ({ page }) => {
-		// Make sure gifs don't animate and cause pixel mismatches
-		await page.route(/ctfassets.*gif/, async (request, response) => {
-			const staticImgUrl = response.url().replace(/fm=\w+/, "fm=jpg");
-			const staticResponse = await request.fetch({ url: staticImgUrl });
-			return staticResponse;
-		});
-		await page.goto("/projects");
-		await expect(page).toHaveScreenshot({
-			fullPage: true,
-			maxDiffPixelRatio: 0.01,
-		});
+const projectFilters = ["All", "Design", "Interactive", "Film"];
+
+test.describe("Projects visual states", () => {
+	test.beforeEach(async ({ page }) => {
+		await prepareVisualPage(page);
 	});
 
-	test("should have tab buttons that filter projects", async ({ page }) => {
-		await page.goto("/projects");
-		const tabButtons = page.getByRole("tab");
-		const thumbnails = page.getByRole("tabpanel").getByRole("link");
-		await expect(page.getByRole("tablist")).toBeVisible();
-		// Clicking "All" should be equal to the initial number (already selected)
-		const initialCount = await thumbnails.count();
-		await tabButtons.filter({ hasText: "all" }).click();
-		await expect(thumbnails).toHaveCount(initialCount);
-		// Other sections should all have less than "All" projects
-		const otherTabs = tabButtons.filter({ hasNotText: "all" });
-		const count = await otherTabs.count();
-		for (let i = 0; i < count; i += 1) {
-			await otherTabs.nth(i).click();
-			// Wait for thumbnail count to change since there is masonry animation
-			// And locator.count() does not retry
-			const prevCount = await thumbnails.count();
-			await page.waitForFunction(
-				(prevCount) =>
-					document.querySelectorAll("[role=tabpanel] a").length !== prevCount,
-				prevCount,
+	for (const filter of projectFilters) {
+		test(`matches the ${filter} filter`, async ({ page }) => {
+			await page.goto("/projects");
+			if (filter !== projectFilters[0]) {
+				await selectFilter(page, projectFilters[0], filter);
+			}
+			await expectFullPageScreenshot(
+				page,
+				`projects-filter-${filter.toLowerCase()}.png`,
 			);
-			const currentCount = await thumbnails.count();
-			expect(currentCount).toBeGreaterThan(0);
-			expect(currentCount).toBeLessThan(initialCount);
-		}
-	});
-
-	test("should open project page with no video", async ({ page }) => {
-		await page.goto("/projects");
-		await page.getByRole("link", { name: "the voice app" }).click();
-		await expect(page).toHaveURL("/projects/the-voice-app-agt-app");
-		await expect(page).toHaveScreenshot({
-			fullPage: true,
-			maxDiffPixelRatio: 0.01,
 		});
-	});
+	}
 
-	test("should open project page with video", async ({ page }) => {
-		await page.goto("/projects");
-		await page.getByRole("link", { name: "em/body" }).click();
-		await expect(page).toHaveURL("/projects/em-body");
-		await expect(page).toHaveScreenshot({
-			fullPage: true,
-			maxDiffPixelRatio: 0.01,
-		});
-	});
-
-	test("should open password protected project page", async ({ page }) => {
-		await page.goto("/projects");
-		await page.getByRole("link", { name: "magnolia app" }).click();
-		await expect(page).toHaveURL("/projects/magnolia-app");
+	test("matches a non-video project", async ({ page }) => {
+		await page.goto("/projects/the-voice-app-agt-app");
 		await expect(
-			page.getByRole("heading", { name: "password protected" }),
+			page.getByRole("heading", { name: "The Voice App / AGT App" }),
 		).toBeVisible();
-		await page.getByLabel("Password", { exact: true }).fill("cdux");
-		await page.getByRole("button", { name: "submit password" }).click();
-		await expect(page).toHaveScreenshot({
-			fullPage: true,
-			maxDiffPixelRatio: 0.01,
-		});
+		await expectFullPageScreenshot(page, "project-non-video.png");
+	});
+
+	test("matches a video project", async ({ page }) => {
+		await page.goto("/projects/em-body");
+		await expect(page.getByTitle("Video Player")).toBeVisible();
+		await expectFullPageScreenshot(page, "project-video.png");
+	});
+
+	test("matches a protected project before and after authentication", async ({
+		page,
+	}) => {
+		await page.goto("/projects/magnolia-app");
+		await expect(
+			page.getByRole("heading", { name: "Password Protected" }),
+		).toBeVisible();
+		await expectFullPageScreenshot(page, "project-auth-gate.png");
+
+		await page
+			.getByLabel("Password", { exact: true })
+			.fill("playwright-password");
+		await page.getByRole("button", { name: "Submit password" }).click();
+		await expect(
+			page.getByRole("heading", { name: "Magnolia App" }),
+		).toBeVisible();
+		await expectFullPageScreenshot(page, "project-authenticated.png");
 	});
 });

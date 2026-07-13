@@ -9,6 +9,7 @@ import {
 	getImageAssetFromRichTextNode,
 } from "@/lib/contentful-utils";
 import type { Project, ProjectInfo, ProjectType } from "@/lib/types";
+import { contentfulFixture } from "@/tests/fixtures/contentful";
 
 function getLink(rawLink: string | undefined): string | undefined {
 	if (!rawLink) {
@@ -26,6 +27,10 @@ function getLink(rawLink: string | undefined): string | undefined {
 }
 
 export async function getProjects(): Promise<Project[]> {
+	if (process.env.PLAYWRIGHT_TEST === "true") {
+		return contentfulFixture.projects;
+	}
+
 	const projectData = await client.getEntries<ProjectSkeleton>({
 		content_type: "project",
 		order: ["fields.order"],
@@ -50,6 +55,14 @@ export async function getProjects(): Promise<Project[]> {
 }
 
 export async function getProjectInfo(slug: string): Promise<ProjectInfo> {
+	if (process.env.PLAYWRIGHT_TEST === "true") {
+		const project = contentfulFixture.projectInfo[slug];
+		if (!project) {
+			throw new Error(`Missing project fixture for ${slug}`);
+		}
+		return project;
+	}
+
 	const projectQuery = await client.getEntries<ProjectSkeleton>({
 		content_type: "project",
 		"fields.slug[match]": slug,

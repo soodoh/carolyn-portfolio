@@ -2,6 +2,7 @@ import { writeFile } from "node:fs/promises";
 import { hash } from "bcryptjs";
 import type { EntryFieldTypes, EntrySkeletonType } from "contentful";
 import { createClient } from "contentful";
+import { contentfulFixture } from "@/tests/fixtures/contentful";
 
 type AuthProjectSkeleton = EntrySkeletonType<
 	{
@@ -14,27 +15,34 @@ type AuthProjectSkeleton = EntrySkeletonType<
 const BCRYPT_ROUNDS = 10;
 
 async function main(): Promise<void> {
-	const space = process.env.NEXT_PUBLIC_CONTENTFUL_SPACE_ID;
-	const accessToken = process.env.NEXT_PUBLIC_CONTENTFUL_ACCESS_TOKEN;
-	if (!space || !accessToken) {
-		throw new Error(
-			"Missing NEXT_PUBLIC_CONTENTFUL_SPACE_ID or NEXT_PUBLIC_CONTENTFUL_ACCESS_TOKEN",
-		);
-	}
-
-	const client = createClient({ space, accessToken });
-	const entries = await client.getEntries<AuthProjectSkeleton>({
-		content_type: "project",
-		select: ["fields.slug", "fields.password"],
-	});
-
 	const manifest: Record<string, string> = {};
-	for (const item of entries.items) {
-		const password = item.fields.password;
-		if (password) {
-			const slug = String(item.fields.slug);
-			const passwordHash = await hash(String(password), BCRYPT_ROUNDS);
-			manifest[slug] = passwordHash;
+	if (process.env.PLAYWRIGHT_TEST === "true") {
+		for (const project of Object.values(contentfulFixture.projectInfo)) {
+			if (project.password) {
+				manifest[project.slug] = await hash(project.password, BCRYPT_ROUNDS);
+			}
+		}
+	} else {
+		const space = process.env.NEXT_PUBLIC_CONTENTFUL_SPACE_ID;
+		const accessToken = process.env.NEXT_PUBLIC_CONTENTFUL_ACCESS_TOKEN;
+		if (!space || !accessToken) {
+			throw new Error(
+				"Missing NEXT_PUBLIC_CONTENTFUL_SPACE_ID or NEXT_PUBLIC_CONTENTFUL_ACCESS_TOKEN",
+			);
+		}
+
+		const client = createClient({ space, accessToken });
+		const entries = await client.getEntries<AuthProjectSkeleton>({
+			content_type: "project",
+			select: ["fields.slug", "fields.password"],
+		});
+
+		for (const item of entries.items) {
+			const password = item.fields.password;
+			if (password) {
+				const slug = String(item.fields.slug);
+				manifest[slug] = await hash(String(password), BCRYPT_ROUNDS);
+			}
 		}
 	}
 

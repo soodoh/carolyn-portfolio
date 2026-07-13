@@ -2,9 +2,14 @@ import { richTextFromMarkdown } from "@contentful/rich-text-from-markdown";
 import type { Asset } from "contentful";
 import type { AboutSkeleton } from "@/lib/contentful-types";
 import type { AboutData } from "@/lib/types";
+import { contentfulFixture } from "@/tests/fixtures/contentful";
 import { client, formatImage, formatUrl } from "./contentful-utils";
 
 export async function getAboutData(): Promise<AboutData> {
+	if (process.env.PLAYWRIGHT_TEST === "true") {
+		return contentfulFixture.about;
+	}
+
 	const aboutData = await client.getEntries<AboutSkeleton>({
 		content_type: "about",
 	});
@@ -24,6 +29,10 @@ export async function getAboutData(): Promise<AboutData> {
 }
 
 export async function getResumeUrl(): Promise<string> {
+	if (process.env.PLAYWRIGHT_TEST === "true") {
+		return contentfulFixture.resumeUrl;
+	}
+
 	const aboutData = await client.getEntries<AboutSkeleton>({
 		content_type: "about",
 	});

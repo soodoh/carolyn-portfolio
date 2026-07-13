@@ -1,7 +1,7 @@
-import sharp from "sharp";
+import sharp, { type Sharp } from "sharp";
 import type { ImagePlaceholder } from "./types";
 
-export async function readImage(baseUrl: string): Promise<sharp.Sharp> {
+export async function readImage(baseUrl: string): Promise<Sharp> {
 	const url = `${baseUrl}?w=100&q=50&fm=jpg`;
 	const response = await fetch(url);
 	const arrayBuffer = await response.arrayBuffer();

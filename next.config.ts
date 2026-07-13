@@ -2,6 +2,7 @@ import type { NextConfig } from "next";
 
 const config: NextConfig = {
 	reactStrictMode: true,
+	devIndicators: false,
 	productionBrowserSourceMaps: true,
 	images: {
 		loader: "custom",

@@ -5,8 +5,13 @@ import type {
 } from "@/lib/contentful-types";
 import { client, formatImage } from "@/lib/contentful-utils";
 import type { IconType, ImageType, SocialMedia } from "@/lib/types";
+import { contentfulFixture } from "@/tests/fixtures/contentful";
 
 export async function getBackgroundImage(): Promise<ImageType> {
+	if (process.env.PLAYWRIGHT_TEST === "true") {
+		return contentfulFixture.backgroundImage;
+	}
+
 	const aboutData = await client.getEntries<AboutSkeleton>({
 		content_type: "about",
 	});
@@ -17,6 +22,10 @@ export async function getBackgroundImage(): Promise<ImageType> {
 }
 
 export async function getSocialMedia(): Promise<SocialMedia[]> {
+	if (process.env.PLAYWRIGHT_TEST === "true") {
+		return contentfulFixture.socialMedia;
+	}
+
 	const socialMedia = await client.getEntries<SocialMediaSkeleton>({
 		content_type: "socialMedia",
 	});

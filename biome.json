@@ -7,7 +7,13 @@
 		"defaultBranch": "main"
 	},
 	"files": {
-		"includes": ["**", "!src/routeTree.gen.ts"]
+		"includes": [
+			"**",
+			"!src/routeTree.gen.ts",
+			"!tests/fixtures/contentful.json",
+			"!playwright-report",
+			"!test-results"
+		]
 	},
 	"assist": {
 		"actions": {
