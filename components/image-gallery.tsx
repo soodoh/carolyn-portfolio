@@ -100,11 +100,11 @@ const ImageGallery = ({
 						</Button>
 					</DialogClose>
 
-					<CarouselContent className="h-full">
+					<CarouselContent className="h-full ml-0">
 						{images.map((image) => (
 							<CarouselItem
 								key={`gallery-slide-${image.id}`}
-								className="h-full p-4 max-md:p-2"
+								className="h-full pl-0 flex justify-center"
 							>
 								<ModalImage image={image} />
 							</CarouselItem>
