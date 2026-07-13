@@ -9,8 +9,8 @@ import { useEffect } from "react";
 import css from "@/components/commonStyles/globals.css?url";
 import Footer from "@/components/footer";
 import Header from "@/components/header";
+import NotFound from "@/components/not-found";
 import { getRootData } from "@/lib/server-functions";
-import { containerClass } from "@/lib/utils";
 
 export const Route = createRootRoute({
 	loader: () => getRootData(),
@@ -22,8 +22,6 @@ export const Route = createRootRoute({
 				content: "width=device-width, initial-scale=1",
 			},
 			{ title: "CD Portfolio" },
-			{ name: "description", content: "" },
-			{ name: "robots", content: "index, follow" },
 			{
 				name: "google-site-verification",
 				content: "mZWTxlscBqxebm-E7NiMf8dG-G2qbqKKODr0BoCUobQ",
@@ -62,17 +60,6 @@ function RootComponent(): JSX.Element {
 			</main>
 			<Footer socialMedia={socialMedia} />
 		</>
-	);
-}
-
-function NotFound(): JSX.Element {
-	return (
-		<div className={containerClass}>
-			<div className="flex flex-col items-center justify-center pt-8">
-				<h1 className="m-0">404</h1>
-				<h2 className="m-0">Page not found</h2>
-			</div>
-		</div>
 	);
 }
 

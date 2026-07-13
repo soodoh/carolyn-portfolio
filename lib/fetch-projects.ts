@@ -4,10 +4,14 @@ import type { Asset as ContentfulAsset } from "contentful";
 import pAll from "p-all";
 import type { ProjectSkeleton } from "@/lib/contentful-types";
 import {
-	client,
 	formatImage,
+	getContentfulClient,
 	getImageAssetFromRichTextNode,
 } from "@/lib/contentful-utils";
+import {
+	buildProjectSlugQuery,
+	findProjectByExactSlug,
+} from "@/lib/project-slug";
 import type { Project, ProjectInfo, ProjectType } from "@/lib/types";
 import { contentfulFixture } from "@/tests/fixtures/contentful";
 
@@ -38,7 +42,7 @@ export async function getProjects(): Promise<Project[]> {
 		return contentfulFixture.projects;
 	}
 
-	const projectData = await client.getEntries<ProjectSkeleton>({
+	const projectData = await getContentfulClient().getEntries<ProjectSkeleton>({
 		content_type: "project",
 		order: ["fields.order"],
 	});
@@ -63,19 +67,16 @@ export async function getProjects(): Promise<Project[]> {
 
 export async function getProjectInfo(slug: string): Promise<ProjectInfo> {
 	if (process.env.PLAYWRIGHT_TEST === "true") {
-		const project = contentfulFixture.projectInfo[slug];
-		if (!project) {
+		if (!Object.hasOwn(contentfulFixture.projectInfo, slug)) {
 			throw new ProjectNotFoundError(slug);
 		}
-		return project;
+		return contentfulFixture.projectInfo[slug];
 	}
 
-	const projectQuery = await client.getEntries<ProjectSkeleton>({
-		content_type: "project",
-		"fields.slug[match]": slug,
-		include: 1,
-	});
-	const projectItem = projectQuery.items[0];
+	const projectQuery = await getContentfulClient().getEntries<ProjectSkeleton>(
+		buildProjectSlugQuery(slug),
+	);
+	const projectItem = findProjectByExactSlug(projectQuery.items, slug);
 	if (!projectItem) {
 		throw new ProjectNotFoundError(slug);
 	}

@@ -10,7 +10,28 @@ permissions:
   contents: read
 
 jobs:
+  validate:
+    runs-on: ubuntu-24.04-arm
+    timeout-minutes: 10
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.2.4
+
+      - name: Install dependencies
+        env:
+          PLAYWRIGHT_CONTAINER: "true"
+        run: bun install --frozen-lockfile
+
+      - name: Validate lint, types, build, and prerender output
+        run: bun run validate
+
   playwright:
+    needs: validate
     runs-on: ubuntu-24.04-arm
     timeout-minutes: 20
     steps:

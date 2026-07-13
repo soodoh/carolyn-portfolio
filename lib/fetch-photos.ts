@@ -2,7 +2,7 @@ import type { Asset } from "contentful";
 import pAll from "p-all";
 import type { PhotosSkeleton } from "@/lib/contentful-types";
 import { contentfulFixture } from "@/tests/fixtures/contentful";
-import { client, formatImage } from "./contentful-utils";
+import { formatImage, getContentfulClient } from "./contentful-utils";
 import type { Album, ImageType } from "./types";
 
 export default async function getAlbums(): Promise<Album[]> {
@@ -10,7 +10,7 @@ export default async function getAlbums(): Promise<Album[]> {
 		return contentfulFixture.albums;
 	}
 
-	const photoData = await client.getEntries<PhotosSkeleton>({
+	const photoData = await getContentfulClient().getEntries<PhotosSkeleton>({
 		content_type: "photos",
 		order: ["fields.order"],
 	});

@@ -3,7 +3,7 @@ import type {
 	AboutSkeleton,
 	SocialMediaSkeleton,
 } from "@/lib/contentful-types";
-import { client, formatImage } from "@/lib/contentful-utils";
+import { formatImage, getContentfulClient } from "@/lib/contentful-utils";
 import type { IconType, ImageType, SocialMedia } from "@/lib/types";
 import { contentfulFixture } from "@/tests/fixtures/contentful";
 
@@ -12,7 +12,7 @@ export async function getBackgroundImage(): Promise<ImageType> {
 		return contentfulFixture.backgroundImage;
 	}
 
-	const aboutData = await client.getEntries<AboutSkeleton>({
+	const aboutData = await getContentfulClient().getEntries<AboutSkeleton>({
 		content_type: "about",
 	});
 	const backgroundAsset = aboutData.items[0]?.fields.background as Asset;
@@ -26,9 +26,10 @@ export async function getSocialMedia(): Promise<SocialMedia[]> {
 		return contentfulFixture.socialMedia;
 	}
 
-	const socialMedia = await client.getEntries<SocialMediaSkeleton>({
-		content_type: "socialMedia",
-	});
+	const socialMedia =
+		await getContentfulClient().getEntries<SocialMediaSkeleton>({
+			content_type: "socialMedia",
+		});
 	return socialMedia.items.map((item) => ({
 		id: item.sys.id,
 		title: String(item.fields.title) as IconType,

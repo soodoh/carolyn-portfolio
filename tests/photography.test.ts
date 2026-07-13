@@ -16,6 +16,13 @@ test.describe("Photography visual states", () => {
 
 	for (const filter of photographyFilters) {
 		test(`matches the ${filter} filter`, async ({ page }) => {
+			const mobileFilter = page.getByRole("button", {
+				name: photographyFilters[0],
+				exact: true,
+			});
+			if (await mobileFilter.isVisible()) {
+				await expect(mobileFilter).toHaveCSS("padding", "4px 8px");
+			}
 			if (filter !== photographyFilters[0]) {
 				await selectFilter(page, photographyFilters[0], filter);
 			}

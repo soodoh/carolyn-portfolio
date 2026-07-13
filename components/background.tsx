@@ -14,6 +14,7 @@ const Background = ({
 }): JSX.Element => {
 	return (
 		<div
+			data-fixed-background={fixed || undefined}
 			className={cn("bg-dark h-screen absolute inset-0 -z-1", fixed && "fixed")}
 		>
 			<ImageWrapper

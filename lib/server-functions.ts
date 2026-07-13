@@ -11,8 +11,12 @@ import {
 } from "@/lib/fetch-projects";
 import { COOKIE_MAX_AGE, signToken, verifyToken } from "@/lib/password-utils";
 import manifest from "@/lib/project-auth-manifest.json";
+import {
+	validateProjectPasswordInput,
+	validateProjectSlug,
+} from "@/lib/server-function-inputs";
 
-const protectedProjects: Record<string, string> = manifest;
+const protectedProjects = new Map(Object.entries(manifest));
 
 export const getRootData = createServerFn().handler(async () => ({
 	socialMedia: await getSocialMedia(),
@@ -39,9 +43,9 @@ export const getProjectsPageData = createServerFn().handler(getProjects);
 export const getPhotographyPageData = createServerFn().handler(getAlbums);
 
 export const getProjectPageData = createServerFn({ method: "POST" })
-	.validator((slug: string) => slug)
+	.validator(validateProjectSlug)
 	.handler(async ({ data: slug }) => {
-		const hash = protectedProjects[slug];
+		const hash = protectedProjects.get(slug);
 		if (hash) {
 			const token = getCookie(`project-auth-${slug}`);
 			if (!token || !(await verifyToken(token, slug))) {
@@ -67,13 +71,13 @@ export const getProjectPageData = createServerFn({ method: "POST" })
 	});
 
 export const verifyProjectPassword = createServerFn({ method: "POST" })
-	.validator((data: { slug: string; password: string }) => data)
+	.validator(validateProjectPasswordInput)
 	.handler(async ({ data: { slug, password } }) => {
 		if (!password) {
 			return { error: "Please enter a password." };
 		}
 
-		const hash = protectedProjects[slug];
+		const hash = protectedProjects.get(slug);
 		if (!hash) {
 			return { error: "This project is not password protected." };
 		}

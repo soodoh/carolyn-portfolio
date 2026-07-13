@@ -3,10 +3,15 @@ import { createClient } from "contentful";
 import { getPlaceholder, readImage } from "@/lib/image-utils";
 import type { Asset, ImageType } from "@/lib/types";
 
-export const client = createClient({
-	space: process.env.NEXT_PUBLIC_CONTENTFUL_SPACE_ID ?? "",
-	accessToken: process.env.NEXT_PUBLIC_CONTENTFUL_ACCESS_TOKEN ?? "",
-});
+let contentfulClient: ReturnType<typeof createClient> | undefined;
+
+export function getContentfulClient(): ReturnType<typeof createClient> {
+	contentfulClient ??= createClient({
+		space: process.env.NEXT_PUBLIC_CONTENTFUL_SPACE_ID ?? "",
+		accessToken: process.env.NEXT_PUBLIC_CONTENTFUL_ACCESS_TOKEN ?? "",
+	});
+	return contentfulClient;
+}
 
 export function formatUrl(baseUrl: string): string {
 	return `https:${baseUrl}`;

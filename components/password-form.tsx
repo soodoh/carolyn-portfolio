@@ -1,4 +1,4 @@
-import { Link } from "@tanstack/react-router";
+import { Link, useRouter } from "@tanstack/react-router";
 import type { FormEvent, JSX } from "react";
 import { useState, useTransition } from "react";
 import LeftArrowIcon from "@/components/icons/left-arrow-icon";
@@ -7,6 +7,7 @@ import { verifyProjectPassword } from "@/lib/server-functions";
 import { cn } from "@/lib/utils";
 
 const PasswordForm = ({ slug }: { slug: string }): JSX.Element => {
+	const router = useRouter();
 	const [error, setError] = useState<string>();
 	const [isPending, startTransition] = useTransition();
 
@@ -23,7 +24,7 @@ const PasswordForm = ({ slug }: { slug: string }): JSX.Element => {
 				return;
 			}
 			setError(undefined);
-			window.location.reload();
+			await router.invalidate();
 		});
 	};
 

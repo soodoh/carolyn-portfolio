@@ -3,14 +3,18 @@ import type { Asset } from "contentful";
 import type { AboutSkeleton } from "@/lib/contentful-types";
 import type { AboutData } from "@/lib/types";
 import { contentfulFixture } from "@/tests/fixtures/contentful";
-import { client, formatImage, formatUrl } from "./contentful-utils";
+import {
+	formatImage,
+	formatUrl,
+	getContentfulClient,
+} from "./contentful-utils";
 
 export async function getAboutData(): Promise<AboutData> {
 	if (process.env.PLAYWRIGHT_TEST === "true") {
 		return contentfulFixture.about;
 	}
 
-	const aboutData = await client.getEntries<AboutSkeleton>({
+	const aboutData = await getContentfulClient().getEntries<AboutSkeleton>({
 		content_type: "about",
 	});
 	const aboutEntry = aboutData.items[0];
@@ -33,7 +37,7 @@ export async function getResumeUrl(): Promise<string> {
 		return contentfulFixture.resumeUrl;
 	}
 
-	const aboutData = await client.getEntries<AboutSkeleton>({
+	const aboutData = await getContentfulClient().getEntries<AboutSkeleton>({
 		content_type: "about",
 	});
 	const aboutEntry = aboutData.items[0];

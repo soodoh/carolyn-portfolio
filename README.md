@@ -12,7 +12,8 @@ Portfolio website for a Film Editor / Graphic Designer / UX Engineer. Built with
 - **Styling:** Tailwind CSS v4
 - **UI Primitives:** shadcn/ui + Radix UI
 - **CMS:** Contentful
-- **Package Manager:** Bun
+- **Package Manager / Build Runner:** Bun
+- **Hosting:** Netlify through its official TanStack Start Vite plugin
 - **Testing:** Playwright visual regression
 
 ## Getting Started
@@ -51,27 +52,30 @@ The predev step generates `lib/project-auth-manifest.json` from Contentful, then
 
 ```bash
 bun run build
-bun start
 ```
 
-Nitro emits the production server to `.output/`. The auth manifest is regenerated before every development and production build.
+The prebuild step refreshes the auth manifest, TanStack Start prerenders public pages into `dist/client/`, and the official Netlify plugin emits the dynamic server handler at `.netlify/v1/functions/server.mjs`. Netlify runs that handler for protected projects, `/resume`, and other dynamic requests. Add all three environment variables to the Netlify site configuration before deploying.
+
+`bun dev` provides the supported local workflow and includes Netlify platform emulation from the Vite plugin. There is no standalone Node production-server command in this repository; Bun remains the local package manager and build runner, while Netlify manages the deployed function runtime.
 
 ## Available Scripts
 
-| Command            | Description                                      |
-| ------------------ | ------------------------------------------------ |
-| `bun dev`          | Start Vite dev server after generating auth data |
-| `bun run build`    | Create the TanStack Start production build       |
-| `bun start`        | Run the production server                        |
-| `bun run lint`     | Run Biome checks                                 |
-| `bun run lint:fix` | Apply safe Biome fixes                           |
-| `bun run test:visual` | Run Playwright in the canonical container     |
+| Command                 | Description                                                   |
+| ----------------------- | ------------------------------------------------------------- |
+| `bun dev`               | Start port 3000 with Netlify emulation after generating auth data |
+| `bun run build`         | Prerender public pages and emit the Netlify deployment bundle |
+| `bun run typecheck`     | Generate fixture build artifacts, then run TypeScript         |
+| `bun run validate`      | Run lint, unit tests, type checking, build, and output checks  |
+| `bun run lint`          | Run Biome checks                                               |
+| `bun run test:unit`     | Run focused Bun unit tests                                    |
+| `bun run lint:fix`      | Apply safe Biome fixes                                         |
+| `bun run test:visual`   | Run Playwright in the canonical ARM64 container               |
 
 ## Architecture
 
 ### Routes and data
 
-TanStack Start file routes live in `src/routes/`. Route loaders call server functions from `lib/server-functions.ts`; Contentful credentials, project passwords, and cookie validation remain server-only.
+TanStack Start file routes live in `src/routes/`. Route loaders call server functions from `lib/server-functions.ts`; Contentful credentials, project passwords, and cookie validation remain server-only. Builds prerender the public routes and public project slugs from Contentful. Protected project slugs and the external `/resume` redirect are explicitly excluded from prerendering and remain Netlify function requests.
 
 | Route                     | Description                                      |
 | ------------------------- | ------------------------------------------------ |
@@ -79,7 +83,6 @@ TanStack Start file routes live in `src/routes/`. Route loaders call server func
 | `/about`                  | Bio and profile picture                          |
 | `/projects`               | Filterable masonry grid                          |
 | `/projects/$slug`         | Project detail or in-place password gate         |
-| `/projects/$slug/auth`    | Direct protected-project password form           |
 | `/photography`            | Photo albums and image gallery                   |
 | `/resume`                 | Permanent redirect to the Contentful PDF         |
 
@@ -105,7 +108,7 @@ bun run test:visual -- tests/home.test.ts
 bun run test:visual:update
 ```
 
-Do not update snapshots from a native Playwright run. Review image diffs before intentionally updating canonical baselines.
+Do not update snapshots from a native Playwright run. Review image diffs before intentionally updating canonical baselines. CI runs `bun run validate` before the canonical visual suite so ignored generated files are always recreated from a clean checkout.
 
 ## License
 

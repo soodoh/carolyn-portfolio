@@ -1,13 +1,22 @@
 import { Image, type ImageProps } from "@unpic/react/base";
-import { type CSSProperties, type JSX, useState } from "react";
+import {
+	type CSSProperties,
+	type JSX,
+	type Ref,
+	useEffect,
+	useRef,
+	useState,
+} from "react";
 import type { ContentfulOperations } from "unpic/providers/contentful";
 import type { ImageType } from "@/lib/types";
 
-type TransformerOptions = {
-	sourceWidth: number;
-};
+const CONTENTFUL_MAX_WIDTH = 4000;
+const IMAGE_BREAKPOINTS = [
+	32, 48, 64, 96, 128, 256, 384, 640, 750, 828, 1080, 1200, 1920, 2048, 3840,
+];
 
-type StyledImageProps = ImageProps<ContentfulOperations, TransformerOptions> & {
+type StyledImageProps = ImageProps<ContentfulOperations, undefined> & {
+	ref?: Ref<HTMLImageElement>;
 	style?: CSSProperties;
 };
 
@@ -15,24 +24,32 @@ function StyledImage(props: StyledImageProps): JSX.Element {
 	return <Image {...props} />;
 }
 
-function transformContentfulImage(
+export function transformContentfulImage(
 	src: string | URL,
 	operations: ContentfulOperations,
-	options?: TransformerOptions,
 ): string {
 	const url = src.toString();
-	const width =
-		operations.width === options?.sourceWidth ? 3840 : operations.width;
 	const searchParams = new URLSearchParams();
-	if (width) {
-		searchParams.set("w", String(width));
+	const requestedWidth =
+		typeof operations.width === "number"
+			? operations.width
+			: Number.parseInt(operations.width ?? "", 10);
+	if (Number.isFinite(requestedWidth)) {
+		searchParams.set(
+			"w",
+			String(Math.min(requestedWidth, CONTENTFUL_MAX_WIDTH)),
+		);
 	}
 	if (operations.quality) {
 		searchParams.set("q", String(operations.quality));
 	}
 	searchParams.set("fm", String(operations.format ?? "webp"));
 	if (url.startsWith("/")) {
-		return `${url}?${searchParams.toString()}`;
+		const transformedUrl = new URL(url, "http://localhost");
+		for (const [name, value] of searchParams) {
+			transformedUrl.searchParams.set(name, value);
+		}
+		return `${transformedUrl.pathname}${transformedUrl.search}${transformedUrl.hash}`;
 	}
 	const transformedUrl = new URL(url);
 	for (const [name, value] of searchParams) {
@@ -68,27 +85,32 @@ const ImageWrapper = ({
 		"280px",
 	].join(", "),
 }: Props): JSX.Element => {
-	const [loaded, setLoaded] = useState(false);
+	const imageRef = useRef<HTMLImageElement>(null);
+	const [loadedUrl, setLoadedUrl] = useState<string>();
+	const loaded = loadedUrl === image.url;
+
+	useEffect(() => {
+		const element = imageRef.current;
+		if (element?.complete && element.naturalWidth > 0) {
+			setLoadedUrl(image.url);
+		}
+	}, [image.url]);
 
 	return (
 		<StyledImage
+			ref={imageRef}
 			className={className ?? "w-full h-auto object-contain"}
-			data-nimg="1"
-			priority={priority || image.url.startsWith("/test-assets/")}
+			priority={priority}
 			layout="fixed"
 			unstyled
 			width={image.width}
 			height={image.height}
 			alt={image.description}
-			breakpoints={[
-				32, 48, 64, 96, 128, 256, 384, 640, 750, 828, 1080, 1200, 1920, 2048,
-				3840,
-			]}
+			breakpoints={IMAGE_BREAKPOINTS}
 			sizes={sizes}
 			src={image.url}
 			transformer={transformContentfulImage}
 			operations={{ quality, format: "webp" }}
-			options={{ sourceWidth: image.width }}
 			style={{
 				color: "transparent",
 				backgroundImage: loaded ? undefined : `url(${image.placeholder})`,
@@ -97,7 +119,7 @@ const ImageWrapper = ({
 				backgroundSize: loaded ? undefined : placeholderFit,
 			}}
 			onLoad={() => {
-				setLoaded(true);
+				setLoadedUrl(image.url);
 				onLoad?.();
 			}}
 		/>

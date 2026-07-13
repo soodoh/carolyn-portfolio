@@ -17,6 +17,15 @@ test.describe("Static route visual states", () => {
 	test("matches the entire not-found page", async ({ page }) => {
 		const response = await page.goto("/route-that-does-not-exist");
 		expect(response?.status()).toBe(404);
+		await expect(page).toHaveTitle("CD: Page Not Found");
+		await expect(page.locator('meta[name="description"]')).toHaveAttribute(
+			"content",
+			"The page you are looking for does not exist.",
+		);
+		await expect(page.locator('meta[name="robots"]')).toHaveAttribute(
+			"content",
+			"noindex, nofollow",
+		);
 		await expectFullPageScreenshot(page, "not-found-full-page.png");
 	});
 

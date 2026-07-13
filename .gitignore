@@ -8,9 +8,11 @@ bun-debug.log*
 /coverage
 /playwright-report/
 /test-results/
+/.pi-subagents/
 
 # TanStack Start
 /.output/
+/.tanstack/
 /src/routeTree.gen.ts
 
 # production

@@ -15,6 +15,13 @@ test.describe("Projects visual states", () => {
 	for (const filter of projectFilters) {
 		test(`matches the ${filter} filter`, async ({ page }) => {
 			await page.goto("/projects");
+			const mobileFilter = page.getByRole("button", {
+				name: projectFilters[0],
+				exact: true,
+			});
+			if (await mobileFilter.isVisible()) {
+				await expect(mobileFilter).toHaveCSS("padding", "4px 8px");
+			}
 			if (filter !== projectFilters[0]) {
 				await selectFilter(page, projectFilters[0], filter);
 			}
