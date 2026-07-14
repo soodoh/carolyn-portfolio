@@ -1,4 +1,6 @@
 const TOKEN_TTL_SECONDS = 7 * 24 * 60 * 60; // 7 days
+const TOKEN_CLOCK_SKEW_SECONDS = 5 * 60; // Allow up to 5 minutes of clock skew.
+const CANONICAL_TIMESTAMP_PATTERN = /^(?:0|[1-9]\d*)$/;
 
 function getSecret(): string {
 	const secret = process.env.PROJECT_AUTH_SECRET;
@@ -59,12 +61,15 @@ export async function verifyToken(
 		return false;
 	}
 
-	const ts = Number.parseInt(timestamp, 10);
-	if (Number.isNaN(ts)) {
+	if (!CANONICAL_TIMESTAMP_PATTERN.test(timestamp)) {
+		return false;
+	}
+	const ts = Number(timestamp);
+	if (!Number.isSafeInteger(ts)) {
 		return false;
 	}
 	const now = Math.floor(Date.now() / 1000);
-	if (now - ts > TOKEN_TTL_SECONDS) {
+	if (now - ts > TOKEN_TTL_SECONDS || ts - now > TOKEN_CLOCK_SKEW_SECONDS) {
 		return false;
 	}
 

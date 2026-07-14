@@ -44,10 +44,21 @@ test.describe("TanStack Start migration behavior", () => {
 
 		await page.goto("/projects/magnolia-app");
 		await page.locator("html[data-hydrated='true']").waitFor();
+		const passwordInput = page.getByLabel("Password", { exact: true });
 		await page.getByRole("button", { name: "Submit password" }).click();
 		await expect(page.getByText("Please enter a password.")).toBeVisible();
 
-		await page.getByLabel("Password", { exact: true }).fill("incorrect");
+		await passwordInput.fill("é".repeat(37));
+		await page.getByRole("button", { name: "Submit password" }).click();
+		const passwordLengthError = page.getByRole("alert");
+		await expect(passwordLengthError).toHaveText("Password is too long.");
+		await expect(passwordInput).toHaveAttribute("aria-invalid", "true");
+		await expect(passwordInput).toHaveAttribute(
+			"aria-describedby",
+			"project-password-error",
+		);
+
+		await passwordInput.fill("incorrect");
 		await page.getByRole("button", { name: "Submit password" }).click();
 		await expect(
 			page.getByText("The password you entered is incorrect."),
@@ -98,10 +109,13 @@ test.describe("TanStack Start migration behavior", () => {
 		const partialProtectedSlug = await request.get("/projects/magnolia");
 		expect(partialProtectedSlug.status()).toBe(404);
 
-		for (const slug of ["toString", "constructor", "__proto__"]) {
-			const prototypeKey = await request.get(`/projects/${slug}`);
-			expect(prototypeKey.status()).toBe(404);
+		for (const slug of ["toString", "constructor", "__proto__", "bad_slug"]) {
+			const malformedProject = await request.get(`/projects/${slug}`);
+			expect(malformedProject.status()).toBe(404);
 		}
+
+		const overlongProject = await request.get(`/projects/${"a".repeat(101)}`);
+		expect(overlongProject.status()).toBe(404);
 
 		const missingProject = await request.get("/projects/not-a-real-project");
 		expect(missingProject.status()).toBe(404);

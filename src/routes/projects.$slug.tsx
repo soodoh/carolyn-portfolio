@@ -7,7 +7,10 @@ import ProjectInfoPage from "@/components/project-info-page";
 import { getProjectInfo, ProjectNotFoundError } from "@/lib/fetch-projects";
 import { verifyToken } from "@/lib/password-utils";
 import manifest from "@/lib/project-auth-manifest.json";
-import { validateProjectSlug } from "@/lib/server-function-inputs";
+import {
+	isValidProjectSlug,
+	validateProjectSlug,
+} from "@/lib/server-function-inputs";
 
 const protectedProjects = new Map(Object.entries(manifest));
 
@@ -41,6 +44,9 @@ const getProjectPageData = createServerFn({ method: "POST" })
 
 export const Route = createFileRoute("/projects/$slug")({
 	loader: async ({ params: { slug } }) => {
+		if (!isValidProjectSlug(slug)) {
+			throw notFound();
+		}
 		const data = await getProjectPageData({ data: slug });
 		if ("notFound" in data) {
 			throw notFound();

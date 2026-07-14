@@ -3,8 +3,11 @@ import type { FormEvent, JSX } from "react";
 import { useState, useTransition } from "react";
 import LeftArrowIcon from "@/components/icons/left-arrow-icon";
 import { Button } from "@/components/ui/button";
+import { isProjectPasswordWithinLimit } from "@/lib/server-function-inputs";
 import { cn } from "@/lib/utils";
 import { verifyProjectPassword } from "@/lib/verify-project-password";
+
+const PASSWORD_ERROR_ID = "project-password-error";
 
 const PasswordForm = ({ slug }: { slug: string }): JSX.Element => {
 	const router = useRouter();
@@ -15,9 +18,14 @@ const PasswordForm = ({ slug }: { slug: string }): JSX.Element => {
 		event.preventDefault();
 		const formData = new FormData(event.currentTarget);
 		const password = formData.get("password");
+		const passwordValue = typeof password === "string" ? password : "";
+		if (!isProjectPasswordWithinLimit(passwordValue)) {
+			setError("Password is too long.");
+			return;
+		}
 		startTransition(async () => {
 			const result = await verifyProjectPassword({
-				data: { slug, password: typeof password === "string" ? password : "" },
+				data: { slug, password: passwordValue },
 			});
 			if (result.error) {
 				setError(result.error);
@@ -51,6 +59,8 @@ const PasswordForm = ({ slug }: { slug: string }): JSX.Element => {
 				>
 					<input
 						aria-label="Password"
+						aria-describedby={error ? PASSWORD_ERROR_ID : undefined}
+						aria-invalid={Boolean(error)}
 						name="password"
 						type="password"
 						className={cn(
@@ -59,7 +69,13 @@ const PasswordForm = ({ slug }: { slug: string }): JSX.Element => {
 						)}
 					/>
 					{error ? (
-						<span className="mt-2 text-xs text-error">{error}</span>
+						<span
+							id={PASSWORD_ERROR_ID}
+							role="alert"
+							className="mt-2 text-xs text-error"
+						>
+							{error}
+						</span>
 					) : null}
 					<Button
 						variant="outline"
