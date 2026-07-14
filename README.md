@@ -75,7 +75,7 @@ The prebuild step refreshes the auth manifest, TanStack Start prerenders public 
 
 ### Routes and data
 
-TanStack Start file routes live in `src/routes/`. Route loaders call server functions from `lib/server-functions.ts`; Contentful credentials, project passwords, and cookie validation remain server-only. Builds prerender the public routes and public project slugs from Contentful. Protected project slugs and the external `/resume` redirect are explicitly excluded from prerendering and remain Netlify function requests.
+TanStack Start file routes live in `src/routes/`. Each route owns its data-loading server function, while password verification uses the focused `lib/verify-project-password.ts` server function. Contentful credentials, project passwords, and cookie validation remain server-only. Builds prerender the public routes and public project slugs from Contentful. Protected project slugs and the external `/resume` redirect are explicitly excluded from prerendering and remain Netlify function requests.
 
 | Route                     | Description                                      |
 | ------------------------- | ------------------------------------------------ |

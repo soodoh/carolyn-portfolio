@@ -1,9 +1,19 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { createServerFn } from "@tanstack/react-start";
 import type { JSX } from "react";
 import Background from "@/components/background";
 import HomePageContent from "@/components/home-page-content";
 import Projects from "@/components/projects";
-import { getHomePageData } from "@/lib/server-functions";
+import { getBackgroundImage } from "@/lib/fetch-home-data";
+import { getProjects } from "@/lib/fetch-projects";
+
+const getHomePageData = createServerFn().handler(async () => {
+	const [backgroundImage, projects] = await Promise.all([
+		getBackgroundImage(),
+		getProjects(),
+	]);
+	return { backgroundImage, projects };
+});
 
 export const Route = createFileRoute("/")({
 	loader: () => getHomePageData(),

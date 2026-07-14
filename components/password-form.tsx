@@ -3,8 +3,8 @@ import type { FormEvent, JSX } from "react";
 import { useState, useTransition } from "react";
 import LeftArrowIcon from "@/components/icons/left-arrow-icon";
 import { Button } from "@/components/ui/button";
-import { verifyProjectPassword } from "@/lib/server-functions";
 import { cn } from "@/lib/utils";
+import { verifyProjectPassword } from "@/lib/verify-project-password";
 
 const PasswordForm = ({ slug }: { slug: string }): JSX.Element => {
 	const router = useRouter();

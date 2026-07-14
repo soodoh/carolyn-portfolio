@@ -11,7 +11,9 @@ test.describe("Static route visual states", () => {
 
 	test("matches the entire About page", async ({ page }) => {
 		await page.goto("/about");
-		await expectFullPageScreenshot(page, "about-full-page.png");
+		await expectFullPageScreenshot(page, "about-full-page.png", {
+			fixedBackground: page.locator("[data-fixed-background]"),
+		});
 	});
 
 	test("matches the entire not-found page", async ({ page }) => {

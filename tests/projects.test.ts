@@ -57,13 +57,17 @@ test.describe("Projects visual states", () => {
 		await expect(
 			page.getByRole("heading", { name: "The Voice App / AGT App" }),
 		).toBeVisible();
-		await expectFullPageScreenshot(page, "project-non-video.png");
+		await expectFullPageScreenshot(page, "project-non-video.png", {
+			capture: "page",
+		});
 	});
 
 	test("matches a video project", async ({ page }) => {
 		await page.goto("/projects/em-body");
 		await expect(page.getByTitle("Video Player")).toBeVisible();
-		await expectFullPageScreenshot(page, "project-video.png");
+		await expectFullPageScreenshot(page, "project-video.png", {
+			capture: "page",
+		});
 	});
 
 	test("matches a protected project before and after authentication", async ({
@@ -73,7 +77,9 @@ test.describe("Projects visual states", () => {
 		await expect(
 			page.getByRole("heading", { name: "Password Protected" }),
 		).toBeVisible();
-		await expectFullPageScreenshot(page, "project-auth-gate.png");
+		await expectFullPageScreenshot(page, "project-auth-gate.png", {
+			capture: "page",
+		});
 
 		await page
 			.getByLabel("Password", { exact: true })
@@ -82,6 +88,8 @@ test.describe("Projects visual states", () => {
 		await expect(
 			page.getByRole("heading", { name: "Magnolia App" }),
 		).toBeVisible();
-		await expectFullPageScreenshot(page, "project-authenticated.png");
+		await expectFullPageScreenshot(page, "project-authenticated.png", {
+			capture: "page",
+		});
 	});
 });

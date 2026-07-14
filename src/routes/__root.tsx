@@ -4,13 +4,18 @@ import {
 	Outlet,
 	Scripts,
 } from "@tanstack/react-router";
+import { createServerFn } from "@tanstack/react-start";
 import type { JSX, ReactNode } from "react";
 import { useEffect } from "react";
 import css from "@/components/commonStyles/globals.css?url";
 import Footer from "@/components/footer";
 import Header from "@/components/header";
 import NotFound from "@/components/not-found";
-import { getRootData } from "@/lib/server-functions";
+import { getSocialMedia } from "@/lib/fetch-home-data";
+
+const getRootData = createServerFn().handler(async () => ({
+	socialMedia: await getSocialMedia(),
+}));
 
 export const Route = createRootRoute({
 	loader: () => getRootData(),

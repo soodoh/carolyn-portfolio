@@ -1,10 +1,20 @@
 import { documentToReactComponents } from "@contentful/rich-text-react-renderer";
 import { createFileRoute } from "@tanstack/react-router";
+import { createServerFn } from "@tanstack/react-start";
 import type { JSX } from "react";
 import Background from "@/components/background";
 import ImageWrapper from "@/components/image-wrapper";
-import { getAboutPageData } from "@/lib/server-functions";
+import { getAboutData } from "@/lib/fetch-about-data";
+import { getBackgroundImage } from "@/lib/fetch-home-data";
 import { containerClass } from "@/lib/utils";
+
+const getAboutPageData = createServerFn().handler(async () => {
+	const [backgroundImage, aboutData] = await Promise.all([
+		getBackgroundImage(),
+		getAboutData(),
+	]);
+	return { backgroundImage, aboutData };
+});
 
 export const Route = createFileRoute("/about")({
 	loader: () => getAboutPageData(),

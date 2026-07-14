@@ -1,4 +1,4 @@
-import { expect, type Page } from "@playwright/test";
+import { expect, type Locator, type Page } from "@playwright/test";
 
 export async function prepareVisualPage(page: Page): Promise<void> {
 	await page.route(/ctfassets.*\.gif/i, async (route) => {
@@ -81,28 +81,31 @@ export async function settleVisualPage(page: Page): Promise<void> {
 	await page.waitForTimeout(1_000);
 }
 
+type FullPageScreenshotOptions = {
+	capture?: "body" | "page";
+	fixedBackground?: Locator;
+};
+
 export async function expectFullPageScreenshot(
 	page: Page,
 	name: string,
+	options: FullPageScreenshotOptions = {},
 ): Promise<void> {
 	await settleVisualPage(page);
-	const fixedBackground = page.locator("[data-fixed-background]");
-	if ((await fixedBackground.count()) > 0) {
+	if (options.fixedBackground) {
 		const pageHeight = await page.evaluate(
 			() => document.documentElement.scrollHeight,
 		);
-		await page.addStyleTag({
-			content: `[data-fixed-background] { position: absolute !important; height: ${pageHeight}px !important; }`,
-		});
+		await options.fixedBackground.evaluate((element, height) => {
+			element.style.position = "absolute";
+			element.style.height = `${height}px`;
+		}, pageHeight);
 	}
-	const useElementCapture =
-		(await page.locator(".masonry-grid, [data-fixed-background]").count()) >
-			0 || (await page.evaluate(() => window.location.pathname === "/"));
-	if (useElementCapture) {
-		await expect(page.locator("body")).toHaveScreenshot(name);
+	if (options.capture === "page") {
+		await expect(page).toHaveScreenshot(name, { fullPage: true });
 		return;
 	}
-	await expect(page).toHaveScreenshot(name, { fullPage: true });
+	await expect(page.locator("body")).toHaveScreenshot(name);
 }
 
 export async function selectFilter(

@@ -1,8 +1,11 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { createServerFn } from "@tanstack/react-start";
 import type { JSX } from "react";
 import PhotographyContent from "@/components/photography-content";
-import { getPhotographyPageData } from "@/lib/server-functions";
+import getAlbums from "@/lib/fetch-photos";
 import { containerClass } from "@/lib/utils";
+
+const getPhotographyPageData = createServerFn().handler(getAlbums);
 
 export const Route = createFileRoute("/photography")({
 	loader: () => getPhotographyPageData(),

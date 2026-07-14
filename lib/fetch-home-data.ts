@@ -4,12 +4,12 @@ import type {
 	SocialMediaSkeleton,
 } from "@/lib/contentful-types";
 import { formatImage, getContentfulClient } from "@/lib/contentful-utils";
+import { loadContentfulFixture } from "@/lib/load-contentful-fixture";
 import type { IconType, ImageType, SocialMedia } from "@/lib/types";
-import { contentfulFixture } from "@/tests/fixtures/contentful";
 
 export async function getBackgroundImage(): Promise<ImageType> {
 	if (process.env.PLAYWRIGHT_TEST === "true") {
-		return contentfulFixture.backgroundImage;
+		return (await loadContentfulFixture()).backgroundImage;
 	}
 
 	const aboutData = await getContentfulClient().getEntries<AboutSkeleton>({
@@ -23,7 +23,7 @@ export async function getBackgroundImage(): Promise<ImageType> {
 
 export async function getSocialMedia(): Promise<SocialMedia[]> {
 	if (process.env.PLAYWRIGHT_TEST === "true") {
-		return contentfulFixture.socialMedia;
+		return (await loadContentfulFixture()).socialMedia;
 	}
 
 	const socialMedia =

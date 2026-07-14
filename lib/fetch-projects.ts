@@ -8,12 +8,8 @@ import {
 	getContentfulClient,
 	getImageAssetFromRichTextNode,
 } from "@/lib/contentful-utils";
-import {
-	buildProjectSlugQuery,
-	findProjectByExactSlug,
-} from "@/lib/project-slug";
+import { loadContentfulFixture } from "@/lib/load-contentful-fixture";
 import type { Project, ProjectInfo, ProjectType } from "@/lib/types";
-import { contentfulFixture } from "@/tests/fixtures/contentful";
 
 export class ProjectNotFoundError extends Error {
 	constructor(slug: string) {
@@ -39,7 +35,7 @@ function getLink(rawLink: string | undefined): string | undefined {
 
 export async function getProjects(): Promise<Project[]> {
 	if (process.env.PLAYWRIGHT_TEST === "true") {
-		return contentfulFixture.projects;
+		return (await loadContentfulFixture()).projects;
 	}
 
 	const projectData = await getContentfulClient().getEntries<ProjectSkeleton>({
@@ -67,16 +63,21 @@ export async function getProjects(): Promise<Project[]> {
 
 export async function getProjectInfo(slug: string): Promise<ProjectInfo> {
 	if (process.env.PLAYWRIGHT_TEST === "true") {
-		if (!Object.hasOwn(contentfulFixture.projectInfo, slug)) {
+		const { projectInfo } = await loadContentfulFixture();
+		if (!Object.hasOwn(projectInfo, slug)) {
 			throw new ProjectNotFoundError(slug);
 		}
-		return contentfulFixture.projectInfo[slug];
+		return projectInfo[slug];
 	}
 
-	const projectQuery = await getContentfulClient().getEntries<ProjectSkeleton>(
-		buildProjectSlugQuery(slug),
+	const projectQuery = await getContentfulClient().getEntries<ProjectSkeleton>({
+		content_type: "project",
+		"fields.slug": slug,
+		include: 1,
+	});
+	const projectItem = projectQuery.items.find(
+		(item) => String(item.fields.slug) === slug,
 	);
-	const projectItem = findProjectByExactSlug(projectQuery.items, slug);
 	if (!projectItem) {
 		throw new ProjectNotFoundError(slug);
 	}
