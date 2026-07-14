@@ -27,6 +27,7 @@ export default defineConfig({
 		},
 		{
 			name: "mobile",
+			grepInvert: /@desktop-only/,
 			use: {
 				viewport: { width: 390, height: 844 },
 				isMobile: true,

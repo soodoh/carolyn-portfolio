@@ -3,6 +3,7 @@ import {
 	expectFullPageScreenshot,
 	prepareVisualPage,
 	selectFilter,
+	settleVisualPage,
 } from "@/tests/visual-helpers";
 
 const projectFilters = ["All", "Design", "Interactive", "Film"];
@@ -31,6 +32,25 @@ test.describe("Projects visual states", () => {
 			);
 		});
 	}
+
+	test("matches a hovered project thumbnail", { tag: "@desktop-only" }, async ({
+		page,
+	}) => {
+		await page.goto("/projects");
+		await settleVisualPage(page);
+
+		const thumbnail = page
+			.getByRole("tabpanel")
+			.getByRole("link", { name: /Magnolia App/ });
+		await thumbnail.hover();
+		await expect(
+			thumbnail.getByRole("heading", { name: "Magnolia App" }),
+		).toBeVisible();
+		await expect(
+			thumbnail.getByRole("heading", { name: "Multi-Platform App" }),
+		).toBeVisible();
+		await expect(thumbnail).toHaveScreenshot("project-thumbnail-hover.png");
+	});
 
 	test("matches a non-video project", async ({ page }) => {
 		await page.goto("/projects/the-voice-app-agt-app");
