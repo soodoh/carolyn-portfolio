@@ -9,7 +9,8 @@
 	--color-dark: #494f5c;
 	--color-dark-rgb: 73, 79, 92;
 	--color-light: #cec0a8;
-	--color-error: #fd9f92;
+	--color-light-on-white: #71634f;
+	--color-error: #ffb5ad;
 
 	--font-body: "Karla", sans-serif;
 	--font-header: "Old Standard TT", serif;
@@ -75,7 +76,7 @@
 	}
 
 	.rich-text-container a {
-		color: var(--color-light);
+		color: var(--color-light-on-white);
 	}
 
 	.rich-text-container > p {

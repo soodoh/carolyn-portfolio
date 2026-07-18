@@ -21,7 +21,7 @@ export async function settleVisualPage(page: Page): Promise<void> {
 	await page.locator("html[data-hydrated='true']").waitFor();
 	await page.waitForLoadState("networkidle");
 	await page.addStyleTag({
-		content: "section.sticky { position: static !important; }",
+		content: "[data-visual-sticky-filter] { position: static !important; }",
 	});
 	await page.evaluate(() => {
 		for (const image of document.querySelectorAll<HTMLImageElement>("img")) {
@@ -114,11 +114,13 @@ export async function selectFilter(
 	next: string,
 ): Promise<void> {
 	await page.locator("html[data-hydrated='true']").waitFor();
-	const tab = page.getByRole("tab", { name: `Choose filter: ${next}` });
-	if (await tab.isVisible()) {
+	const filterButton = page.getByRole("button", {
+		name: `Choose filter: ${next}`,
+	});
+	if (await filterButton.isVisible()) {
 		await expect(async () => {
-			await tab.click();
-			await expect(tab).toHaveAttribute("aria-selected", "true", {
+			await filterButton.click();
+			await expect(filterButton).toHaveAttribute("aria-pressed", "true", {
 				timeout: 1_000,
 			});
 		}).toPass({ timeout: 30_000 });
@@ -130,10 +132,13 @@ export async function selectFilter(
 			await expect(menuItem).toBeVisible({ timeout: 1_000 });
 		}).toPass({ timeout: 30_000 });
 		await menuItem.click();
-		await expect(
-			page.getByRole("button", { name: next, exact: true }),
-		).toBeVisible();
+		const selectedButton = page.getByRole("button", {
+			name: next,
+			exact: true,
+		});
+		await expect(selectedButton).toBeVisible();
+		await selectedButton.evaluate((button: HTMLButtonElement) => button.blur());
 	}
-	await expect(page.getByRole("tabpanel")).toBeVisible();
+	await expect(page.locator("[aria-busy='true']")).toHaveCount(0);
 	await page.waitForTimeout(300);
 }

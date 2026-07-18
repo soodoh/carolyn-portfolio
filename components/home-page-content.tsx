@@ -24,6 +24,7 @@ const HomePageContent = (): JSX.Element => {
 		if (homePageRef.current) {
 			observer.observe(homePageRef.current);
 		}
+		return () => observer.disconnect();
 	}, []);
 
 	return (

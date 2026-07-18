@@ -7,13 +7,12 @@ export type Asset = {
 	url: string;
 };
 
-export type ImagePlaceholder = `data:image/${string}`;
+export type ImagePlaceholder = string;
 
 export type ImageType = Asset & {
 	width: number;
 	height: number;
 	placeholder: ImagePlaceholder;
-	dominantColor?: string;
 };
 
 export type Album = {
@@ -22,12 +21,8 @@ export type Album = {
 };
 
 export type IconType = "instagram" | "linkedin";
-export type ProjectType =
-	| "All"
-	| "Design"
-	| "Film"
-	| "Interactive"
-	| "Animation";
+export type ProjectType = "Design" | "Film" | "Interactive" | "Animation";
+export type ProjectFilter = "All" | ProjectType;
 
 export type SocialMedia = {
 	id: string;
@@ -44,20 +39,11 @@ export type Project = {
 	summary: string;
 };
 
-export type ProjectInfo = {
-	id: string;
-	title: string;
-	slug: string;
-	coverImage: ImageType;
-	projectType: ProjectType[];
-	summary: string;
+export type ProjectInfo = Project & {
 	role?: string;
 	description: Document;
 	videoLink?: string;
-	password?: string;
 };
-
-export type ProjectInfoPublic = Omit<ProjectInfo, "password">;
 
 export type AboutData = {
 	profilePicture: ImageType;

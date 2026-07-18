@@ -23,16 +23,20 @@ const PasswordForm = ({ slug }: { slug: string }): JSX.Element => {
 			setError("Password is too long.");
 			return;
 		}
+		setError(undefined);
 		startTransition(async () => {
-			const result = await verifyProjectPassword({
-				data: { slug, password: passwordValue },
-			});
-			if (result.error) {
-				setError(result.error);
-				return;
+			try {
+				const result = await verifyProjectPassword({
+					data: { slug, password: passwordValue },
+				});
+				if (result.error) {
+					setError(result.error);
+					return;
+				}
+				await router.invalidate();
+			} catch {
+				setError("Unable to verify the password. Please try again.");
 			}
-			setError(undefined);
-			await router.invalidate();
 		});
 	};
 

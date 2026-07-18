@@ -7,7 +7,9 @@ import manifest from "./lib/project-auth-manifest.json";
 
 const staticPublicPaths = new Set(["/", "/about", "/photography", "/projects"]);
 const protectedProjectPaths = new Set(
-	Object.keys(manifest).map((slug) => `/projects/${slug}`),
+	Object.entries(manifest)
+		.filter(([, auth]) => auth.passwordHash)
+		.map(([slug]) => `/projects/${slug}`),
 );
 
 export default defineConfig({

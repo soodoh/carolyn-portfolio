@@ -17,29 +17,33 @@ function Filter<T extends string>({
 	onChange,
 }: FilterProps<T>): JSX.Element {
 	return (
-		<section className="sticky top-[var(--spacing-header-height)] mb-6 z-2 bg-white">
-			<div role="tablist" className="max-md:hidden">
+		<div
+			data-visual-sticky-filter
+			className="sticky top-[var(--spacing-header-height)] mb-6 z-2 bg-white"
+		>
+			<fieldset className="m-0 max-md:hidden border-0 p-0">
+				<legend className="sr-only">Filter</legend>
 				{options.map((name) => (
 					<Button
 						key={`filter-${name}`}
 						variant="ghost"
-						role="tab"
-						aria-selected={current === name}
+						aria-pressed={current === name}
 						aria-label={`Choose filter: ${name}`}
 						className={cn(
 							"text-dark font-body text-base leading-7 rounded-none px-8 py-4 h-auto hover:bg-transparent hover:text-dark",
-							current === name && "border-t-[5px] border-t-light -mt-[5px]",
+							current === name &&
+								"border-t-[5px] border-t-light-on-white -mt-[5px]",
 						)}
 						onClick={() => onChange(name)}
 					>
 						{name}
 					</Button>
 				))}
-			</div>
+			</fieldset>
 			<div className="hidden max-md:block">
 				<Dropdown current={current} options={options} onChange={onChange} />
 			</div>
-		</section>
+		</div>
 	);
 }
 

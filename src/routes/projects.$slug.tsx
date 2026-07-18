@@ -6,19 +6,20 @@ import PasswordForm from "@/components/password-form";
 import ProjectInfoPage from "@/components/project-info-page";
 import { getProjectInfo, ProjectNotFoundError } from "@/lib/fetch-projects";
 import { verifyToken } from "@/lib/password-utils";
-import manifest from "@/lib/project-auth-manifest.json";
+import { getProjectAuth } from "@/lib/project-auth";
 import {
 	isValidProjectSlug,
 	validateProjectSlug,
 } from "@/lib/server-function-inputs";
 
-const protectedProjects = new Map(Object.entries(manifest));
-
 const getProjectPageData = createServerFn({ method: "POST" })
 	.validator(validateProjectSlug)
 	.handler(async ({ data: slug }) => {
-		const hash = protectedProjects.get(slug);
-		if (hash) {
+		const auth = getProjectAuth(slug);
+		if (!auth) {
+			return { notFound: true as const };
+		}
+		if (auth.passwordHash) {
 			const token = getCookie(`project-auth-${slug}`);
 			if (!token || !(await verifyToken(token, slug))) {
 				return { authorized: false as const, slug };
@@ -26,13 +27,11 @@ const getProjectPageData = createServerFn({ method: "POST" })
 		}
 
 		try {
-			const project = await getProjectInfo(slug);
-			const { password, ...projectInfo } = project;
-			void password;
+			const projectInfo = await getProjectInfo(slug);
 			return {
 				authorized: true as const,
 				projectInfo,
-				protected: Boolean(hash),
+				protected: Boolean(auth.passwordHash),
 			};
 		} catch (error) {
 			if (error instanceof ProjectNotFoundError) {

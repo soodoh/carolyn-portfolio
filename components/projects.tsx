@@ -4,14 +4,17 @@ import { Link } from "@tanstack/react-router";
 import type { JSX } from "react";
 import { useMemo, useState } from "react";
 import Filter from "@/components/filter";
-import ImageWrapper from "@/components/image-wrapper";
+import ImageWrapper, {
+	MASONRY_IMAGE_BREAKPOINTS,
+	MASONRY_IMAGE_SIZES,
+} from "@/components/image-wrapper";
 import Masonry from "@/components/masonry";
-import type { Project, ProjectType } from "@/lib/types";
+import type { Project, ProjectFilter } from "@/lib/types";
 import { containerClass } from "@/lib/utils";
 
 const Projects = ({ projects }: { projects: Project[] }): JSX.Element => {
-	const projectTypes: ProjectType[] = useMemo(() => {
-		const uniqueTypes = new Set<ProjectType>(["All"]);
+	const projectTypes: ProjectFilter[] = useMemo(() => {
+		const uniqueTypes = new Set<ProjectFilter>(["All"]);
 		for (const project of projects) {
 			for (const projectType of project.projectType) {
 				uniqueTypes.add(projectType);
@@ -20,29 +23,22 @@ const Projects = ({ projects }: { projects: Project[] }): JSX.Element => {
 		return [...uniqueTypes];
 	}, [projects]);
 
-	const [projectType, setProjectType] = useState<ProjectType>("All");
-	const [filteredProjects, setFilteredProjects] = useState<Project[]>(projects);
-
-	const handleProjectChange = (newType: ProjectType) => {
-		setProjectType(newType);
-		if (newType === "All") {
-			setFilteredProjects(projects);
-		} else {
-			setFilteredProjects(
-				projects.filter((project) => project.projectType.includes(newType)),
-			);
-		}
-	};
+	const [projectType, setProjectType] = useState<ProjectFilter>("All");
+	const filteredProjects =
+		projectType === "All"
+			? projects
+			: projects.filter((project) => project.projectType.includes(projectType));
 
 	return (
 		<div className={containerClass}>
+			<h1 className="sr-only">Projects</h1>
 			<Filter
 				options={projectTypes}
 				current={projectType}
-				onChange={handleProjectChange}
+				onChange={setProjectType}
 			/>
 
-			<div role="tabpanel">
+			<div>
 				<Masonry>
 					{filteredProjects.map((item) => (
 						<Link
@@ -56,7 +52,13 @@ const Projects = ({ projects }: { projects: Project[] }): JSX.Element => {
 								<h2>{item.title}</h2>
 								<h3>{item.summary}</h3>
 							</div>
-							<ImageWrapper image={item.coverImage} quality={50} />
+							<ImageWrapper
+								alt=""
+								breakpoints={MASONRY_IMAGE_BREAKPOINTS}
+								image={item.coverImage}
+								quality={50}
+								sizes={MASONRY_IMAGE_SIZES}
+							/>
 						</Link>
 					))}
 				</Masonry>

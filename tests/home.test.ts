@@ -28,6 +28,7 @@ test.describe("Home page visual states", () => {
 		await page.getByRole("contentinfo").scrollIntoViewIfNeeded();
 		await expect(brandLogo).toBeVisible();
 		await expect(header).toHaveCSS("background-color", "rgb(73, 79, 92)");
+		await expect.poll(async () => (await header.boundingBox())?.y).toBe(0);
 		await expect(page).toHaveScreenshot("home-scrolled-header.png");
 	});
 });

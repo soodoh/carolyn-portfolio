@@ -1,83 +1,122 @@
-import type { AssetDetails, Asset as ContentfulAsset } from "contentful";
+import type { Asset as ContentfulAsset, UnresolvedLink } from "contentful";
 import { createClient } from "contentful";
-import { getPlaceholder, readImage } from "@/lib/image-utils";
-import type { Asset, ImageType } from "@/lib/types";
+import { getImageMetadataAndPlaceholder } from "@/lib/image-utils";
+import type { Asset, ImagePlaceholder, ImageType } from "@/lib/types";
 
 let contentfulClient: ReturnType<typeof createClient> | undefined;
 
 export function getContentfulClient(): ReturnType<typeof createClient> {
-	contentfulClient ??= createClient({
-		space: process.env.NEXT_PUBLIC_CONTENTFUL_SPACE_ID ?? "",
-		accessToken: process.env.NEXT_PUBLIC_CONTENTFUL_ACCESS_TOKEN ?? "",
-	});
+	const space = process.env.NEXT_PUBLIC_CONTENTFUL_SPACE_ID;
+	const accessToken = process.env.NEXT_PUBLIC_CONTENTFUL_ACCESS_TOKEN;
+	if (!space || !accessToken) {
+		throw new Error(
+			"Missing NEXT_PUBLIC_CONTENTFUL_SPACE_ID or NEXT_PUBLIC_CONTENTFUL_ACCESS_TOKEN",
+		);
+	}
+	contentfulClient ??= createClient({ space, accessToken });
 	return contentfulClient;
 }
 
-export function formatUrl(baseUrl: string): string {
-	return `https:${baseUrl}`;
+export function formatUrl(rawUrl: string): string {
+	if (!rawUrl) {
+		throw new Error("Contentful asset is missing a URL.");
+	}
+	const url = new URL(rawUrl.startsWith("//") ? `https:${rawUrl}` : rawUrl);
+	if (url.protocol !== "https:") {
+		throw new Error(`Contentful asset URL must use HTTPS: ${rawUrl}`);
+	}
+	return url.toString();
 }
 
-export function formatAsset(asset: ContentfulAsset): Asset {
+export function requireContentfulAsset(
+	asset: ContentfulAsset<undefined> | UnresolvedLink<"Asset"> | undefined,
+	context: string,
+): ContentfulAsset<undefined> {
+	if (!asset || !("fields" in asset)) {
+		throw new Error(`${context} is missing a resolved Contentful asset.`);
+	}
+	return asset;
+}
+
+export function formatAsset(asset: ContentfulAsset<undefined>): Asset {
 	const fileUrl = asset.fields.file?.url;
-	const assetUrl = formatUrl(typeof fileUrl === "string" ? fileUrl : "");
+	if (typeof fileUrl !== "string") {
+		throw new Error(`Contentful asset ${asset.sys.id} is missing a file URL.`);
+	}
 	const title = asset.fields.title;
 	const description = asset.fields.description;
 	return {
 		id: asset.sys.id,
 		title: typeof title === "string" ? title : "",
 		description: typeof description === "string" ? description : "",
-		url: assetUrl,
+		url: formatUrl(fileUrl),
 	};
 }
 
-const imageCache = new Map<string, ImageType>();
+export function getContentfulPlaceholder(url: string): ImagePlaceholder {
+	const placeholderUrl = new URL(url);
+	placeholderUrl.searchParams.set("w", "25");
+	placeholderUrl.searchParams.set("q", "30");
+	placeholderUrl.searchParams.set("fm", "jpg");
+	return placeholderUrl.toString();
+}
 
-export async function formatImage(
-	contentfulAsset: ContentfulAsset,
-): Promise<ImageType> {
+export function formatImage(
+	contentfulAsset: ContentfulAsset<undefined>,
+): ImageType {
 	const asset = formatAsset(contentfulAsset);
-	const cached = imageCache.get(asset.id);
-	if (cached) {
-		return cached;
+	const file = contentfulAsset.fields.file;
+	if (!file || !("details" in file)) {
+		throw new Error(`Contentful image ${asset.id} is missing file details.`);
 	}
-
-	const imageDetails = contentfulAsset.fields.file?.details as AssetDetails;
-	const width = imageDetails.image?.width ?? 0;
-	const height = imageDetails.image?.height ?? 0;
-	const placeholder = await getPlaceholder(asset.url);
-
-	const image = {
+	const imageDetails = file.details.image;
+	const width = imageDetails?.width;
+	const height = imageDetails?.height;
+	if (!width || !height) {
+		throw new Error(`Contentful image ${asset.id} is missing dimensions.`);
+	}
+	return {
 		...asset,
 		width,
 		height,
-		placeholder,
+		placeholder: getContentfulPlaceholder(asset.url),
 	};
-	imageCache.set(asset.id, image);
-
-	return image;
 }
 
-export const getImageAssetFromRichTextNode = async (
-	rawUrl: string,
-	alt: string,
-): Promise<ImageType> => {
-	const url = formatUrl(rawUrl);
-	const cached = imageCache.get(url);
+type RichTextImageMetadata = Pick<
+	ImageType,
+	"width" | "height" | "placeholder"
+>;
+
+const richTextImageCache = new Map<string, Promise<RichTextImageMetadata>>();
+
+function getRichTextImageMetadata(url: string): Promise<RichTextImageMetadata> {
+	const cached = richTextImageCache.get(url);
 	if (cached) {
 		return cached;
 	}
 
-	const image = await readImage(url);
-	const imageMetadata = await image.metadata();
-	const placeholder = await getPlaceholder(url);
+	const pending = getImageMetadataAndPlaceholder(url);
+	richTextImageCache.set(url, pending);
+	void pending.catch(() => {
+		if (richTextImageCache.get(url) === pending) {
+			richTextImageCache.delete(url);
+		}
+	});
+	return pending;
+}
 
+export async function getImageAssetFromRichTextNode(
+	rawUrl: string,
+	alt: string,
+): Promise<ImageType> {
+	const url = formatUrl(rawUrl);
+	const metadata = await getRichTextImageMetadata(url);
 	return {
 		id: url,
 		title: alt,
 		description: alt,
 		url,
-		placeholder,
-		width: imageMetadata.width,
-		height: imageMetadata.height,
+		...metadata,
 	};
-};
+}

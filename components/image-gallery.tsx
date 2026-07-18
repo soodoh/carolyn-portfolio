@@ -1,8 +1,8 @@
 "use client";
 
 import { XIcon } from "lucide-react";
-import type { JSX } from "react";
-import { useCallback, useEffect, useState } from "react";
+import type { JSX, RefObject } from "react";
+import { useEffect, useState } from "react";
 import ModalImage from "@/components/modal-image";
 import { Button } from "@/components/ui/button";
 import type { CarouselApi } from "@/components/ui/carousel";
@@ -22,33 +22,23 @@ import {
 } from "@/components/ui/dialog";
 import type { ImageType } from "@/lib/types";
 
-const ImageGallery = ({
-	open,
-	images,
-	initialIndex,
-	onClose,
-}: {
+type ImageGalleryProps = {
 	open: boolean;
 	images: ImageType[];
 	initialIndex: number;
 	onClose: () => void;
-}): JSX.Element => {
+	returnFocusRef: RefObject<HTMLButtonElement | null>;
+};
+
+const OpenImageGallery = ({
+	images,
+	initialIndex,
+	onClose,
+	returnFocusRef,
+}: Omit<ImageGalleryProps, "open">): JSX.Element => {
 	const [api, setApi] = useState<CarouselApi>();
-	const [currentIndex, setCurrentIndex] = useState(0);
+	const [currentIndex, setCurrentIndex] = useState(initialIndex);
 
-	// Scroll to initial index when the carousel API is ready or initialIndex changes
-	const handleApi = useCallback(
-		(carouselApi: CarouselApi) => {
-			setApi(carouselApi);
-			if (carouselApi) {
-				carouselApi.scrollTo(initialIndex, true);
-				setCurrentIndex(initialIndex);
-			}
-		},
-		[initialIndex],
-	);
-
-	// Track current slide index
 	useEffect(() => {
 		if (!api) {
 			return;
@@ -64,17 +54,20 @@ const ImageGallery = ({
 		};
 	}, [api]);
 
-	// When dialog opens, scroll to the requested initial index
 	useEffect(() => {
-		if (open && api) {
+		if (api) {
 			api.scrollTo(initialIndex, true);
 		}
-	}, [open, initialIndex, api]);
+	}, [initialIndex, api]);
 
 	return (
-		<Dialog open={open} onOpenChange={(isOpen) => !isOpen && onClose()}>
+		<Dialog open onOpenChange={(isOpen) => !isOpen && onClose()}>
 			<DialogContent
 				showCloseButton={false}
+				onCloseAutoFocus={(event) => {
+					event.preventDefault();
+					returnFocusRef.current?.focus();
+				}}
 				className="inset-0 translate-x-0 translate-y-0 max-w-none sm:max-w-none w-full h-full rounded-none border-none bg-black/95 p-0 shadow-none gap-0 flex flex-col data-[state=open]:zoom-in-100 data-[state=closed]:zoom-out-100"
 			>
 				<DialogTitle className="sr-only">Image Gallery</DialogTitle>
@@ -82,12 +75,10 @@ const ImageGallery = ({
 					Viewing image {currentIndex + 1} of {images.length}
 				</DialogDescription>
 
-				{/* Carousel — close button is inside so Dialog's auto-focus
-             lands within the carousel subtree, enabling its onKeyDownCapture */}
 				<Carousel
 					className="flex-1 min-h-0 flex flex-col"
 					opts={{ startIndex: initialIndex, watchDrag: true }}
-					setApi={handleApi}
+					setApi={setApi}
 				>
 					<DialogClose asChild>
 						<Button
@@ -101,12 +92,17 @@ const ImageGallery = ({
 					</DialogClose>
 
 					<CarouselContent className="h-full ml-0">
-						{images.map((image) => (
+						{images.map((image, index) => (
 							<CarouselItem
 								key={`gallery-slide-${image.id}`}
+								aria-label={`${index + 1} of ${images.length}`}
+								aria-hidden={index !== currentIndex}
 								className="h-full pl-0 flex justify-center"
 							>
-								<ModalImage image={image} />
+								<ModalImage
+									image={image}
+									priority={Math.abs(index - currentIndex) <= 1}
+								/>
 							</CarouselItem>
 						))}
 					</CarouselContent>
@@ -121,12 +117,28 @@ const ImageGallery = ({
 					/>
 				</Carousel>
 
-				{/* Counter — below image */}
-				<div className="pb-3 text-center text-light/70 text-sm">
+				<div
+					aria-live="polite"
+					className="pb-3 text-center text-light/70 text-sm"
+				>
 					{currentIndex + 1} / {images.length}
 				</div>
 			</DialogContent>
 		</Dialog>
+	);
+};
+
+const ImageGallery = (props: ImageGalleryProps): JSX.Element | null => {
+	if (!props.open) {
+		return null;
+	}
+	return (
+		<OpenImageGallery
+			images={props.images}
+			initialIndex={props.initialIndex}
+			onClose={props.onClose}
+			returnFocusRef={props.returnFocusRef}
+		/>
 	);
 };
 

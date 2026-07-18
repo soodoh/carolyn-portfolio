@@ -4,6 +4,7 @@ export type ProjectPasswordInput = {
 };
 
 export const MAX_PROJECT_SLUG_LENGTH = 100;
+export const MAX_ALBUM_NAME_LENGTH = 100;
 export const MAX_PROJECT_PASSWORD_BYTES = 72;
 
 const PROJECT_SLUG_PATTERN = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
@@ -26,6 +27,18 @@ export function validateProjectSlug(input: unknown): string {
 
 export function isProjectPasswordWithinLimit(password: string): boolean {
 	return textEncoder.encode(password).byteLength <= MAX_PROJECT_PASSWORD_BYTES;
+}
+
+export function validateAlbumName(input: unknown): string {
+	if (
+		typeof input !== "string" ||
+		!input ||
+		input.length > MAX_ALBUM_NAME_LENGTH ||
+		input.trim() !== input
+	) {
+		throw new TypeError("Album name is malformed.");
+	}
+	return input;
 }
 
 export function validateProjectPasswordInput(

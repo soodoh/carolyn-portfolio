@@ -17,12 +17,14 @@ export default defineConfig({
 			animations: "disabled",
 			caret: "hide",
 			maxDiffPixelRatio: 0.001,
+			maxDiffPixels: 2_500,
 		},
 		timeout: 30_000,
 	},
 	projects: [
 		{
 			name: "desktop",
+			grepInvert: /@mobile-only/,
 			use: { viewport: { width: 1440, height: 900 } },
 		},
 		{

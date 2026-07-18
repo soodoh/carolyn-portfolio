@@ -2,10 +2,8 @@ import { createServerFn } from "@tanstack/react-start";
 import { setCookie } from "@tanstack/react-start/server";
 import { compare } from "bcryptjs";
 import { COOKIE_MAX_AGE, signToken } from "@/lib/password-utils";
-import manifest from "@/lib/project-auth-manifest.json";
+import { getProjectAuth } from "@/lib/project-auth";
 import { validateProjectPasswordInput } from "@/lib/server-function-inputs";
-
-const protectedProjects = new Map(Object.entries(manifest));
 
 export const verifyProjectPassword = createServerFn({ method: "POST" })
 	.validator(validateProjectPasswordInput)
@@ -14,12 +12,12 @@ export const verifyProjectPassword = createServerFn({ method: "POST" })
 			return { error: "Please enter a password." };
 		}
 
-		const hash = protectedProjects.get(slug);
-		if (!hash) {
+		const passwordHash = getProjectAuth(slug)?.passwordHash;
+		if (!passwordHash) {
 			return { error: "This project is not password protected." };
 		}
 
-		if (!(await compare(password, hash))) {
+		if (!(await compare(password, passwordHash))) {
 			return { error: "The password you entered is incorrect." };
 		}
 

@@ -11,6 +11,7 @@ import {
 	SheetClose,
 	SheetContent,
 	SheetTitle,
+	SheetTrigger,
 } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
 
@@ -80,15 +81,16 @@ const Header = ({
 			</nav>
 
 			<Sheet open={mobileNavOpen} onOpenChange={setMobileNav}>
-				<Button
-					variant="ghost"
-					size="icon-lg"
-					className="hidden max-md:inline-flex border border-light rounded-[5px] bg-transparent hover:bg-transparent"
-					onClick={() => setMobileNav(true)}
-					aria-label="Open Navigation"
-				>
-					<MenuIcon className="h-6 w-6 text-light-text" />
-				</Button>
+				<SheetTrigger asChild>
+					<Button
+						variant="ghost"
+						size="icon-lg"
+						className="hidden max-md:inline-flex border border-light rounded-[5px] bg-transparent hover:bg-transparent"
+						aria-label="Open Navigation"
+					>
+						<MenuIcon className="h-6 w-6 text-light-text" />
+					</Button>
+				</SheetTrigger>
 
 				<SheetContent
 					side="right"

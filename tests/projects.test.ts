@@ -6,7 +6,13 @@ import {
 	settleVisualPage,
 } from "@/tests/visual-helpers";
 
-const projectFilters = ["All", "Design", "Interactive", "Film"];
+const projectFilters = ["All", "Design", "Interactive", "Film"] as const;
+const projectFilterExpectations = {
+	All: { count: 15, included: "Magnolia App" },
+	Design: { count: 10, included: "NBC App", excluded: "Em/body" },
+	Interactive: { count: 4, included: "Em/body", excluded: "NBC App" },
+	Film: { count: 3, included: "Shed", excluded: "Magnolia App" },
+} as const;
 
 test.describe("Projects visual states", () => {
 	test.beforeEach(async ({ page }) => {
@@ -26,6 +32,23 @@ test.describe("Projects visual states", () => {
 			if (filter !== projectFilters[0]) {
 				await selectFilter(page, projectFilters[0], filter);
 			}
+			const expectation = projectFilterExpectations[filter];
+			const projectGrid = page.locator(".masonry-grid");
+			await expect(projectGrid.getByRole("link")).toHaveCount(
+				expectation.count,
+			);
+			await expect(
+				projectGrid.getByRole("link", {
+					name: new RegExp(expectation.included),
+				}),
+			).toBeVisible();
+			if ("excluded" in expectation) {
+				await expect(
+					projectGrid.getByRole("link", {
+						name: new RegExp(expectation.excluded),
+					}),
+				).toHaveCount(0);
+			}
 			await expectFullPageScreenshot(
 				page,
 				`projects-filter-${filter.toLowerCase()}.png`,
@@ -40,7 +63,7 @@ test.describe("Projects visual states", () => {
 		await settleVisualPage(page);
 
 		const thumbnail = page
-			.getByRole("tabpanel")
+			.locator(".masonry-grid")
 			.getByRole("link", { name: /Magnolia App/ });
 		await thumbnail.hover();
 		await expect(

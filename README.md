@@ -14,7 +14,7 @@ Portfolio website for a Film Editor / Graphic Designer / UX Engineer. Built with
 - **CMS:** Contentful
 - **Package Manager / Build Runner:** Bun
 - **Hosting:** Netlify through its official TanStack Start Vite plugin
-- **Testing:** Playwright visual regression
+- **Testing:** Bun unit tests plus Playwright behavior and visual regression
 
 ## Getting Started
 
@@ -63,13 +63,13 @@ The prebuild step refreshes the auth manifest, TanStack Start prerenders public 
 | Command                 | Description                                                   |
 | ----------------------- | ------------------------------------------------------------- |
 | `bun dev`               | Start port 3000 with Netlify emulation after generating auth data |
-| `bun run build`         | Prerender public pages and emit the Netlify deployment bundle |
-| `bun run typecheck`     | Generate fixture build artifacts, then run TypeScript         |
-| `bun run validate`      | Run lint, unit tests, type checking, build, and output checks  |
-| `bun run lint`          | Run Biome checks                                               |
-| `bun run test:unit`     | Run focused Bun unit tests                                    |
-| `bun run lint:fix`      | Apply safe Biome fixes                                         |
-| `bun run test:visual`   | Run Playwright in the canonical ARM64 container               |
+| `bun run build`         | Prerender public pages and emit the Netlify deployment bundle    |
+| `bun run typecheck`     | Generate fixture build artifacts, then run TypeScript             |
+| `bun run validate`      | Run lint, unit tests, type checking, build, and output checks      |
+| `bun run lint`          | Run Biome checks                                                   |
+| `bun run test:unit`     | Run focused Bun unit tests                                         |
+| `bun run lint:fix`      | Apply safe Biome fixes                                             |
+| `bun run test:visual`   | Run Playwright in the canonical ARM64 container                   |
 
 ## Architecture
 
@@ -83,20 +83,25 @@ TanStack Start file routes live in `src/routes/`. Each route owns its data-loadi
 | `/about`                  | Bio and profile picture                          |
 | `/projects`               | Filterable masonry grid                          |
 | `/projects/$slug`         | Project detail or in-place password gate         |
-| `/photography`            | Photo albums and image gallery                   |
+| `/photography`            | On-demand photo albums and fullscreen gallery    |
 | `/resume`                 | Permanent redirect to the Contentful PDF         |
 
 ### Password protection
 
-1. `scripts/generate-auth-manifest.ts` writes gitignored `slug -> bcrypt hash` data before dev/build.
-2. The project loader checks its project-specific HTTP-only cookie before fetching or returning protected content.
-3. Unauthorized projects render the password form at the requested project URL.
-4. A TanStack Start server function verifies the password, signs a token, and sets a secure, SameSite=strict cookie.
-5. The route loader is invalidated after authentication and then returns only password-free project data.
+1. `scripts/generate-auth-manifest.ts` paginates through every Contentful project and writes a complete gitignored manifest before dev/build. Each slug has an explicit public state or a bcrypt hash.
+2. Manifest generation rejects duplicate or malformed slugs. Runtime lookups fail closed when a slug is absent from the deployment snapshot.
+3. The project loader checks its project-specific HTTP-only cookie before fetching or returning protected content.
+4. Unauthorized projects render the password form at the requested project URL.
+5. A TanStack Start server function verifies the password, signs a token, and sets a secure, SameSite=strict cookie.
+6. The route loader is invalidated after authentication and then returns only password-free project data.
 
-### Images
+### Photography and images
 
-`components/image-wrapper.tsx` uses `@unpic/react` and Contentful's image CDN transformer to generate responsive sources with WebP output and the requested quality. Local Playwright fixture images retain deterministic query parameters for visual testing.
+The photography route initially returns album names and the first ordered album. Selecting another album calls a validated server function, preventing every photograph and placeholder from being serialized into the initial page. Stale album responses are ignored, and thumbnails are temporarily disabled while the selected album loads.
+
+`components/image-wrapper.tsx` uses `@unpic/react` and Contentful's image CDN transformer to generate layout-specific responsive sources with WebP output. Standard Contentful assets use small CDN placeholder URLs without downloading image bodies on the server. Rich-text images still use server-derived metadata and embedded placeholders because Markdown does not provide dimensions.
+
+The fullscreen gallery prioritizes only the selected image and its neighbors, restores focus to the opening thumbnail, and exposes slide position and image labels to assistive technology.
 
 ## Testing
 
@@ -108,7 +113,15 @@ bun run test:visual -- tests/home.test.ts
 bun run test:visual:update
 ```
 
-Do not update snapshots from a native Playwright run. Review image diffs before intentionally updating canonical baselines. CI runs `bun run validate` before the canonical visual suite so ignored generated files are always recreated from a clean checkout.
+Do not update snapshots from a native Playwright run. Review image diffs before intentionally updating canonical baselines. Prefer targeted updates such as `bun run test:visual -- tests/photography.test.ts --project=mobile --update-snapshots=changed` instead of rebaselining every snapshot. CI runs `bun run validate` before the canonical visual suite so ignored generated files are always recreated from a clean checkout.
+
+The checked-in Contentful fixture keeps CMS data stable. To deliberately refresh it from live Contentful, run:
+
+```bash
+bun run scripts/capture-contentful-fixture.ts
+```
+
+The capture script stages assets and fixture JSON before replacement, limits download concurrency, embeds placeholders, and localizes visual assets. Review the generated content and any visual diffs before committing it.
 
 ## License
 

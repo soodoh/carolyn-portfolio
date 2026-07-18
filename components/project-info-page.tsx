@@ -4,13 +4,49 @@ import { Link } from "@tanstack/react-router";
 import type { JSX } from "react";
 import LeftArrowIcon from "@/components/icons/left-arrow-icon";
 import ImageWrapper from "@/components/image-wrapper";
-import type { ImageType, ProjectInfoPublic } from "@/lib/types";
+import type { ImagePlaceholder, ImageType, ProjectInfo } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
-const ProjectInfo = ({
+function isImagePlaceholder(value: unknown): value is ImagePlaceholder {
+	return typeof value === "string" && value.startsWith("data:image/");
+}
+
+function getEmbeddedImage(value: unknown): ImageType | undefined {
+	if (
+		typeof value !== "object" ||
+		value === null ||
+		!("id" in value) ||
+		typeof value.id !== "string" ||
+		!("title" in value) ||
+		typeof value.title !== "string" ||
+		!("description" in value) ||
+		typeof value.description !== "string" ||
+		!("url" in value) ||
+		typeof value.url !== "string" ||
+		!("width" in value) ||
+		typeof value.width !== "number" ||
+		!("height" in value) ||
+		typeof value.height !== "number" ||
+		!("placeholder" in value) ||
+		!isImagePlaceholder(value.placeholder)
+	) {
+		return undefined;
+	}
+	return {
+		id: value.id,
+		title: value.title,
+		description: value.description,
+		url: value.url,
+		width: value.width,
+		height: value.height,
+		placeholder: value.placeholder,
+	};
+}
+
+const ProjectInfoPage = ({
 	projectInfo,
 }: {
-	projectInfo: ProjectInfoPublic;
+	projectInfo: ProjectInfo;
 }): JSX.Element => {
 	return (
 		<div className="max-w-[1000px] px-(--spacing-padding) py-8 mx-auto flex flex-col items-center">
@@ -45,7 +81,10 @@ const ProjectInfo = ({
 					</div>
 				) : (
 					<div className="w-full max-md:row-start-1 max-md:mb-8">
-						<ImageWrapper image={projectInfo.coverImage} />
+						<ImageWrapper
+							image={projectInfo.coverImage}
+							sizes="(max-width: 800px) calc(100vw - 48px), 500px"
+						/>
 					</div>
 				)}
 			</section>
@@ -55,12 +94,10 @@ const ProjectInfo = ({
 					renderNode: {
 						[BLOCKS.TABLE]: () => null,
 						[BLOCKS.EMBEDDED_ASSET]: (node) => {
-							return (
-								<ImageWrapper
-									sizes="100vw"
-									image={node.data.image as ImageType}
-								/>
-							);
+							const image = getEmbeddedImage(node.data.image);
+							return image ? (
+								<ImageWrapper sizes="100vw" image={image} />
+							) : null;
 						},
 					},
 				})}
@@ -76,4 +113,4 @@ const ProjectInfo = ({
 	);
 };
 
-export default ProjectInfo;
+export default ProjectInfoPage;

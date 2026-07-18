@@ -35,11 +35,13 @@ function About(): JSX.Element {
 	const { backgroundImage, aboutData } = Route.useLoaderData();
 	return (
 		<div className={containerClass}>
+			<h1 className="sr-only">About Carolyn DiLoreto</h1>
 			<Background fixed image={backgroundImage} />
 			<div className="grid grid-cols-[25%_1fr] gap-10 mt-14 max-lg:grid-cols-2 max-md:grid-cols-1 max-md:grid-rows-[auto_auto]">
 				<div className="flex flex-col items-center text-light text-base leading-6 max-md:mb-10">
 					<ImageWrapper
 						quality={50}
+						sizes="(max-width: 800px) calc(100vw - 48px), (max-width: 1024px) calc((100vw - 88px) / 2), min(25vw, 360px)"
 						className="w-full h-auto border-[1.5rem] border-light box-border mb-8"
 						image={aboutData.profilePicture}
 					/>

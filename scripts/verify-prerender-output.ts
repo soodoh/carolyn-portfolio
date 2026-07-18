@@ -4,7 +4,11 @@ import manifest from "@/lib/project-auth-manifest.json";
 import { contentfulFixture } from "@/tests/fixtures/contentful";
 
 const publicRoot = "dist/client";
-const protectedSlugs = new Set(Object.keys(manifest));
+const protectedSlugs = new Set(
+	Object.entries(manifest)
+		.filter(([, auth]) => auth.passwordHash)
+		.map(([slug]) => slug),
+);
 const publicProjectSlugs = contentfulFixture.projects
 	.map((project) => project.slug)
 	.filter((slug) => !protectedSlugs.has(slug));
@@ -76,8 +80,8 @@ for (const file of inspectableFiles) {
 	if (/\$2[aby]\$\d{2}\$/.test(contents)) {
 		throw new Error(`Password hash leaked into public output: ${file}`);
 	}
-	for (const hash of Object.values(manifest)) {
-		if (contents.includes(hash)) {
+	for (const { passwordHash } of Object.values(manifest)) {
+		if (passwordHash && contents.includes(passwordHash)) {
 			throw new Error(
 				`Protected-project hash leaked into public output: ${file}`,
 			);

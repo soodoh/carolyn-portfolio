@@ -9,16 +9,34 @@ test.describe("TanStack Start migration behavior", () => {
 		await page.goto("/");
 		await page.locator("html[data-hydrated='true']").waitFor();
 		await page.evaluate(() => {
-			window.name = "tanstack-spa-navigation";
+			const marker = document.createElement("div");
+			marker.id = "spa-navigation-marker";
+			document.body.append(marker);
 		});
 		await page.getByRole("link", { name: "View Projects" }).click();
 		await expect(page).toHaveURL(/\/projects\/?$/);
-		await expect(page.getByRole("tabpanel")).toBeVisible();
-		expect(await page.evaluate(() => window.name)).toBe(
-			"tanstack-spa-navigation",
-		);
+		await expect(
+			page.getByRole("heading", { name: "Projects" }),
+		).toBeAttached();
+		await expect(page.locator("#spa-navigation-marker")).toBeAttached();
 		await page.goBack();
 		await expect(page).toHaveURL(/\/$/);
+	});
+
+	test("restores focus when closing mobile navigation", {
+		tag: "@mobile-only",
+	}, async ({ page }) => {
+		await page.goto("/about");
+		await page.locator("html[data-hydrated='true']").waitFor();
+		const trigger = page.getByRole("button", { name: "Open Navigation" });
+		await trigger.click();
+		await expect(page.getByRole("link", { name: "Projects" })).toBeVisible();
+		await page.keyboard.press("Escape");
+		await expect(trigger).toBeFocused();
+
+		await trigger.click();
+		await page.getByRole("link", { name: "Projects" }).click();
+		await expect(page).toHaveURL(/\/projects\/?$/);
 	});
 
 	test("generates bounded responsive image URLs", async ({ page }) => {
@@ -29,6 +47,26 @@ test.describe("TanStack Start migration behavior", () => {
 		const srcset = await backgroundImage.getAttribute("srcset");
 		expect(srcset).toContain("w=3840");
 		expect(srcset).toContain("3840w");
+
+		await page.goto("/projects");
+		const projectThumbnail = page.locator(".masonry-grid img").first();
+		await expect(projectThumbnail).toHaveAttribute(
+			"sizes",
+			/\(max-width: 660px\) calc\(100vw - 48px\)/,
+		);
+		await expect(projectThumbnail).toHaveAttribute("srcset", /1200w/);
+
+		await page.goto("/projects/the-voice-app-agt-app");
+		await expect(page.locator("section img")).toHaveAttribute(
+			"sizes",
+			"(max-width: 800px) calc(100vw - 48px), 500px",
+		);
+
+		await page.goto("/about");
+		await expect(page.locator(".grid img").first()).toHaveAttribute(
+			"sizes",
+			/min\(25vw, 360px\)/,
+		);
 	});
 
 	test("rejects invalid credentials and isolates protected-project cookies", async ({

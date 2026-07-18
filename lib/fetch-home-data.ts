@@ -1,11 +1,18 @@
-import type { Asset } from "contentful";
 import type {
 	AboutSkeleton,
 	SocialMediaSkeleton,
 } from "@/lib/contentful-types";
-import { formatImage, getContentfulClient } from "@/lib/contentful-utils";
+import {
+	formatImage,
+	getContentfulClient,
+	requireContentfulAsset,
+} from "@/lib/contentful-utils";
 import { loadContentfulFixture } from "@/lib/load-contentful-fixture";
 import type { IconType, ImageType, SocialMedia } from "@/lib/types";
+
+function isIconType(value: unknown): value is IconType {
+	return value === "instagram" || value === "linkedin";
+}
 
 export async function getBackgroundImage(): Promise<ImageType> {
 	if (process.env.PLAYWRIGHT_TEST === "true") {
@@ -14,11 +21,19 @@ export async function getBackgroundImage(): Promise<ImageType> {
 
 	const aboutData = await getContentfulClient().getEntries<AboutSkeleton>({
 		content_type: "about",
+		limit: 1,
+		select: ["fields.background"],
 	});
-	const backgroundAsset = aboutData.items[0]?.fields.background as Asset;
-	const backgroundImage = await formatImage(backgroundAsset);
-
-	return backgroundImage;
+	const aboutEntry = aboutData.items[0];
+	if (!aboutEntry) {
+		throw new Error("Contentful has no about entry.");
+	}
+	return formatImage(
+		requireContentfulAsset(
+			aboutEntry.fields.background,
+			"About background image",
+		),
+	);
 }
 
 export async function getSocialMedia(): Promise<SocialMedia[]> {
@@ -30,9 +45,11 @@ export async function getSocialMedia(): Promise<SocialMedia[]> {
 		await getContentfulClient().getEntries<SocialMediaSkeleton>({
 			content_type: "socialMedia",
 		});
-	return socialMedia.items.map((item) => ({
-		id: item.sys.id,
-		title: String(item.fields.title) as IconType,
-		link: String(item.fields.link),
-	}));
+	return socialMedia.items.map((item) => {
+		const { link, title } = item.fields;
+		if (!isIconType(title) || typeof link !== "string" || !link) {
+			throw new Error(`Social media entry ${item.sys.id} is malformed.`);
+		}
+		return { id: item.sys.id, title, link };
+	});
 }

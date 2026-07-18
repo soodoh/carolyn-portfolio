@@ -2,13 +2,33 @@ import { describe, expect, test } from "bun:test";
 import {
 	isProjectPasswordWithinLimit,
 	isValidProjectSlug,
+	MAX_ALBUM_NAME_LENGTH,
 	MAX_PROJECT_PASSWORD_BYTES,
 	MAX_PROJECT_SLUG_LENGTH,
+	validateAlbumName,
 	validateProjectPasswordInput,
 	validateProjectSlug,
 } from "@/lib/server-function-inputs";
 
 describe("server function inputs", () => {
+	test("validates album names", () => {
+		expect(validateAlbumName("Portraits")).toBe("Portraits");
+		expect(validateAlbumName("a".repeat(MAX_ALBUM_NAME_LENGTH))).toBe(
+			"a".repeat(MAX_ALBUM_NAME_LENGTH),
+		);
+		for (const input of [
+			undefined,
+			null,
+			42,
+			"",
+			" Portraits",
+			"Portraits ",
+			"a".repeat(MAX_ALBUM_NAME_LENGTH + 1),
+		]) {
+			expect(() => validateAlbumName(input)).toThrow(TypeError);
+		}
+	});
+
 	test("validates project slugs", () => {
 		expect(isValidProjectSlug("magnolia-app")).toBe(true);
 		expect(isValidProjectSlug("Magnolia-app")).toBe(false);
