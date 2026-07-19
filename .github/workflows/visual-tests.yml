@@ -31,8 +31,16 @@ jobs:
           PLAYWRIGHT_CONTAINER: "true"
         run: bun install --frozen-lockfile
 
-      - name: Validate lint, types, build, and prerender output
+      - name: Validate application lint, types, build, and prerender output
         run: bun run validate
+
+      - name: Install infrastructure dependencies
+        working-directory: infra
+        run: bun install --frozen-lockfile
+
+      - name: Validate infrastructure types
+        working-directory: infra
+        run: bun run typecheck
 
   playwright:
     needs: validate

@@ -20,5 +20,5 @@
 		"types": ["vite/client"]
 	},
 	"include": ["**/*.ts", "**/*.tsx"],
-	"exclude": ["node_modules", ".output"]
+	"exclude": ["node_modules", ".output", "infra"]
 }
