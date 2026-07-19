@@ -1,89 +1,52 @@
 import { expect, type Locator, type Page } from "@playwright/test";
 
-export async function prepareVisualPage(page: Page): Promise<void> {
-	await page.route(/ctfassets.*\.gif/i, async (route) => {
-		const url = new URL(route.request().url());
-		url.searchParams.set("fm", "jpg");
-		await route.continue({ url: url.toString() });
-	});
-	await page.route(
-		/(player\.vimeo\.com|youtube\.com\/embed)/i,
-		async (route) => {
-			await route.fulfill({
-				contentType: "text/html",
-				body: '<!doctype html><html><body style="margin:0;background:#111"></body></html>',
-			});
-		},
-	);
+async function expectImageLoaded(image: Locator): Promise<void> {
+	await expect
+		.poll(
+			() =>
+				image.evaluate(
+					(element: HTMLImageElement) =>
+						element.complete &&
+						element.naturalWidth > 0 &&
+						getComputedStyle(element).backgroundImage === "none",
+				),
+			{ timeout: 60_000 },
+		)
+		.toBe(true);
 }
 
 export async function settleVisualPage(page: Page): Promise<void> {
 	await page.locator("html[data-hydrated='true']").waitFor();
 	await page.waitForLoadState("networkidle");
-	await page.addStyleTag({
-		content: "[data-visual-sticky-filter] { position: static !important; }",
-	});
-	await page.evaluate(() => {
-		for (const image of document.querySelectorAll<HTMLImageElement>("img")) {
-			image.loading = "eager";
-		}
-	});
 	await page.evaluate(async () => {
 		await Promise.all([
 			document.fonts.load('400 16px "Karla"'),
 			document.fonts.load('400 16px "Old Standard TT"'),
 		]);
 		await document.fonts.ready;
-		const step = Math.max(window.innerHeight - 100, 100);
-		for (let y = 0; y < document.documentElement.scrollHeight; y += step) {
-			window.scrollTo(0, y);
-			await new Promise((resolve) => window.setTimeout(resolve, 25));
-		}
-		window.scrollTo(0, 0);
 	});
-	await expect
-		.poll(
-			async () =>
-				page.evaluate(() =>
-					[...document.images].every(
-						(image) => image.complete && image.naturalWidth > 0,
-					),
-				),
-			{ timeout: 60_000 },
-		)
-		.toBe(true);
-	await page.evaluate(async () => {
-		for (const image of document.images) {
-			const source = new URL(image.currentSrc || image.src);
-			if (source.pathname.startsWith("/test-assets/")) {
-				source.search = "";
-			}
-			image.removeAttribute("srcset");
-			image.removeAttribute("sizes");
-			image.src = source.toString();
-		}
-		await Promise.allSettled(
-			[...document.images].map((image) => image.decode()),
+
+	const images = page.locator("img");
+	for (let index = 0; index < (await images.count()); index += 1) {
+		const image = images.nth(index);
+		const isInactiveGalleryImage = await image.evaluate(
+			(element) => element.closest("[aria-hidden='true']") !== null,
 		);
-	});
-	await expect
-		.poll(() =>
-			page.evaluate(() =>
-				[...document.images].every(
-					(image) =>
-						image.complete &&
-						image.naturalWidth > 0 &&
-						getComputedStyle(image).backgroundImage === "none",
-				),
-			),
-		)
-		.toBe(true);
-	await page.waitForTimeout(1_000);
+		if (isInactiveGalleryImage) {
+			continue;
+		}
+		await image.scrollIntoViewIfNeeded();
+		await expectImageLoaded(image);
+	}
+
+	await page.keyboard.press("Home");
+	await expect.poll(() => page.evaluate(() => window.scrollY)).toBe(0);
 }
 
 type FullPageScreenshotOptions = {
 	capture?: "body" | "page";
-	fixedBackground?: Locator;
+	mask?: Locator[];
+	maskColor?: string;
 };
 
 export async function expectFullPageScreenshot(
@@ -92,20 +55,117 @@ export async function expectFullPageScreenshot(
 	options: FullPageScreenshotOptions = {},
 ): Promise<void> {
 	await settleVisualPage(page);
-	if (options.fixedBackground) {
-		const pageHeight = await page.evaluate(
-			() => document.documentElement.scrollHeight,
-		);
-		await options.fixedBackground.evaluate((element, height) => {
-			element.style.position = "absolute";
-			element.style.height = `${height}px`;
-		}, pageHeight);
-	}
+	const screenshotOptions = {
+		fullPage: true,
+		mask: options.mask,
+		maskColor: options.maskColor,
+	};
 	if (options.capture === "page") {
-		await expect(page).toHaveScreenshot(name, { fullPage: true });
+		await expect(page).toHaveScreenshot(name, screenshotOptions);
 		return;
 	}
-	await expect(page.locator("body")).toHaveScreenshot(name);
+	await expect(page.locator("body")).toHaveScreenshot(name, {
+		mask: options.mask,
+		maskColor: options.maskColor,
+	});
+}
+
+export async function expectStickyFilterBelowHeader(page: Page): Promise<void> {
+	const header = page.locator("header");
+	const filter = page.locator("[data-visual-sticky-filter]");
+	await expect(header).toBeVisible();
+	await expect(filter).toBeVisible();
+	await expect(filter).toHaveCSS("position", "sticky");
+	const [headerBox, filterBox] = await Promise.all([
+		header.boundingBox(),
+		filter.boundingBox(),
+	]);
+	if (!headerBox || !filterBox) {
+		throw new Error("Sticky filter geometry is unavailable.");
+	}
+	expect(filterBox.y).toBeCloseTo(headerBox.y + headerBox.height, 1);
+
+	const mobileTrigger = filter.locator("[data-slot='dropdown-menu-trigger']");
+	if (await mobileTrigger.isVisible()) {
+		await expect(filter).toHaveCSS("padding-top", "8px");
+		await expect(filter).toHaveCSS("padding-bottom", "24px");
+		const triggerBox = await mobileTrigger.boundingBox();
+		if (!triggerBox) {
+			throw new Error("Mobile filter geometry is unavailable.");
+		}
+		expect(triggerBox.y - filterBox.y).toBeCloseTo(8, 1);
+		expect(
+			filterBox.y + filterBox.height - (triggerBox.y + triggerBox.height),
+		).toBeCloseTo(24, 1);
+	}
+}
+
+export async function expectFilterFocusWithoutOutline(
+	page: Page,
+	filter: string,
+): Promise<void> {
+	const desktopFilter = page.getByRole("button", {
+		name: `Choose filter: ${filter}`,
+	});
+	const isDesktopFilter = await desktopFilter.isVisible();
+	const control = isDesktopFilter
+		? desktopFilter
+		: page.getByRole("button", { name: filter, exact: true });
+	await page.keyboard.press("Tab");
+	await control.focus();
+	await expect(control).toBeFocused();
+	expect(
+		await control.evaluate((element) => element.matches(":focus-visible")),
+	).toBe(true);
+	await expect(control).toHaveCSS("outline-style", "none");
+	await expect(control).toHaveCSS("box-shadow", "none");
+	if (isDesktopFilter) {
+		await expect(control).toHaveCSS("border-top-width", "0px");
+		await expect(control).toHaveCSS("border-right-width", "0px");
+		await expect(control).toHaveCSS("border-bottom-width", "0px");
+		await expect(control).toHaveCSS("border-left-width", "0px");
+	}
+}
+
+export async function expectDesktopFilterIndicator(
+	page: Page,
+	filter: string,
+): Promise<void> {
+	const selectedFilter = page.getByRole("button", {
+		name: `Choose filter: ${filter}`,
+	});
+	if (!(await selectedFilter.isVisible())) {
+		return;
+	}
+
+	await expect(page.locator("[data-visual-sticky-filter]")).toHaveCSS(
+		"z-index",
+		"3",
+	);
+	const indicator = selectedFilter.locator("[data-selected-filter-indicator]");
+	await expect(indicator).toBeVisible();
+	await expect(indicator).toHaveCSS("height", "5px");
+	await expect(indicator).toHaveCSS("background-color", "rgb(206, 192, 168)");
+	const [headerBox, indicatorBox] = await Promise.all([
+		page.locator("header").boundingBox(),
+		indicator.boundingBox(),
+	]);
+	if (!headerBox || !indicatorBox) {
+		throw new Error("Desktop filter indicator geometry is unavailable.");
+	}
+	expect(indicatorBox.y).toBeCloseTo(headerBox.y + headerBox.height - 5, 1);
+	expect(
+		await page.evaluate(
+			({ x, y }) =>
+				document
+					.elementFromPoint(x, y)
+					?.hasAttribute("data-selected-filter-indicator") ?? false,
+			{
+				x: indicatorBox.x + indicatorBox.width / 2,
+				y: indicatorBox.y + indicatorBox.height / 2,
+			},
+		),
+	).toBe(true);
 }
 
 export async function selectFilter(
@@ -132,13 +192,9 @@ export async function selectFilter(
 			await expect(menuItem).toBeVisible({ timeout: 1_000 });
 		}).toPass({ timeout: 30_000 });
 		await menuItem.click();
-		const selectedButton = page.getByRole("button", {
-			name: next,
-			exact: true,
-		});
-		await expect(selectedButton).toBeVisible();
-		await selectedButton.evaluate((button: HTMLButtonElement) => button.blur());
+		await expect(
+			page.getByRole("button", { name: next, exact: true }),
+		).toBeVisible();
 	}
 	await expect(page.locator("[aria-busy='true']")).toHaveCount(0);
-	await page.waitForTimeout(300);
 }

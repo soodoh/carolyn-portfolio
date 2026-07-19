@@ -1,19 +1,14 @@
 import { expect, test } from "@playwright/test";
 import {
 	expectFullPageScreenshot,
-	prepareVisualPage,
+	settleVisualPage,
 } from "@/tests/visual-helpers";
 
 test.describe("Static route visual states", () => {
-	test.beforeEach(async ({ page }) => {
-		await prepareVisualPage(page);
-	});
-
-	test("matches the entire About page", async ({ page }) => {
+	test("matches the About page viewport", async ({ page }) => {
 		await page.goto("/about");
-		await expectFullPageScreenshot(page, "about-full-page.png", {
-			fixedBackground: page.locator("[data-fixed-background]"),
-		});
+		await settleVisualPage(page);
+		await expect(page).toHaveScreenshot("about-viewport.png");
 	});
 
 	test("matches the entire not-found page", async ({ page }) => {

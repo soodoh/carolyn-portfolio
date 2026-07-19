@@ -1,6 +1,8 @@
 import { expect, type Locator, type Page, test } from "@playwright/test";
 import {
-	prepareVisualPage,
+	expectDesktopFilterIndicator,
+	expectFilterFocusWithoutOutline,
+	expectStickyFilterBelowHeader,
 	selectFilter,
 	settleVisualPage,
 } from "@/tests/visual-helpers";
@@ -55,7 +57,6 @@ async function swipeGallery(
 
 test.describe("Photography visual states", () => {
 	test.beforeEach(async ({ page }) => {
-		await prepareVisualPage(page);
 		await page.goto("/photography");
 	});
 
@@ -81,6 +82,8 @@ test.describe("Photography visual states", () => {
 					"solid",
 				);
 			}
+			await expectDesktopFilterIndicator(page, filter);
+			await expectFilterFocusWithoutOutline(page, filter);
 			const expectation = albumExpectations[filter];
 			const thumbnails = page
 				.locator(".masonry-grid")
@@ -91,21 +94,28 @@ test.describe("Photography visual states", () => {
 				new RegExp(expectation.firstPhotoId),
 			);
 			await settleVisualPage(page);
-			await page.evaluate(() => {
-				if (document.activeElement instanceof HTMLElement) {
-					document.activeElement.blur();
-				}
-				window.scrollTo(0, 0);
-			});
-			await expect.poll(() => page.evaluate(() => window.scrollY)).toBe(0);
-			const header = page.locator("header");
-			await expect(header).toBeVisible();
-			await expect.poll(async () => (await header.boundingBox())?.y).toBe(0);
 			await expect(page).toHaveScreenshot(
 				`photography-filter-${filter.toLowerCase()}.png`,
 			);
 		});
 	}
+
+	test("matches the selected Portraits filter while scrolled", async ({
+		page,
+	}) => {
+		await selectFilter(page, "Dance", "Portraits");
+		await settleVisualPage(page);
+		await expectFilterFocusWithoutOutline(page, "Portraits");
+		await page
+			.locator(".masonry-grid")
+			.getByRole("button", { name: /View fullscreen photo/ })
+			.nth(8)
+			.scrollIntoViewIfNeeded();
+		await expectStickyFilterBelowHeader(page);
+		await expect(page).toHaveScreenshot(
+			"photography-filter-portraits-scrolled.png",
+		);
+	});
 
 	test("matches a portrait-oriented photo", async ({ page }) => {
 		await selectFilter(page, "Dance", "Portraits");

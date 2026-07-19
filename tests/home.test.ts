@@ -1,13 +1,12 @@
 import { expect, test } from "@playwright/test";
 import {
 	expectFullPageScreenshot,
-	prepareVisualPage,
+	expectStickyFilterBelowHeader,
 	settleVisualPage,
 } from "@/tests/visual-helpers";
 
 test.describe("Home page visual states", () => {
 	test.beforeEach(async ({ page }) => {
-		await prepareVisualPage(page);
 		await page.goto("/");
 	});
 
@@ -20,15 +19,22 @@ test.describe("Home page visual states", () => {
 		await expect(page).toHaveScreenshot("home-top.png");
 	});
 
-	test("matches the header after scrolling past projects", async ({ page }) => {
+	test("matches the sticky projects filter below the scrolled header", async ({
+		page,
+	}) => {
 		await settleVisualPage(page);
 		const header = page.locator("header");
-		const brandLogo = page.getByRole("link", { name: "Home" });
+		const brandLogo = header.locator('a[aria-label="Home"]');
 		await expect(brandLogo).toBeHidden();
-		await page.getByRole("contentinfo").scrollIntoViewIfNeeded();
+		await page
+			.locator(".masonry-grid")
+			.getByRole("link")
+			.last()
+			.scrollIntoViewIfNeeded();
 		await expect(brandLogo).toBeVisible();
 		await expect(header).toHaveCSS("background-color", "rgb(73, 79, 92)");
 		await expect.poll(async () => (await header.boundingBox())?.y).toBe(0);
+		await expectStickyFilterBelowHeader(page);
 		await expect(page).toHaveScreenshot("home-scrolled-header.png");
 	});
 });

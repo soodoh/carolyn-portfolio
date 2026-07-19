@@ -1,26 +1,26 @@
 import { expect, test } from "@playwright/test";
-import { prepareVisualPage } from "@/tests/visual-helpers";
 
 test.describe("TanStack Start migration behavior", () => {
 	test("navigates through an internal link without a document reload", async ({
 		page,
 	}) => {
-		await prepareVisualPage(page);
 		await page.goto("/");
 		await page.locator("html[data-hydrated='true']").waitFor();
-		await page.evaluate(() => {
-			const marker = document.createElement("div");
-			marker.id = "spa-navigation-marker";
-			document.body.append(marker);
+		const documentRequests: string[] = [];
+		page.on("request", (request) => {
+			if (request.resourceType() === "document") {
+				documentRequests.push(request.url());
+			}
 		});
 		await page.getByRole("link", { name: "View Projects" }).click();
 		await expect(page).toHaveURL(/\/projects\/?$/);
 		await expect(
 			page.getByRole("heading", { name: "Projects" }),
 		).toBeAttached();
-		await expect(page.locator("#spa-navigation-marker")).toBeAttached();
+		expect(documentRequests).toEqual([]);
 		await page.goBack();
 		await expect(page).toHaveURL(/\/$/);
+		expect(documentRequests).toEqual([]);
 	});
 
 	test("restores focus when closing mobile navigation", {

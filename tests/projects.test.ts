@@ -1,7 +1,9 @@
 import { expect, test } from "@playwright/test";
 import {
+	expectDesktopFilterIndicator,
+	expectFilterFocusWithoutOutline,
 	expectFullPageScreenshot,
-	prepareVisualPage,
+	expectStickyFilterBelowHeader,
 	selectFilter,
 	settleVisualPage,
 } from "@/tests/visual-helpers";
@@ -15,10 +17,6 @@ const projectFilterExpectations = {
 } as const;
 
 test.describe("Projects visual states", () => {
-	test.beforeEach(async ({ page }) => {
-		await prepareVisualPage(page);
-	});
-
 	for (const filter of projectFilters) {
 		test(`matches the ${filter} filter`, async ({ page }) => {
 			await page.goto("/projects");
@@ -32,6 +30,8 @@ test.describe("Projects visual states", () => {
 			if (filter !== projectFilters[0]) {
 				await selectFilter(page, projectFilters[0], filter);
 			}
+			await expectDesktopFilterIndicator(page, filter);
+			await expectFilterFocusWithoutOutline(page, filter);
 			const expectation = projectFilterExpectations[filter];
 			const projectGrid = page.locator(".masonry-grid");
 			await expect(projectGrid.getByRole("link")).toHaveCount(
@@ -55,6 +55,20 @@ test.describe("Projects visual states", () => {
 			);
 		});
 	}
+
+	test("matches a scrolled projects filter", async ({ page }) => {
+		await page.goto("/projects");
+		await selectFilter(page, "All", "Design");
+		await settleVisualPage(page);
+		await expectFilterFocusWithoutOutline(page, "Design");
+		await page
+			.locator(".masonry-grid")
+			.getByRole("link")
+			.nth(4)
+			.scrollIntoViewIfNeeded();
+		await expectStickyFilterBelowHeader(page);
+		await expect(page).toHaveScreenshot("projects-filter-design-scrolled.png");
+	});
 
 	test("matches a hovered project thumbnail", { tag: "@desktop-only" }, async ({
 		page,
@@ -82,6 +96,8 @@ test.describe("Projects visual states", () => {
 		).toBeVisible();
 		await expectFullPageScreenshot(page, "project-non-video.png", {
 			capture: "page",
+			mask: [page.locator('img[src*=".gif"]')],
+			maskColor: "#111",
 		});
 	});
 
@@ -90,6 +106,8 @@ test.describe("Projects visual states", () => {
 		await expect(page.getByTitle("Video Player")).toBeVisible();
 		await expectFullPageScreenshot(page, "project-video.png", {
 			capture: "page",
+			mask: [page.getByTitle("Video Player")],
+			maskColor: "#111",
 		});
 	});
 
@@ -113,6 +131,8 @@ test.describe("Projects visual states", () => {
 		).toBeVisible();
 		await expectFullPageScreenshot(page, "project-authenticated.png", {
 			capture: "page",
+			mask: [page.locator('img[src*=".gif"]')],
+			maskColor: "#111",
 		});
 	});
 });

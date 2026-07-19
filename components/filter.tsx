@@ -3,7 +3,6 @@
 import type { JSX } from "react";
 import Dropdown from "@/components/dropdown";
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
 
 type FilterProps<T extends string> = {
 	current: T;
@@ -19,9 +18,9 @@ function Filter<T extends string>({
 	return (
 		<div
 			data-visual-sticky-filter
-			className="sticky top-[var(--spacing-header-height)] mb-6 z-2 bg-white"
+			className="sticky top-[var(--spacing-header-height)] z-3 mb-6 bg-white max-md:mb-0 max-md:pt-2 max-md:pb-6"
 		>
-			<fieldset className="m-0 max-md:hidden border-0 p-0">
+			<fieldset className="m-0 max-md:hidden overflow-visible border-0 p-0">
 				<legend className="sr-only">Filter</legend>
 				{options.map((name) => (
 					<Button
@@ -29,13 +28,16 @@ function Filter<T extends string>({
 						variant="ghost"
 						aria-pressed={current === name}
 						aria-label={`Choose filter: ${name}`}
-						className={cn(
-							"text-dark font-body text-base leading-7 rounded-none px-8 py-4 h-auto hover:bg-transparent hover:text-dark",
-							current === name &&
-								"border-t-[5px] border-t-light-on-white -mt-[5px]",
-						)}
+						className="relative h-auto overflow-visible rounded-none px-8 py-4 font-body text-base leading-7 text-dark hover:bg-transparent hover:text-dark focus-visible:border-0 focus-visible:ring-0 focus-visible:[box-shadow:none]"
 						onClick={() => onChange(name)}
 					>
+						{current === name ? (
+							<span
+								data-selected-filter-indicator
+								aria-hidden="true"
+								className="absolute -top-[5px] right-0 left-0 h-[5px] bg-light"
+							/>
+						) : null}
 						{name}
 					</Button>
 				))}
