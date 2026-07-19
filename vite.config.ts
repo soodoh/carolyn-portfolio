@@ -14,6 +14,9 @@ const protectedProjectPaths = new Set(
 
 export default defineConfig({
 	define: {
+		"process.env.CONTENTFUL_SPACE_ID": JSON.stringify(
+			process.env.CONTENTFUL_SPACE_ID ?? "",
+		),
 		"process.env.PLAYWRIGHT_TEST": JSON.stringify(
 			process.env.PLAYWRIGHT_TEST ?? "false",
 		),
