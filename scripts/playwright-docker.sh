@@ -13,6 +13,8 @@ fi
 docker build --file "${ROOT_DIR}/Dockerfile.playwright" --tag "${IMAGE_NAME}" "${ROOT_DIR}"
 docker run --rm --init --ipc=host \
 	--env "CI=${CI:-}" \
+	--env AMPLIFY_BASE_URL \
+	--env AMPLIFY_PROTECTED_PROJECT_PASSWORD \
 	--mount "type=bind,source=${ROOT_DIR},target=/work" \
 	--mount "type=volume,source=carolyn-portfolio-playwright-node-modules,target=/work/node_modules" \
 	--mount "type=volume,source=carolyn-portfolio-playwright-output,target=/work/.output" \

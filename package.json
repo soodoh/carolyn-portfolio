@@ -32,6 +32,7 @@
 		"lint": "biome check .",
 		"test:unit": "bun test ./tests/unit/*.unit.ts",
 		"lint:fix": "biome check --write .",
+		"test:amplify": "./scripts/playwright-docker.sh --config=playwright.amplify.config.ts",
 		"test:visual": "./scripts/playwright-docker.sh",
 		"test:visual:update": "./scripts/playwright-docker.sh --update-snapshots=all",
 		"prepare": "[ \"$PLAYWRIGHT_CONTAINER\" = \"true\" ] || lefthook install"

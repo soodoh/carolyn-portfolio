@@ -74,6 +74,7 @@ bun run test:visual
 | `bun run typecheck` | Build fixture output and run TypeScript |
 | `bun run validate` | Run lint, unit tests, typecheck, build, and artifact checks |
 | `bun run test:unit` | Run focused Bun unit tests |
+| `bun run test:amplify` | Run deployed Amplify smoke tests against `AMPLIFY_BASE_URL` |
 | `bun run test:visual` | Run canonical ARM64 Playwright behavior/visual tests |
 | `bun run test:visual:update` | Update reviewed canonical screenshots |
 
@@ -189,7 +190,14 @@ Amplify rebuilds the SSR app from the connected branch. The duplicate GitHub val
 
 ## Deployment verification
 
-Before DNS cutover, test the Amplify hostname on desktop and mobile:
+Before DNS cutover, run the automated desktop/mobile smoke suite:
+
+```bash
+AMPLIFY_BASE_URL=https://amplify-production.APP_ID.amplifyapp.com \
+  bun run test:amplify
+```
+
+Set `AMPLIFY_PROTECTED_PROJECT_PASSWORD` only in the invoking process to add valid-password and security-cookie checks; the suite otherwise skips that one credentialed test. The suite verifies:
 
 - `/`, `/about`, `/projects`, `/photography`, and a public project
 - Protected gate without protected data or bcrypt leakage
