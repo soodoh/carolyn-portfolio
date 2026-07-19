@@ -13,9 +13,9 @@ export default defineConfig({
 	testDir: "tests",
 	testMatch: "amplify.smoke.ts",
 	fullyParallel: false,
-	timeout: 180_000,
+	timeout: 60_000,
 	workers: 1,
-	retries: process.env.CI ? 2 : 0,
+	retries: process.env.CI ? 1 : 0,
 	reporter: [["list"]],
 	projects: [
 		{

@@ -234,7 +234,9 @@ export class HostingStack extends Stack {
 		});
 		const amplifyComputeRole = new Role(this, "AmplifySsrComputeRole", {
 			assumedBy: new ServicePrincipal("amplify.amazonaws.com").withConditions({
-				ArnLike: { "aws:SourceArn": amplifyApp.attrArn },
+				ArnLike: {
+					"aws:SourceArn": `${amplifyApp.attrArn}/branches/*`,
+				},
 				StringEquals: { "aws:SourceAccount": Aws.ACCOUNT_ID },
 			}),
 			description:

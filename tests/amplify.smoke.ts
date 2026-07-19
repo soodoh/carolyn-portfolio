@@ -64,7 +64,8 @@ test.describe("Amplify production behavior", () => {
 	test("loads photography albums through a server function", async ({
 		page,
 	}) => {
-		await page.goto("/photography");
+		const initialResponse = await page.goto("/photography");
+		expect(initialResponse?.status()).toBe(200);
 		await page.locator("html[data-hydrated='true']").waitFor();
 		const responsePromise = page.waitForResponse(
 			(response) => response.request().method() === "POST" && response.ok(),
