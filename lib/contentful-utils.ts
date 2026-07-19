@@ -1,20 +1,27 @@
 import type { Asset as ContentfulAsset, UnresolvedLink } from "contentful";
 import { createClient } from "contentful";
 import { getImageMetadataAndPlaceholder } from "@/lib/image-utils";
+import { getContentfulAccessToken } from "@/lib/server-secrets.server";
 import type { Asset, ImagePlaceholder, ImageType } from "@/lib/types";
 
-let contentfulClient: ReturnType<typeof createClient> | undefined;
+let contentfulClient: Promise<ReturnType<typeof createClient>> | undefined;
 
-export function getContentfulClient(): ReturnType<typeof createClient> {
-	const space = process.env.NEXT_PUBLIC_CONTENTFUL_SPACE_ID;
-	const accessToken = process.env.NEXT_PUBLIC_CONTENTFUL_ACCESS_TOKEN;
-	if (!space || !accessToken) {
-		throw new Error(
-			"Missing NEXT_PUBLIC_CONTENTFUL_SPACE_ID or NEXT_PUBLIC_CONTENTFUL_ACCESS_TOKEN",
-		);
-	}
-	contentfulClient ??= createClient({ space, accessToken });
+export function getContentfulClient(): Promise<
+	ReturnType<typeof createClient>
+> {
+	contentfulClient ??= createContentfulClient();
 	return contentfulClient;
+}
+
+async function createContentfulClient(): Promise<
+	ReturnType<typeof createClient>
+> {
+	const space = process.env.CONTENTFUL_SPACE_ID;
+	if (!space) {
+		throw new Error("Missing CONTENTFUL_SPACE_ID environment variable");
+	}
+	const accessToken = await getContentfulAccessToken();
+	return createClient({ space, accessToken });
 }
 
 export function formatUrl(rawUrl: string): string {

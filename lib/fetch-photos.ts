@@ -30,7 +30,8 @@ export async function getAlbumNames(): Promise<string[]> {
 		return (await loadContentfulFixture()).albums.map((album) => album.name);
 	}
 
-	const photoData = await getContentfulClient().getEntries<PhotosSkeleton>({
+	const contentfulClient = await getContentfulClient();
+	const photoData = await contentfulClient.getEntries<PhotosSkeleton>({
 		content_type: "photos",
 		order: ["fields.order"],
 		select: ["fields.album"],
@@ -52,7 +53,8 @@ export async function getFirstAlbum(): Promise<Album> {
 		return album;
 	}
 
-	const photoData = await getContentfulClient().getEntries<PhotosSkeleton>({
+	const contentfulClient = await getContentfulClient();
+	const photoData = await contentfulClient.getEntries<PhotosSkeleton>({
 		content_type: "photos",
 		order: ["fields.order"],
 		limit: 1,
@@ -78,7 +80,8 @@ export async function getAlbum(albumName: string): Promise<Album> {
 		return album;
 	}
 
-	const photoData = await getContentfulClient().getEntries<PhotosSkeleton>({
+	const contentfulClient = await getContentfulClient();
+	const photoData = await contentfulClient.getEntries<PhotosSkeleton>({
 		content_type: "photos",
 		"fields.album": albumName,
 		limit: 1,
@@ -98,7 +101,8 @@ export default async function getAlbums(): Promise<Album[]> {
 		return (await loadContentfulFixture()).albums;
 	}
 
-	const photoData = await getContentfulClient().getEntries<PhotosSkeleton>({
+	const contentfulClient = await getContentfulClient();
+	const photoData = await contentfulClient.getEntries<PhotosSkeleton>({
 		content_type: "photos",
 		order: ["fields.order"],
 	});

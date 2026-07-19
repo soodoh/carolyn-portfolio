@@ -103,7 +103,8 @@ export async function getProjects(): Promise<Project[]> {
 		return (await loadContentfulFixture()).projects;
 	}
 
-	const projectData = await getContentfulClient().getEntries<ProjectSkeleton>({
+	const contentfulClient = await getContentfulClient();
+	const projectData = await contentfulClient.getEntries<ProjectSkeleton>({
 		content_type: "project",
 		order: ["fields.order"],
 		select: [
@@ -146,7 +147,8 @@ export async function getProjectInfo(slug: string): Promise<ProjectInfo> {
 		return project;
 	}
 
-	const projectQuery = await getContentfulClient().getEntries<ProjectSkeleton>({
+	const contentfulClient = await getContentfulClient();
+	const projectQuery = await contentfulClient.getEntries<ProjectSkeleton>({
 		content_type: "project",
 		"fields.slug": slug,
 		include: 1,

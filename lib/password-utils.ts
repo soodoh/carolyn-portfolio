@@ -1,20 +1,14 @@
+import { getProjectAuthSecret } from "@/lib/server-secrets.server";
+
 const TOKEN_TTL_SECONDS = 7 * 24 * 60 * 60; // 7 days
 const TOKEN_CLOCK_SKEW_SECONDS = 5 * 60; // Allow up to 5 minutes of clock skew.
 const CANONICAL_TIMESTAMP_PATTERN = /^(?:0|[1-9]\d*)$/;
-
-function getSecret(): string {
-	const secret = process.env.PROJECT_AUTH_SECRET;
-	if (!secret) {
-		throw new Error("Missing PROJECT_AUTH_SECRET environment variable");
-	}
-	return secret;
-}
 
 async function hmacSign(data: string): Promise<string> {
 	const encoder = new TextEncoder();
 	const key = await crypto.subtle.importKey(
 		"raw",
-		encoder.encode(getSecret()),
+		encoder.encode(await getProjectAuthSecret()),
 		{ name: "HMAC", hash: "SHA-256" },
 		false,
 		["sign"],

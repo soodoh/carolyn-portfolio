@@ -17,7 +17,8 @@ function requireText(value: unknown, context: string): string {
 }
 
 async function getAboutEntry() {
-	const aboutData = await getContentfulClient().getEntries<AboutSkeleton>({
+	const contentfulClient = await getContentfulClient();
+	const aboutData = await contentfulClient.getEntries<AboutSkeleton>({
 		content_type: "about",
 		limit: 1,
 	});

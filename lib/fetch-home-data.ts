@@ -19,7 +19,8 @@ export async function getBackgroundImage(): Promise<ImageType> {
 		return (await loadContentfulFixture()).backgroundImage;
 	}
 
-	const aboutData = await getContentfulClient().getEntries<AboutSkeleton>({
+	const contentfulClient = await getContentfulClient();
+	const aboutData = await contentfulClient.getEntries<AboutSkeleton>({
 		content_type: "about",
 		limit: 1,
 		select: ["fields.background"],
@@ -41,10 +42,10 @@ export async function getSocialMedia(): Promise<SocialMedia[]> {
 		return (await loadContentfulFixture()).socialMedia;
 	}
 
-	const socialMedia =
-		await getContentfulClient().getEntries<SocialMediaSkeleton>({
-			content_type: "socialMedia",
-		});
+	const contentfulClient = await getContentfulClient();
+	const socialMedia = await contentfulClient.getEntries<SocialMediaSkeleton>({
+		content_type: "socialMedia",
+	});
 	return socialMedia.items.map((item) => {
 		const { link, title } = item.fields;
 		if (!isIconType(title) || typeof link !== "string" || !link) {

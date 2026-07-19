@@ -61,7 +61,7 @@ async function findInspectableFiles(directory: string): Promise<string[]> {
 		const path = join(directory, entry.name);
 		if (entry.isDirectory()) {
 			files.push(...(await findInspectableFiles(path)));
-		} else if (/\.(?:html|js|json|map)$/.test(entry.name)) {
+		} else if (/\.(?:html|js|json|map|mjs)$/.test(entry.name)) {
 			files.push(path);
 		}
 	}
@@ -94,6 +94,23 @@ for (const file of inspectableFiles) {
 				`Protected-project hash leaked into public output: ${file}`,
 			);
 		}
+	}
+}
+
+const privateValues: string[] = [];
+for (const environmentName of [
+	"CONTENTFUL_ACCESS_TOKEN",
+	"PROJECT_AUTH_SECRET",
+]) {
+	const value = process.env[environmentName];
+	if (value) {
+		privateValues.push(value);
+	}
+}
+for (const file of await findInspectableFiles(amplifyRoot)) {
+	const contents = await readFile(file, "utf8");
+	if (privateValues.some((value) => contents.includes(value))) {
+		throw new Error(`A secret value was serialized into the artifact: ${file}`);
 	}
 }
 
