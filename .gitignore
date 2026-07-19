@@ -15,6 +15,10 @@ bun-debug.log*
 /.tanstack/
 /src/routeTree.gen.ts
 
+# Nitro / Amplify Hosting
+/.nitro/
+/.amplify-hosting/
+
 # production
 /build
 /dist

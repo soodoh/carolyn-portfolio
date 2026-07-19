@@ -3,7 +3,11 @@ import { join, relative } from "node:path";
 import manifest from "@/lib/project-auth-manifest.json";
 import { contentfulFixture } from "@/tests/fixtures/contentful";
 
-const publicRoot = "dist/client";
+const amplifyRoot = ".amplify-hosting";
+const publicRoot = join(amplifyRoot, "static");
+const computeRoot = join(amplifyRoot, "compute", "default");
+const maximumComputeBytes = 220 * 1024 * 1024;
+const intendedRuntime = "nodejs24.x";
 const protectedSlugs = new Set(
 	Object.entries(manifest)
 		.filter(([, auth]) => auth.passwordHash)
@@ -45,6 +49,10 @@ for (const slug of protectedSlugs) {
 await assertFileMissing(
 	join(publicRoot, "resume", "index.html"),
 	"Dynamic resume redirect was prerendered",
+);
+await assertFileMissing(
+	join(publicRoot, "test-assets"),
+	"Local visual-test fixtures were copied into the production artifact",
 );
 
 async function findInspectableFiles(directory: string): Promise<string[]> {
@@ -89,10 +97,79 @@ for (const file of inspectableFiles) {
 	}
 }
 
-await Promise.all([
-	stat(".netlify/v1/functions/server.mjs"),
-	stat("dist/server/server.js"),
-]);
+await stat(join(computeRoot, "server.js"));
+
+function isObject(value: unknown): value is Record<string, unknown> {
+	return typeof value === "object" && value !== null && !Array.isArray(value);
+}
+
+const deployManifest: unknown = JSON.parse(
+	await readFile(join(amplifyRoot, "deploy-manifest.json"), "utf8"),
+);
+if (!isObject(deployManifest) || deployManifest.version !== 1) {
+	throw new Error("Amplify deploy manifest must use specification version 1");
+}
+if (!Array.isArray(deployManifest.computeResources)) {
+	throw new Error("Amplify deploy manifest is missing compute resources");
+}
+const defaultCompute = deployManifest.computeResources.find(
+	(resource) => isObject(resource) && resource.name === "default",
+);
+if (
+	!isObject(defaultCompute) ||
+	defaultCompute.entrypoint !== "server.js" ||
+	defaultCompute.runtime !== intendedRuntime
+) {
+	throw new Error(
+		`Amplify default compute must use server.js on ${intendedRuntime}`,
+	);
+}
+if (!Array.isArray(deployManifest.routes)) {
+	throw new Error("Amplify deploy manifest is missing routes");
+}
+const catchAllRoute = deployManifest.routes.at(-1);
+if (!isObject(catchAllRoute) || catchAllRoute.path !== "/*") {
+	throw new Error("Amplify deploy manifest must end with a catch-all route");
+}
+const catchAllTarget = catchAllRoute.target;
+if (
+	!isObject(catchAllTarget) ||
+	catchAllTarget.kind !== "Compute" ||
+	catchAllTarget.src !== "default"
+) {
+	throw new Error("Amplify catch-all route must target default compute");
+}
+if (!isObject(deployManifest.framework)) {
+	throw new Error("Amplify deploy manifest is missing framework metadata");
+}
+if (
+	deployManifest.framework.name !== "nitro" ||
+	typeof deployManifest.framework.version !== "string" ||
+	!deployManifest.framework.version
+) {
+	throw new Error("Amplify deploy manifest has invalid Nitro metadata");
+}
+
+async function getDirectorySize(directory: string): Promise<number> {
+	let totalBytes = 0;
+	for (const entry of await readdir(directory, { withFileTypes: true })) {
+		const path = join(directory, entry.name);
+		if (entry.isDirectory()) {
+			totalBytes += await getDirectorySize(path);
+		} else {
+			totalBytes += (await stat(path)).size;
+		}
+	}
+	return totalBytes;
+}
+
+const computeBytes = await getDirectorySize(computeRoot);
+if (computeBytes >= maximumComputeBytes) {
+	throw new Error(
+		`Amplify compute bundle is ${(computeBytes / 1024 / 1024).toFixed(1)} MiB; it must remain below 220 MiB uncompressed`,
+	);
+}
+
 process.stdout.write(
-	`Verified ${requiredPages.length} prerendered pages, ${protectedSlugs.size} dynamic protected projects, the dynamic resume redirect, and the Netlify server output.\n`,
+	`Verified ${requiredPages.length} prerendered pages, ${protectedSlugs.size} dynamic protected projects, the dynamic resume redirect, a ${(computeBytes / 1024 / 1024).toFixed(1)} MiB Node.js 24 compute bundle, and the Amplify deployment manifest.\n`,
 );

@@ -1,7 +1,7 @@
-import netlify from "@netlify/vite-plugin-tanstack-start";
 import tailwindcss from "@tailwindcss/vite";
 import { tanstackStart } from "@tanstack/react-start/plugin/vite";
 import viteReact from "@vitejs/plugin-react";
+import { nitro } from "nitro/vite";
 import { defineConfig } from "vite";
 import manifest from "./lib/project-auth-manifest.json";
 
@@ -22,6 +22,10 @@ export default defineConfig({
 		tsconfigPaths: true,
 	},
 	plugins: [
+		nitro({
+			preset: "aws_amplify",
+			awsAmplify: { runtime: "nodejs24.x" },
+		}),
 		tanstackStart({
 			prerender: {
 				enabled: true,
@@ -46,7 +50,6 @@ export default defineConfig({
 		}),
 		tailwindcss(),
 		viteReact(),
-		netlify({ dev: { edgeFunctions: { enabled: false } } }),
 	],
 	server: {
 		port: 3000,
