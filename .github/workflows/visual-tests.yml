@@ -38,9 +38,9 @@ jobs:
         working-directory: infra
         run: bun install --frozen-lockfile
 
-      - name: Validate infrastructure types
+      - name: Validate infrastructure types and template
         working-directory: infra
-        run: bun run typecheck
+        run: bun run typecheck && bun run synth -- --quiet
 
   playwright:
     needs: validate
@@ -148,6 +148,13 @@ jobs:
           fi
           echo "deploy=true" >> "$GITHUB_OUTPUT"
 
+      - name: Check out tested commit
+        if: steps.current.outputs.deploy == 'true'
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
+        with:
+          ref: ${{ needs.release-production-ref.outputs.tested_sha }}
+          persist-credentials: false
+
       - name: Validate deployment configuration
         if: steps.current.outputs.deploy == 'true'
         env:
@@ -173,6 +180,7 @@ jobs:
           role-session-name: carolyn-portfolio-production
 
       - name: Start and monitor exact Amplify release
+        id: release
         if: steps.current.outputs.deploy == 'true'
         env:
           AMPLIFY_APP_ID: ${{ vars.AMPLIFY_APP_ID }}
@@ -242,9 +250,16 @@ jobs:
             --query 'app.defaultDomain' \
             --output text)
           deployed_url="https://$AMPLIFY_BRANCH.$default_domain"
+          echo "url=$deployed_url" >> "$GITHUB_OUTPUT"
           {
             echo "### Amplify production deployment"
             echo "- Commit: [\`$EXPECTED_SHA\`](https://github.com/$GITHUB_REPOSITORY/commit/$EXPECTED_SHA)"
             echo "- Amplify job: \`$job_id\`"
             echo "- URL: [$deployed_url]($deployed_url)"
           } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Run deployed Amplify smoke tests
+        if: steps.current.outputs.deploy == 'true'
+        env:
+          AMPLIFY_BASE_URL: ${{ steps.release.outputs.url }}
+        run: ./scripts/playwright-docker.sh --config=playwright.amplify.config.ts

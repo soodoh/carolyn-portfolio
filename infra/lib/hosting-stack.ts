@@ -204,35 +204,6 @@ export class HostingStack extends Stack {
 			}),
 		);
 
-		const amplifyComputeRole = new Role(this, "AmplifySsrComputeRole", {
-			assumedBy: new ServicePrincipal("amplify.amazonaws.com").withConditions({
-				ArnLike: { "aws:SourceArn": amplifySourceArn },
-				StringEquals: { "aws:SourceAccount": Aws.ACCOUNT_ID },
-			}),
-			description:
-				"Branch-scoped SSR role for the two Carolyn Portfolio production SecureStrings",
-		});
-		amplifyComputeRole.addToPolicy(
-			new PolicyStatement({
-				actions: ["ssm:GetParameter"],
-				resources: [contentfulParameterArn, projectAuthParameterArn],
-			}),
-		);
-		amplifyComputeRole.addToPolicy(
-			new PolicyStatement({
-				actions: ["kms:Decrypt"],
-				conditions: {
-					StringEquals: {
-						"kms:EncryptionContext:PARAMETER_ARN": [
-							contentfulParameterArn,
-							projectAuthParameterArn,
-						],
-					},
-				},
-				resources: [secretKey.keyArn],
-			}),
-		);
-
 		const githubAccessToken = Token.asString(
 			Fn.conditionIf(
 				hasGitHubAccessToken.logicalId,
@@ -261,6 +232,35 @@ export class HostingStack extends Stack {
 			platform: "WEB_COMPUTE",
 			repository: REPOSITORY_URL,
 		});
+		const amplifyComputeRole = new Role(this, "AmplifySsrComputeRole", {
+			assumedBy: new ServicePrincipal("amplify.amazonaws.com").withConditions({
+				ArnLike: { "aws:SourceArn": amplifyApp.attrArn },
+				StringEquals: { "aws:SourceAccount": Aws.ACCOUNT_ID },
+			}),
+			description:
+				"App-scoped SSR role for the two Carolyn Portfolio production SecureStrings",
+		});
+		amplifyComputeRole.addToPolicy(
+			new PolicyStatement({
+				actions: ["ssm:GetParameter"],
+				resources: [contentfulParameterArn, projectAuthParameterArn],
+			}),
+		);
+		amplifyComputeRole.addToPolicy(
+			new PolicyStatement({
+				actions: ["kms:Decrypt"],
+				conditions: {
+					StringEquals: {
+						"kms:EncryptionContext:PARAMETER_ARN": [
+							contentfulParameterArn,
+							projectAuthParameterArn,
+						],
+					},
+				},
+				resources: [secretKey.keyArn],
+			}),
+		);
+
 		const branch = new CfnBranch(this, "ProductionBranch", {
 			appId: amplifyApp.attrAppId,
 			branchName: PRODUCTION_BRANCH,

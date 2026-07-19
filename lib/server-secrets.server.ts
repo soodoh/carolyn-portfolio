@@ -39,7 +39,15 @@ export function createServerSecretLoader({
 		let initialization: Promise<string> | undefined;
 
 		return () => {
-			initialization ??= loadSecret(definition);
+			if (!initialization) {
+				const pendingInitialization = loadSecret(definition);
+				initialization = pendingInitialization;
+				void pendingInitialization.catch(() => {
+					if (initialization === pendingInitialization) {
+						initialization = undefined;
+					}
+				});
+			}
 			return initialization;
 		};
 	}

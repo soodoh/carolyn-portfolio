@@ -197,16 +197,16 @@ AMPLIFY_BASE_URL=https://amplify-production.APP_ID.amplifyapp.com \
   bun run test:amplify
 ```
 
-Set `AMPLIFY_PROTECTED_PROJECT_PASSWORD` only in the invoking process to add valid-password and security-cookie checks; the suite otherwise skips that one credentialed test. The suite verifies:
+The production workflow runs this suite without credentials after each successful Amplify release. Set `AMPLIFY_PROTECTED_PROJECT_PASSWORD` only in a secure invoking process to add the valid-password checks; the suite otherwise skips that credentialed test. The suite verifies:
 
 - `/`, `/about`, `/projects`, `/photography`, and a public project
 - Protected gate without protected data or bcrypt leakage
-- Invalid and valid password behavior, cookie attributes, and project-cookie isolation
+- Invalid-password behavior
 - Photography album server calls
 - `/resume` returning 308 to an allowed Contentful HTTPS asset
 - A real 404 status/page and static asset delivery
-- No 5xx responses or secret-bearing CloudWatch log events
-- Amplify job commit ID equal to the validated GitHub SHA
+
+The credentialed test additionally verifies valid-password behavior, secure cookie attributes, and project-cookie isolation. Separately, from a secure operations shell, confirm the Amplify job commit ID equals the validated GitHub SHA, the `5xxErrors` metric remains zero, and CloudWatch/build logs and artifacts do not contain either production secret value.
 
 Keep Nitro's generated routing until POST server functions, protected fallbacks, and SSR 404 behavior have been verified in production.
 

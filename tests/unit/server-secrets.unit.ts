@@ -56,32 +56,35 @@ describe("server secret loading", () => {
 		expect(parameterCalls).toBe(1);
 	});
 
-	test("caches initialization failures without exposing provider details", async () => {
+	test("retries sanitized initialization failures", async () => {
 		const sensitiveProviderDetail = "provider-response-with-secret-value";
 		let parameterCalls = 0;
 		const loader = createServerSecretLoader({
 			environment: emptyEnvironment,
 			getParameter: async () => {
 				parameterCalls += 1;
-				throw new Error(sensitiveProviderDetail);
+				if (parameterCalls === 1) {
+					throw new Error(sensitiveProviderDetail);
+				}
+				return "recovered-secret";
 			},
 		});
 
-		for (let attempt = 0; attempt < 2; attempt += 1) {
-			try {
-				await loader.getProjectAuthSecret();
-				throw new Error("Expected secret initialization to fail");
-			} catch (error) {
-				if (!(error instanceof Error)) {
-					throw error;
-				}
-				expect(error.message).toBe(
-					"Failed to initialize PROJECT_AUTH_SECRET from AWS Systems Manager Parameter Store",
-				);
-				expect(error.message).not.toContain(sensitiveProviderDetail);
+		try {
+			await loader.getProjectAuthSecret();
+			throw new Error("Expected secret initialization to fail");
+		} catch (error) {
+			if (!(error instanceof Error)) {
+				throw error;
 			}
+			expect(error.message).toBe(
+				"Failed to initialize PROJECT_AUTH_SECRET from AWS Systems Manager Parameter Store",
+			);
+			expect(error.message).not.toContain(sensitiveProviderDetail);
 		}
+
+		expect(await loader.getProjectAuthSecret()).toBe("recovered-secret");
 		expect(JSON.stringify(loader)).not.toContain(sensitiveProviderDetail);
-		expect(parameterCalls).toBe(1);
+		expect(parameterCalls).toBe(2);
 	});
 });
