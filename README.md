@@ -1,29 +1,31 @@
 # Carolyn DiLoreto Portfolio
 
-Portfolio website for a Film Editor / Graphic Designer / UX Engineer. Built with TanStack Start and powered by Contentful CMS.
+Portfolio website for a Film Editor / Graphic Designer / UX Engineer. It uses TanStack Start, React 19, Vite, Nitro, and Contentful.
 
-**Live site:** [carolyndiloreto.com](https://carolyndiloreto.com)
+**Production domain:** [carolyndiloreto.com](https://carolyndiloreto.com)
 
-## Tech Stack
+> The repository is being migrated from Netlify to AWS Amplify Hosting. Do not remove the Netlify site or change authoritative DNS until the Amplify hostname, TLS, DNS inventory, and production behavior have all passed the cutover checklist below.
+
+## Tech stack
 
 - **Framework:** TanStack Start with TanStack Router and React 19
-- **Images:** `@unpic/react` with Contentful image transforms
-- **Language:** TypeScript
-- **Styling:** Tailwind CSS v4
-- **UI Primitives:** shadcn/ui + Radix UI
+- **Build:** Vite 8 and Nitro's `aws_amplify` preset
+- **Hosting:** AWS Amplify Hosting `WEB_COMPUTE` in `us-west-2`
+- **Runtime:** Node.js 24
+- **Infrastructure:** AWS CDK v2 in `infra/`
 - **CMS:** Contentful
-- **Package Manager / Build Runner:** Bun
-- **Hosting:** Netlify through its official TanStack Start Vite plugin
-- **Testing:** Bun unit tests plus Playwright behavior and visual regression
+- **Images:** `@unpic/react` with Contentful image transforms
+- **Styling:** Tailwind CSS v4, shadcn/ui, and Radix UI
+- **Package manager:** Bun 1.2.4 in CI and Amplify
+- **Testing:** Bun unit tests and canonical Playwright behavior/visual tests
 
-## Getting Started
+## Local development
 
 ### Prerequisites
 
-- [Bun](https://bun.sh) v1.2+
-- Access to the Contentful space for this project
-
-### Install and configure
+- Node.js 24 (see `.nvmrc`)
+- Bun 1.2.4
+- Access to the project's Contentful delivery API
 
 ```bash
 git clone https://github.com/soodoh/carolyn-portfolio.git
@@ -32,78 +34,237 @@ bun install
 cp .env.example .env
 ```
 
-| Variable                              | Description                                             |
-| ------------------------------------- | ------------------------------------------------------- |
-| `NEXT_PUBLIC_CONTENTFUL_SPACE_ID`     | Contentful space identifier                             |
-| `NEXT_PUBLIC_CONTENTFUL_ACCESS_TOKEN` | Content Delivery API access token                       |
-| `PROJECT_AUTH_SECRET`                 | HMAC signing key for protected project cookies          |
+Local `.env` variables are server-only:
 
-Generate a local signing key with `openssl rand -hex 32`.
+| Variable | Description |
+| --- | --- |
+| `CONTENTFUL_SPACE_ID` | Non-secret Contentful space identifier |
+| `CONTENTFUL_ACCESS_TOKEN` | Local Content Delivery API token |
+| `PROJECT_AUTH_SECRET` | Local HMAC key for protected-project cookies |
 
-### Development
+Generate a local signing key with `openssl rand -hex 32`. Never use a production token or signing key in a checked-in file, `.env.production`, CDK context, an Amplify environment variable, or a GitHub Actions secret.
 
 ```bash
 bun dev
 ```
 
-The predev step generates `lib/project-auth-manifest.json` from Contentful, then Vite starts the TanStack Start server at `http://localhost:3000`.
+The predev step creates the gitignored `lib/project-auth-manifest.json`, then Vite serves the application at `http://localhost:3000`.
 
-### Production
+## Build and test
 
 ```bash
 bun run build
+bun run validate
+bun run test:visual
 ```
 
-The prebuild step refreshes the auth manifest, TanStack Start prerenders public pages into `dist/client/`, and the official Netlify plugin emits the dynamic server handler at `.netlify/v1/functions/server.mjs`. Netlify runs that handler for protected projects, `/resume`, and other dynamic requests. Add all three environment variables to the Netlify site configuration before deploying.
+`bun run build` refreshes the auth manifest, prerenders public routes, and emits Amplify's deployment contract under `.amplify-hosting/`:
 
-`bun dev` provides the supported local workflow and includes Netlify platform emulation from the Vite plugin. There is no standalone Node production-server command in this repository; Bun remains the local package manager and build runner, while Netlify manages the deployed function runtime.
+- `static/` contains public assets and prerendered public pages.
+- `compute/default/server.js` starts the Node.js 24 SSR server.
+- `deploy-manifest.json` retains Nitro's default static-with-compute-fallback routing.
+- `static/test-assets/` is deleted after the build so local visual fixtures are never deployed.
 
-## Available Scripts
+`bun run verify:prerender` checks the exact static page set, keeps protected projects and `/resume` dynamic, rejects public bcrypt hashes and configured secret values, validates the deployment manifest/runtime, and enforces Amplify's 220 MiB uncompressed compute limit.
 
-| Command                 | Description                                                   |
-| ----------------------- | ------------------------------------------------------------- |
-| `bun dev`               | Start port 3000 with Netlify emulation after generating auth data |
-| `bun run build`         | Prerender public pages and emit the Netlify deployment bundle    |
-| `bun run typecheck`     | Generate fixture build artifacts, then run TypeScript             |
-| `bun run validate`      | Run lint, unit tests, type checking, build, and output checks      |
-| `bun run lint`          | Run Biome checks                                                   |
-| `bun run test:unit`     | Run focused Bun unit tests                                         |
-| `bun run lint:fix`      | Apply safe Biome fixes                                             |
-| `bun run test:visual`   | Run Playwright in the canonical ARM64 container                   |
+| Command | Description |
+| --- | --- |
+| `bun dev` | Generate auth data and start Vite on port 3000 |
+| `bun run build` | Emit a cleaned `.amplify-hosting` production bundle |
+| `bun run typecheck` | Build fixture output and run TypeScript |
+| `bun run validate` | Run lint, unit tests, typecheck, build, and artifact checks |
+| `bun run test:unit` | Run focused Bun unit tests |
+| `bun run test:visual` | Run canonical ARM64 Playwright behavior/visual tests |
+| `bun run test:visual:update` | Update reviewed canonical screenshots |
 
-## Architecture
+## Application architecture
 
-### Routes and data
+TanStack Start routes live in `src/routes/`. Public pages and public project slugs are prerendered. Protected project slugs, `/resume`, server functions, and unknown routes use Amplify SSR compute.
 
-TanStack Start file routes live in `src/routes/`. Each route owns its data-loading server function, while password verification uses the focused `lib/verify-project-password.ts` server function. Contentful credentials, project passwords, and cookie validation remain server-only. Builds prerender the public routes and public project slugs from Contentful. Protected project slugs and the external `/resume` redirect are explicitly excluded from prerendering and remain Netlify function requests.
+| Route | Behavior |
+| --- | --- |
+| `/` | Home hero and project previews |
+| `/about` | Bio and profile picture |
+| `/projects` | Filterable project grid |
+| `/projects/$slug` | Public detail or project-specific password gate |
+| `/photography` | On-demand album server functions and gallery |
+| `/resume` | Dynamic HTTP 308 redirect to an allowed HTTPS Contentful asset |
 
-| Route                     | Description                                      |
-| ------------------------- | ------------------------------------------------ |
-| `/`                       | Home hero and project previews                   |
-| `/about`                  | Bio and profile picture                          |
-| `/projects`               | Filterable masonry grid                          |
-| `/projects/$slug`         | Project detail or in-place password gate         |
-| `/photography`            | On-demand photo albums and fullscreen gallery    |
-| `/resume`                 | Permanent redirect to the Contentful PDF         |
+Protected routes fail closed against the generated auth manifest. Successful authentication sets a project-specific HTTP-only, Secure, SameSite=Strict cookie. The project loader validates that cookie before fetching or returning protected Contentful data. Passwords are bcrypt-verified only in server functions; hashes remain in compute and are rejected from public output.
 
-### Password protection
+Production secrets are loaded through `lib/server-secrets.server.ts`:
 
-1. `scripts/generate-auth-manifest.ts` paginates through every Contentful project and writes a complete gitignored manifest before dev/build. Each slug has an explicit public state or a bcrypt hash.
-2. Manifest generation rejects duplicate or malformed slugs. Runtime lookups fail closed when a slug is absent from the deployment snapshot.
-3. The project loader checks its project-specific HTTP-only cookie before fetching or returning protected content.
-4. Unauthorized projects render the password form at the requested project URL.
-5. A TanStack Start server function verifies the password, signs a token, and sets a secure, SameSite=strict cookie.
-6. The route loader is invalidated after authentication and then returns only password-free project data.
+- Local development and fixture CI can use `.env`.
+- Amplify build and SSR compute use SSM `SecureString` parameters.
+- Values are requested with decryption once per process/secret and cached in memory.
+- Provider errors are replaced with non-sensitive initialization errors.
 
-### Photography and images
+## AWS infrastructure
 
-The photography route initially returns album names and the first ordered album. Selecting another album calls a validated server function, preventing every photograph and placeholder from being serialized into the initial page. Stale album responses are ignored, and thumbnails are temporarily disabled while the selected album loads.
+The self-contained CDK project is under `infra/` with its own package manifest and lockfile.
 
-`components/image-wrapper.tsx` uses `@unpic/react` and Contentful's image CDN transformer to generate layout-specific responsive sources with WebP output. Standard Contentful assets use small CDN placeholder URLs without downloading image bodies on the server. Rich-text images still use server-derived metadata and embedded placeholders because Markdown does not provide dimensions.
+```bash
+cd infra
+bun install --frozen-lockfile
+bun run typecheck
+bun run synth
+```
 
-The fullscreen gallery prioritizes only the selected image and its neighbors, restores focus to the opening thumbnail, and exposes slide position and image labels to assistive technology.
+`CarolynPortfolioHostingStack` defines:
 
-## Testing
+- An Amplify `WEB_COMPUTE` app and `amplify-production` branch
+- Disabled auto-builds and pull-request previews
+- A no-cookie managed cache policy for protected SSR responses
+- A build/service/logging role restricted to the Contentful parameter, its KMS encryption context, and Amplify log groups
+- A branch compute role restricted to the two production parameters and their KMS encryption contexts
+- A retained customer-managed KMS key for SSM
+- The existing Route 53 public zone, imported as `Z32YJCERCJ1WLI`
+- Optional apex/`www` Amplify domain association and a permanent `www` to apex redirect
+- GitHub Actions OIDC trust restricted to this repository's `main` ref
+- An Amplify-only deployment role
+- Fourteen-day SSR log retention, a minimal 5xx alarm, and email notifications
+- An account-wide $5 monthly actual/forecast AWS budget warning
+
+The Route 53 zone currently contains only NS/SOA data and public delegation still points to Netlify/NS1. The stack intentionally gates domain association behind `EnableDomainAssociation=false`; this is not a cutover switch.
+
+### Initial infrastructure deployment
+
+Infrastructure deployment is allowed only after local validation. The target account was not bootstrapped when migration work began.
+
+```bash
+ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
+cd infra
+bunx cdk bootstrap "aws://$ACCOUNT_ID/us-west-2"
+```
+
+For the first connected-app creation, authorize the regional Amplify GitHub App for only `soodoh/carolyn-portfolio`. If the API requires a bootstrap token, store a JSON object with a `token` key in a temporary `us-west-2` Secrets Manager secret. Pass only that secret ARN to CDK; never pass the token through CDK context or a CloudFormation parameter.
+
+```bash
+bun run deploy -- \
+  --parameters ContentfulSpaceId=CONTENTFUL_SPACE_ID \
+  --parameters NotificationEmail=NOTIFICATION_EMAIL \
+  --parameters GitHubAccessTokenSecretArn=TEMPORARY_SECRET_ARN \
+  --parameters EnableDomainAssociation=false
+```
+
+After the GitHub connection and a connected build are proven, deploy again with an empty `GitHubAccessTokenSecretArn`, verify the repository remains connected, then revoke the token and delete the temporary Secrets Manager secret.
+
+### Create production SSM parameters
+
+CDK creates the KMS key but never creates secret values. On a secure workstation, use non-echoing input and a mode-0600 temporary JSON file with `aws ssm put-parameter --cli-input-json file://...`. Create standard `SecureString` parameters under the stack's `SecretKmsKeyArn` output:
+
+- `/carolyn-portfolio/prod/contentful-access-token`
+- `/carolyn-portfolio/prod/project-auth-secret`
+
+At cutover, create a new Contentful delivery token and a new `openssl rand -hex 32` project-auth secret. Do not revoke the old Contentful token until AWS production passes all behavior checks. Rotating `PROJECT_AUTH_SECRET` intentionally invalidates existing protected-project cookies.
+
+### Required SSM access spike
+
+Before provisioning production DNS or relying on Amplify:
+
+1. Create temporary production parameter values with the stack KMS key.
+2. Trigger one connected Amplify build and confirm auth-manifest generation reads Contentful through the Amplify service role.
+3. Request a dynamic route on the Amplify hostname and confirm SSR compute reads both parameters through the compute role.
+4. Confirm no value appears in build logs, CloudWatch logs, `.amplify-hosting`, Amplify environment variables, or the synthesized template.
+5. If build-time SSM access fails, stop. Do not fall back to plaintext Amplify variables or long-lived AWS keys.
+
+### Configure GitHub deployment variables
+
+Read stack outputs, then configure non-secret repository variables:
+
+```bash
+gh variable set AMPLIFY_APP_ID --body "APP_ID"
+gh variable set AMPLIFY_DEPLOYMENT_ROLE_ARN --body "DEPLOYMENT_ROLE_ARN"
+```
+
+No AWS access key is stored in GitHub. The production workflow:
+
+1. Waits for validation and canonical Playwright jobs.
+2. Skips a tested SHA when `main` has advanced.
+3. Uses a dedicated `contents: write` job to advance `amplify-production` to the exact tested SHA.
+4. Uses a separate OIDC-only job to call `amplify:StartJob`.
+5. Rejects the wrong commit, polls `GetJob`, fails terminal error states/timeouts, and publishes the Amplify URL in the job summary.
+
+Amplify rebuilds the SSR app from the connected branch. The duplicate GitHub validation build and Amplify production build are intentional.
+
+## Deployment verification
+
+Before DNS cutover, test the Amplify hostname on desktop and mobile:
+
+- `/`, `/about`, `/projects`, `/photography`, and a public project
+- Protected gate without protected data or bcrypt leakage
+- Invalid and valid password behavior, cookie attributes, and project-cookie isolation
+- Photography album server calls
+- `/resume` returning 308 to an allowed Contentful HTTPS asset
+- A real 404 status/page and static asset delivery
+- No 5xx responses or secret-bearing CloudWatch log events
+- Amplify job commit ID equal to the validated GitHub SHA
+
+Keep Nitro's generated routing until POST server functions, protected fallbacks, and SSR 404 behavior have been verified in production.
+
+## DNS and cutover runbook
+
+DNS cutover is destructive and requires explicit final confirmation immediately before execution.
+
+1. Export every record from the current Netlify/NS1 authoritative zone. Include A, AAAA, CNAME, MX, TXT/SPF/DKIM/DMARC, CAA, SRV, and verification records—not only web records.
+2. Query all four current authoritative servers and compare the export with public resolvers.
+3. Recreate the full record inventory in Route 53 with reviewed TTLs.
+4. Enable the Amplify domain association only after the inventory is complete. Add certificate/domain-verification records to both NS1 and Route 53 when Amplify requires them.
+5. Validate the Route 53 zone directly against each stack-output name server before delegation.
+6. Lower relevant TTLs in advance where the current provider permits it.
+7. After final confirmation, update the Route 53 Registrar nameservers to the stack outputs.
+8. Verify authoritative delegation and DNSSEC/CAA implications with multiple public resolvers; then verify TLS, apex application behavior, permanent `www` redirect, path/query preservation, and no redirect loops.
+9. Run the production smoke suite and confirm GitHub/Amplify still report the expected SHA.
+10. Wait for old NS caches to expire and repeat global checks. Do not delete Netlify at the instant nameservers change.
+11. Only then revoke the old Contentful token, delete the Netlify site/zone/integration, and remove any remaining external Netlify configuration.
+
+There is no planned seven-day rollback window, but Netlify remains the emergency DNS rollback target until post-delegation verification completes.
+
+## Rollback
+
+### Application rollback
+
+Select a previously validated commit, force `amplify-production` to that exact SHA, and start/monitor a new Amplify `RELEASE` job. Confirm the returned job uses the rollback SHA. Do not point production at an untested branch head.
+
+### DNS rollback
+
+Before Netlify retirement, restore the registrar's previous NS1 nameservers if Amplify DNS/TLS/application behavior is unhealthy. Restore any changed TTLs only after service is stable. After Netlify deletion, rollback is forward-only through Amplify/CDK and Route 53.
+
+### Infrastructure rollback
+
+Use `cdk diff` before every change. KMS keys and SSR logs are retained on stack deletion; account for their continuing cost and remove them manually only after secret recovery and log-retention requirements are satisfied.
+
+## Secret rotation
+
+1. Create the replacement value in Contentful or generate a new project-auth key.
+2. Overwrite only the corresponding SSM parameter using the same KMS key.
+3. Trigger an exact-SHA Amplify release so fresh compute processes load the new value.
+4. Verify public and protected behavior and inspect logs.
+5. Revoke the old Contentful token only after successful verification.
+
+Never print parameter values while troubleshooting. Use metadata-only `describe-parameters` calls when checking existence.
+
+## Cost posture
+
+Current public pricing assumptions, before free-tier credits:
+
+| Item | Assumption |
+| --- | --- |
+| Route 53 hosted zone | $0.50/month plus about $0.40 per million standard queries |
+| Dedicated KMS key | About $1/month plus negligible API use |
+| CloudWatch 5xx alarm | About $0.10/month; logs/SNS are usage-based |
+| Amplify standard build | $0.01/minute |
+| Amplify CDN storage | $0.023/GB-month |
+| Amplify transfer out | $0.15/GB |
+| Amplify SSR requests | $0.30/million |
+| Amplify SSR duration | $0.20/GB-hour |
+| AWS Budget monitoring | Free for notification-only budgets |
+
+Expected fixed baseline is roughly $1.60/month plus low logs, build, CDN, transfer, DNS query, and SSR usage. Data transfer is the largest likely variable. Amplify WAF is intentionally omitted because its Amplify charge alone is $15/month. PR previews, staging branches, and unnecessary alarms are disabled.
+
+After one complete billing week, review Cost Explorer by service, Amplify build minutes/data transfer/SSR use, CloudWatch ingestion, KMS, and Route 53. Recalculate the monthly projection and investigate any forecast approaching the $5 warning.
+
+## Visual testing
 
 Visual tests run in a pinned Linux ARM64 Playwright container so local and CI rendering is identical. An ARM64 Docker engine must be running.
 
@@ -113,15 +274,7 @@ bun run test:visual -- tests/home.test.ts
 bun run test:visual:update
 ```
 
-Do not update snapshots from a native Playwright run. Review image diffs before intentionally updating canonical baselines. Prefer targeted updates such as `bun run test:visual -- tests/photography.test.ts --project=mobile --update-snapshots=changed` instead of rebaselining every snapshot. CI runs `bun run validate` before the canonical visual suite so ignored generated files are always recreated from a clean checkout.
-
-The checked-in Contentful fixture keeps CMS data stable. To deliberately refresh it from live Contentful, run:
-
-```bash
-bun run scripts/capture-contentful-fixture.ts
-```
-
-The capture script stages assets and fixture JSON before replacement, limits download concurrency, embeds placeholders, and localizes visual assets. Review the generated content and any visual diffs before committing it.
+Do not update snapshots from a native Playwright run. Review image diffs before accepting canonical baselines. The checked-in Contentful fixture keeps CMS data stable; deliberately refresh it with `bun run scripts/capture-contentful-fixture.ts` and review generated content plus visual diffs.
 
 ## License
 

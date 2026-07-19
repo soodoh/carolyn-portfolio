@@ -7,13 +7,14 @@
 - `lib/` includes data fetching and shared utilities (`fetch-*.ts`, Contentful helpers, image utilities, type definitions).
 - `tests/` contains Playwright specs and visual baselines (`*.test.ts` and `*-snapshots/`).
 - `scripts/` stores build-time tasks, including `generate-auth-manifest.ts`.
+- `infra/` contains the self-contained AWS CDK v2 TypeScript project for Amplify, IAM, Route 53, monitoring, and budgets.
 - `public/` is for static assets. `lib/project-auth-manifest.json` is generated and must stay uncommitted.
 
 ## Build, Test, and Development Commands
 
 - `bun install`: install dependencies.
 - `bun dev`: generate auth manifest, then start local dev server (`http://localhost:3000`).
-- `bun run build`: generate auth data, prerender public pages, and emit the Netlify deployment bundle.
+- `bun run build`: generate auth data, prerender public pages, and emit the cleaned AWS Amplify Hosting bundle under `.amplify-hosting/`.
 - `bun run typecheck`: generate fixture build artifacts, then run TypeScript.
 - `bun run validate`: run lint, unit tests, type checking, fixture build, and prerender-output checks.
 - `bun run lint`: run Biome lint and format checks.
