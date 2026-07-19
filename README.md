@@ -4,7 +4,7 @@ Portfolio website for a Film Editor / Graphic Designer / UX Engineer. It uses Ta
 
 **Production domain:** [carolyndiloreto.com](https://carolyndiloreto.com)
 
-> The repository is being migrated from Netlify to AWS Amplify Hosting. Do not remove the Netlify site or change authoritative DNS until the Amplify hostname, TLS, DNS inventory, and production behavior have all passed the cutover checklist below.
+AWS Amplify Hosting serves production through Route 53. `www.carolyndiloreto.com` and the cross-account legacy hostname `carolyn.diloreto.com` permanently redirect to the canonical HTTPS domain while preserving paths and query strings. Keep the former Netlify site and DNS zone intact only until pre-cutover nameserver caches have expired and global checks remain healthy.
 
 ## Tech stack
 
@@ -190,10 +190,10 @@ Amplify rebuilds the SSR app from the connected branch. The duplicate GitHub val
 
 ## Deployment verification
 
-Before DNS cutover, run the automated desktop/mobile smoke suite:
+Run the automated desktop/mobile production smoke suite after each release:
 
 ```bash
-AMPLIFY_BASE_URL=https://amplify-production.APP_ID.amplifyapp.com \
+AMPLIFY_BASE_URL=https://carolyndiloreto.com \
   bun run test:amplify
 ```
 
@@ -205,28 +205,24 @@ The production workflow runs this suite without credentials after each successfu
 - Photography album server calls
 - `/resume` returning 308 to an allowed Contentful HTTPS asset
 - A real 404 status/page and static asset delivery
+- Canonical `www` and `carolyn.diloreto.com` redirects with path/query preservation
 
 The credentialed test additionally verifies valid-password behavior, secure cookie attributes, and project-cookie isolation. Separately, from a secure operations shell, confirm the Amplify job commit ID equals the validated GitHub SHA, the `5xxErrors` metric remains zero, and CloudWatch/build logs and artifacts do not contain either production secret value.
 
 Keep Nitro's generated routing until POST server functions, protected fallbacks, and SSR 404 behavior have been verified in production.
 
-## DNS and cutover runbook
+## DNS operations
 
-DNS cutover is destructive and requires explicit final confirmation immediately before execution.
+The production cutover completed after exporting all four Netlify-managed DNS records, validating both Amplify certificates, and testing the target distributions directly. The registrar delegates `carolyndiloreto.com` to the Route 53 nameservers emitted by the CDK stack.
 
-1. Export every record from the current Netlify/NS1 authoritative zone. Include A, AAAA, CNAME, MX, TXT/SPF/DKIM/DMARC, CAA, SRV, and verification records—not only web records.
-2. Query all four current authoritative servers and compare the export with public resolvers.
-3. Recreate the full record inventory in Route 53 with reviewed TTLs.
-4. Enable the Amplify domain association only after the inventory is complete. Add certificate/domain-verification records to both NS1 and Route 53 when Amplify requires them.
-5. Validate the Route 53 zone directly against each stack-output name server before delegation.
-6. Lower relevant TTLs in advance where the current provider permits it.
-7. After final confirmation, update the Route 53 Registrar nameservers to the stack outputs.
-8. Verify authoritative delegation and DNSSEC/CAA implications with multiple public resolvers; then verify TLS, apex application behavior, permanent `www` redirect, path/query preservation, and no redirect loops.
-9. Run the production smoke suite and confirm GitHub/Amplify still report the expected SHA.
-10. Wait for old NS caches to expire and repeat global checks. Do not delete Netlify at the instant nameservers change.
-11. Only then revoke the old Contentful token, delete the Netlify site/zone/integration, and remove any remaining external Netlify configuration.
+- The production association manages the apex and `www` records in hosted zone `Z32YJCERCJ1WLI`.
+- The legacy association manages TLS and routing for `carolyn.diloreto.com`; its CNAME and ACM validation record live in the separate authoritative `diloreto.com` Route 53 zone.
+- Both domain associations must report `AVAILABLE` before changing either target.
+- DNSSEC is not enabled. Recheck CAA implications before adding restrictive CAA records.
+- After DNS changes, query every authoritative server and multiple public resolvers, verify TLS and redirect path/query preservation, run `bun run test:amplify`, and inspect the Amplify 5xx metric and compute logs.
+- Do not delete the former Netlify site or DNS zone until old NS caches have expired. Remove the temporary Amplify certificate-validation record from Netlify only after Route 53 is consistently authoritative worldwide.
 
-There is no planned seven-day rollback window, but Netlify remains the emergency DNS rollback target until post-delegation verification completes.
+For emergency rollback before Netlify retirement, restore the registrar's NS1 nameservers and point the Route 53 apex and `www` records back to the exported Netlify IPv4/IPv6 targets so resolvers with either delegation remain healthy.
 
 ## Rollback
 
@@ -236,7 +232,7 @@ Select a previously validated commit, force `amplify-production` to that exact S
 
 ### DNS rollback
 
-Before Netlify retirement, restore the registrar's previous NS1 nameservers if Amplify DNS/TLS/application behavior is unhealthy. Restore any changed TTLs only after service is stable. After Netlify deletion, rollback is forward-only through Amplify/CDK and Route 53.
+Before Netlify retirement, restore the registrar's previous NS1 nameservers if Amplify DNS/TLS/application behavior is unhealthy. Also restore the exported Netlify apex and `www` targets in Route 53 so resolvers caching either delegation remain healthy. The cross-account `carolyn.diloreto.com` CNAME can be returned to `carolyndiloreto.com` while Netlify still holds its wildcard certificate. Restore any changed TTLs only after service is stable. After Netlify deletion, rollback is forward-only through Amplify/CDK and Route 53.
 
 ### Infrastructure rollback
 

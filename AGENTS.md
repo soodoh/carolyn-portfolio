@@ -19,6 +19,7 @@
 - `bun run validate`: run lint, unit tests, type checking, fixture build, and prerender-output checks.
 - `bun run lint`: run Biome lint and format checks.
 - `bun run test:unit`: run focused Bun unit tests.
+- `bun run test:amplify`: run deployed production smoke tests against `AMPLIFY_BASE_URL`.
 - `bun run lint:fix`: apply automatic Biome lint and format fixes.
 - `bun run test:visual`: run all end-to-end/visual tests in the canonical container.
 - `bun run test:visual -- tests/home.test.ts`: run one spec file in the canonical container.

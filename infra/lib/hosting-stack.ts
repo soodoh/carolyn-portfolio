@@ -37,6 +37,8 @@ import type { Construct } from "constructs";
 
 const AWS_REGION = "us-west-2";
 const DOMAIN_NAME = "carolyndiloreto.com";
+const LEGACY_DOMAIN_NAME = "diloreto.com";
+const LEGACY_DOMAIN_PREFIX = "carolyn";
 const REPOSITORY_URL = "https://github.com/soodoh/carolyn-portfolio";
 const PRODUCTION_BRANCH = "amplify-production";
 const CONTENTFUL_ACCESS_TOKEN_PARAMETER =
@@ -85,9 +87,9 @@ export class HostingStack extends Stack {
 			"EnableDomainAssociation",
 			{
 				allowedValues: ["true", "false"],
-				default: "false",
+				default: "true",
 				description:
-					"Create the Amplify custom-domain association after DNS records have been inventoried",
+					"Create the validated production and legacy Amplify domain associations",
 				type: "String",
 			},
 		);
@@ -224,6 +226,11 @@ export class HostingStack extends Stack {
 					status: "301",
 					target: `https://${DOMAIN_NAME}`,
 				},
+				{
+					source: `https://${LEGACY_DOMAIN_PREFIX}.${LEGACY_DOMAIN_NAME}`,
+					status: "301",
+					target: `https://${DOMAIN_NAME}`,
+				},
 			],
 			description: "Carolyn DiLoreto portfolio production hosting",
 			enableBranchAutoDeletion: false,
@@ -293,6 +300,20 @@ export class HostingStack extends Stack {
 		});
 		domain.cfnOptions.condition = shouldCreateDomainAssociation;
 		domain.addDependency(branch);
+
+		const legacyDomain = new CfnDomain(this, "LegacyDomain", {
+			appId: amplifyApp.attrAppId,
+			domainName: LEGACY_DOMAIN_NAME,
+			enableAutoSubDomain: false,
+			subDomainSettings: [
+				{
+					branchName: PRODUCTION_BRANCH,
+					prefix: LEGACY_DOMAIN_PREFIX,
+				},
+			],
+		});
+		legacyDomain.cfnOptions.condition = shouldCreateDomainAssociation;
+		legacyDomain.addDependency(branch);
 
 		new LogGroup(this, "AmplifySsrLogGroup", {
 			logGroupName: `/aws/amplify/${amplifyApp.attrAppId}`,

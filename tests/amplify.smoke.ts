@@ -1,6 +1,8 @@
 import { expect, test } from "@playwright/test";
 import { selectFilter } from "@/tests/visual-helpers";
 
+const canonicalOrigin = "https://carolyndiloreto.com";
+const legacyOrigin = "https://carolyn.diloreto.com";
 const publicProjectPath = "/projects/d23-membership-page";
 const protectedSlug = "magnolia-app";
 const secondProtectedSlug = "nbc-app";
@@ -91,6 +93,21 @@ test.describe("Amplify production behavior", () => {
 		const missing = await request.get("/not-a-real-amplify-route");
 		expect(missing.status()).toBe(404);
 		expect(await missing.text()).toContain("Page Not Found");
+	});
+
+	test("preserves paths and queries when redirecting domain aliases", async ({
+		request,
+	}) => {
+		const path = "/projects?redirect-smoke=1";
+		for (const origin of [`https://www.carolyndiloreto.com`, legacyOrigin]) {
+			const response = await request.get(`${origin}${path}`, {
+				maxRedirects: 0,
+			});
+			expect(response.status(), origin).toBe(301);
+			expect(response.headers().location, origin).toBe(
+				`${canonicalOrigin}${path}`,
+			);
+		}
 	});
 
 	test("sets a secure isolated cookie for a valid password", async ({
