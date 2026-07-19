@@ -301,6 +301,9 @@ export class HostingStack extends Stack {
 		domain.cfnOptions.condition = shouldCreateDomainAssociation;
 		domain.addDependency(branch);
 
+		// This association attaches only carolyn.diloreto.com to the Carolyn app.
+		// The shared diloreto.com Route 53 zone is owned by a separate AWS account;
+		// this stack must never manage its apex, www, home, wildcard, mail, or paul records.
 		const legacyDomain = new CfnDomain(this, "LegacyDomain", {
 			appId: amplifyApp.attrAppId,
 			domainName: LEGACY_DOMAIN_NAME,

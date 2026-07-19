@@ -120,13 +120,13 @@ bun run synth
 - A branch compute role restricted to the two production parameters and their KMS encryption contexts
 - A retained customer-managed KMS key for SSM
 - The existing Route 53 public zone, imported as `Z32YJCERCJ1WLI`
-- Optional apex/`www` Amplify domain association and a permanent `www` to apex redirect
+- Production apex/`www` and legacy `carolyn.diloreto.com` Amplify associations with permanent canonical redirects
 - GitHub Actions OIDC trust restricted to this repository's `main` ref
 - An Amplify-only deployment role
 - Fourteen-day SSR log retention, a minimal 5xx alarm, and email notifications
 - An account-wide $5 monthly actual/forecast AWS budget warning
 
-The Route 53 zone currently contains only NS/SOA data and public delegation still points to Netlify/NS1. The stack intentionally gates domain association behind `EnableDomainAssociation=false`; this is not a cutover switch.
+Route 53 is authoritative for `carolyndiloreto.com`, and `EnableDomainAssociation` now defaults to `true` as the deployed steady state. Setting it to `false` is destructive and removes both Amplify domain associations; it is not a routine rollback switch.
 
 ### Initial infrastructure deployment
 
@@ -148,7 +148,7 @@ bun run deploy -- \
   --parameters EnableDomainAssociation=false
 ```
 
-After the GitHub connection and a connected build are proven, deploy again with an empty `GitHubAccessTokenSecretArn`, verify the repository remains connected, then revoke the token and delete the temporary Secrets Manager secret.
+After the GitHub connection and a connected build are proven, deploy again with an empty `GitHubAccessTokenSecretArn`, verify the repository remains connected, then revoke the token and delete the temporary Secrets Manager secret. For the deployed production state, pass `EnableDomainAssociation=true` or rely on its current `true` default.
 
 ### Create production SSM parameters
 
@@ -215,14 +215,21 @@ Keep Nitro's generated routing until POST server functions, protected fallbacks,
 
 The production cutover completed after exporting all four Netlify-managed DNS records, validating both Amplify certificates, and testing the target distributions directly. The registrar delegates `carolyndiloreto.com` to the Route 53 nameservers emitted by the CDK stack.
 
-- The production association manages the apex and `www` records in hosted zone `Z32YJCERCJ1WLI`.
-- The legacy association manages TLS and routing for `carolyn.diloreto.com`; its CNAME and ACM validation record live in the separate authoritative `diloreto.com` Route 53 zone.
+- AWS account `725669362139` owns the Carolyn Amplify app, `carolyndiloreto.com`, and hosted zone `Z32YJCERCJ1WLI`.
+- AWS account `658271954302` owns the shared `diloreto.com` hosted zone `Z07741203I5VR48TBSMSA`. Only `carolyn.diloreto.com` and its dedicated ACM validation CNAME belong to this project.
+- The shared zone's apex, `www`, `home`, wildcard, mail, and `paul` records belong to other services/projects and must never be changed by this repository's operations.
+- There is no cross-account IAM trust. Account `725669362139` owns the Amplify domain association and certificate; account `658271954302` supplies only the two DNS CNAMEs that prove ownership and route the legacy hostname.
+- Before any cross-account DNS write, verify `aws sts get-caller-identity`: local profile `default` must resolve to `725669362139`, and the dedicated alias-DNS profile must resolve to `658271954302`. Never use the unrelated `sarabeth-production` profile.
 - Both domain associations must report `AVAILABLE` before changing either target.
 - DNSSEC is not enabled. Recheck CAA implications before adding restrictive CAA records.
 - After DNS changes, query every authoritative server and multiple public resolvers, verify TLS and redirect path/query preservation, run `bun run test:amplify`, and inspect the Amplify 5xx metric and compute logs.
 - Do not delete the former Netlify site or DNS zone until old NS caches have expired. Remove the temporary Amplify certificate-validation record from Netlify only after Route 53 is consistently authoritative worldwide.
 
 For emergency rollback before Netlify retirement, restore the registrar's NS1 nameservers and point the Route 53 apex and `www` records back to the exported Netlify IPv4/IPv6 targets so resolvers with either delegation remain healthy.
+
+### Netlify retirement
+
+Do not delete Netlify before **2026-07-21 23:00 UTC**, which is later than the pre-cutover 172800-second nameserver TTL. At that time, repeat authoritative/public resolver checks, the credentialed production smoke suite, TLS/redirect checks, and the Amplify metric/log review. Then use a freshly authenticated, pinned Netlify CLI—not the dashboard—to verify and delete only the `carolyndiloreto` project and `carolyndiloreto.com` DNS zone. Abort if the CLI cannot enumerate the expected project and exactly the exported Carolyn DNS records; never delete by a guessed ID.
 
 ## Rollback
 
