@@ -393,14 +393,14 @@ export class HostingStack extends Stack {
 		);
 		deploymentRole.addToPolicy(
 			new PolicyStatement({
-				actions: ["amplify:GetBranch", "amplify:StartJob"],
+				actions: ["amplify:GetBranch"],
 				effect: Effect.ALLOW,
 				resources: [branch.attrArn],
 			}),
 		);
 		deploymentRole.addToPolicy(
 			new PolicyStatement({
-				actions: ["amplify:GetJob"],
+				actions: ["amplify:GetJob", "amplify:StartJob"],
 				effect: Effect.ALLOW,
 				resources: [`${branch.attrArn}/jobs/*`],
 			}),
