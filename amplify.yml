@@ -11,8 +11,8 @@ frontend:
     build:
       commands:
         - nvm use 24.18.0
-        - $HOME/.bun/bin/bun run build
-        - VERIFY_DEPLOYMENT_SECRETS=true $HOME/.bun/bin/bun run verify:prerender
+        - export PATH="$HOME/.bun/bin:$PATH" && bun run build
+        - export PATH="$HOME/.bun/bin:$PATH" && VERIFY_DEPLOYMENT_SECRETS=true bun run verify:prerender
   artifacts:
     baseDirectory: .amplify-hosting
     files:
