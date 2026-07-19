@@ -9,16 +9,20 @@ on:
 permissions:
   contents: read
 
+env:
+  AMPLIFY_BRANCH: amplify-production
+  AWS_REGION: us-west-2
+
 jobs:
   validate:
     runs-on: ubuntu-24.04-arm
     timeout-minutes: 10
     steps:
       - name: Check out repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
 
       - name: Set up Bun
-        uses: oven-sh/setup-bun@v2
+        uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2
         with:
           bun-version: 1.2.4
 
@@ -36,14 +40,14 @@ jobs:
     timeout-minutes: 20
     steps:
       - name: Check out repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
 
       - name: Run canonical Linux visual tests
         run: ./scripts/playwright-docker.sh
 
       - name: Upload Playwright report
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
         with:
           name: playwright-report
           path: |
@@ -51,3 +55,188 @@ jobs:
             test-results/
           if-no-files-found: ignore
           retention-days: 14
+
+  release-production-ref:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs:
+      - validate
+      - playwright
+    runs-on: ubuntu-24.04-arm
+    timeout-minutes: 5
+    concurrency:
+      group: amplify-production
+      cancel-in-progress: false
+    permissions:
+      contents: write
+    outputs:
+      should_deploy: ${{ steps.release.outputs.should_deploy }}
+      tested_sha: ${{ steps.release.outputs.tested_sha }}
+    steps:
+      - name: Check out tested commit
+        uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
+        with:
+          fetch-depth: 0
+
+      - name: Advance production source branch
+        id: release
+        env:
+          TESTED_SHA: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+          echo "should_deploy=false" >> "$GITHUB_OUTPUT"
+          echo "tested_sha=$TESTED_SHA" >> "$GITHUB_OUTPUT"
+
+          remote_main=$(git ls-remote origin refs/heads/main | cut -f1)
+          if [[ "$remote_main" != "$TESTED_SHA" ]]; then
+            {
+              echo "### Production deployment skipped"
+              echo "A newer commit now owns main, so tested commit \`$TESTED_SHA\` is obsolete."
+            } >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+
+          remote_production=$(git ls-remote origin "refs/heads/$AMPLIFY_BRANCH" | cut -f1)
+          if [[ -n "$remote_production" ]]; then
+            git push \
+              --force-with-lease="refs/heads/$AMPLIFY_BRANCH:$remote_production" \
+              origin "$TESTED_SHA:refs/heads/$AMPLIFY_BRANCH"
+          else
+            git push origin "$TESTED_SHA:refs/heads/$AMPLIFY_BRANCH"
+          fi
+
+          released_sha=$(git ls-remote origin "refs/heads/$AMPLIFY_BRANCH" | cut -f1)
+          if [[ "$released_sha" != "$TESTED_SHA" ]]; then
+            echo "Production source branch points to $released_sha, expected $TESTED_SHA" >&2
+            exit 1
+          fi
+          echo "should_deploy=true" >> "$GITHUB_OUTPUT"
+
+  deploy-production:
+    if: needs.release-production-ref.outputs.should_deploy == 'true'
+    needs: release-production-ref
+    runs-on: ubuntu-24.04-arm
+    timeout-minutes: 35
+    concurrency:
+      group: amplify-production
+      cancel-in-progress: false
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - name: Confirm deployment is still current
+        id: current
+        env:
+          TESTED_SHA: ${{ needs.release-production-ref.outputs.tested_sha }}
+        run: |
+          set -euo pipefail
+          remote_main=$(git ls-remote "https://github.com/$GITHUB_REPOSITORY.git" refs/heads/main | cut -f1)
+          if [[ "$remote_main" != "$TESTED_SHA" ]]; then
+            echo "deploy=false" >> "$GITHUB_OUTPUT"
+            {
+              echo "### Production deployment skipped"
+              echo "A newer commit now owns main, so tested commit \`$TESTED_SHA\` is obsolete."
+            } >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+          echo "deploy=true" >> "$GITHUB_OUTPUT"
+
+      - name: Validate deployment configuration
+        if: steps.current.outputs.deploy == 'true'
+        env:
+          AMPLIFY_APP_ID: ${{ vars.AMPLIFY_APP_ID }}
+          DEPLOYMENT_ROLE_ARN: ${{ vars.AMPLIFY_DEPLOYMENT_ROLE_ARN }}
+        run: |
+          set -euo pipefail
+          [[ "$AMPLIFY_APP_ID" =~ ^d[a-z0-9]+$ ]] || {
+            echo "Repository variable AMPLIFY_APP_ID is missing or invalid" >&2
+            exit 1
+          }
+          [[ "$DEPLOYMENT_ROLE_ARN" =~ ^arn:aws:iam::[0-9]{12}:role/ ]] || {
+            echo "Repository variable AMPLIFY_DEPLOYMENT_ROLE_ARN is missing or invalid" >&2
+            exit 1
+          }
+
+      - name: Authenticate to AWS with GitHub OIDC
+        if: steps.current.outputs.deploy == 'true'
+        uses: aws-actions/configure-aws-credentials@61815dcd50bd041e203e49132bacad1fd04d2708 # v5
+        with:
+          aws-region: ${{ env.AWS_REGION }}
+          role-to-assume: ${{ vars.AMPLIFY_DEPLOYMENT_ROLE_ARN }}
+          role-session-name: carolyn-portfolio-production
+
+      - name: Start and monitor exact Amplify release
+        if: steps.current.outputs.deploy == 'true'
+        env:
+          AMPLIFY_APP_ID: ${{ vars.AMPLIFY_APP_ID }}
+          EXPECTED_SHA: ${{ needs.release-production-ref.outputs.tested_sha }}
+        run: |
+          set -euo pipefail
+
+          job_summary=$(aws amplify start-job \
+            --app-id "$AMPLIFY_APP_ID" \
+            --branch-name "$AMPLIFY_BRANCH" \
+            --job-type RELEASE \
+            --commit-id "$EXPECTED_SHA" \
+            --job-reason "GitHub Actions validated $EXPECTED_SHA" \
+            --query jobSummary \
+            --output json)
+          job_id=$(jq -r '.jobId // empty' <<< "$job_summary")
+          job_commit=$(jq -r '.commitId // empty' <<< "$job_summary")
+          if [[ -z "$job_id" ]]; then
+            echo "Amplify did not return a job ID" >&2
+            exit 1
+          fi
+          if [[ "$job_commit" != "$EXPECTED_SHA" ]]; then
+            echo "Amplify started commit $job_commit, expected $EXPECTED_SHA" >&2
+            exit 1
+          fi
+
+          deadline=$(( $(date +%s) + 1800 ))
+          while true; do
+            job=$(aws amplify get-job \
+              --app-id "$AMPLIFY_APP_ID" \
+              --branch-name "$AMPLIFY_BRANCH" \
+              --job-id "$job_id" \
+              --query job \
+              --output json)
+            status=$(jq -r '.summary.status' <<< "$job")
+            observed_commit=$(jq -r '.summary.commitId // empty' <<< "$job")
+            if [[ "$observed_commit" != "$EXPECTED_SHA" ]]; then
+              echo "Amplify job changed to commit $observed_commit, expected $EXPECTED_SHA" >&2
+              exit 1
+            fi
+
+            case "$status" in
+              SUCCEED)
+                break
+                ;;
+              FAILED|CANCELLED|CANCELLING)
+                echo "Amplify job $job_id finished with $status" >&2
+                exit 1
+                ;;
+              PENDING|PROVISIONING|RUNNING)
+                ;;
+              *)
+                echo "Amplify job $job_id returned unexpected status $status" >&2
+                exit 1
+                ;;
+            esac
+
+            if (( $(date +%s) >= deadline )); then
+              echo "Timed out waiting for Amplify job $job_id" >&2
+              exit 1
+            fi
+            sleep 15
+          done
+
+          default_domain=$(aws amplify get-app \
+            --app-id "$AMPLIFY_APP_ID" \
+            --query 'app.defaultDomain' \
+            --output text)
+          deployed_url="https://$AMPLIFY_BRANCH.$default_domain"
+          {
+            echo "### Amplify production deployment"
+            echo "- Commit: [\`$EXPECTED_SHA\`](https://github.com/$GITHUB_REPOSITORY/commit/$EXPECTED_SHA)"
+            echo "- Amplify job: \`$job_id\`"
+            echo "- URL: [$deployed_url]($deployed_url)"
+          } >> "$GITHUB_STEP_SUMMARY"
