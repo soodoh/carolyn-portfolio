@@ -1,0 +1,9 @@
+{
+	"app": "bun run bin/app.ts",
+	"context": {
+		"@aws-cdk/aws-iam:minimizePolicies": true,
+		"@aws-cdk/core:checkSecretUsage": true,
+		"@aws-cdk/core:enablePartitionLiterals": true,
+		"@aws-cdk/core:newStyleStackSynthesis": true
+	}
+}

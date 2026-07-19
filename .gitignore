@@ -18,6 +18,8 @@ bun-debug.log*
 # Nitro / Amplify Hosting
 /.nitro/
 /.amplify-hosting/
+/infra/cdk.out/
+/infra/node_modules/
 
 # production
 /build

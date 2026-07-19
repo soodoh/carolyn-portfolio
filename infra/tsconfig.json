@@ -1,0 +1,15 @@
+{
+	"compilerOptions": {
+		"esModuleInterop": true,
+		"lib": ["ES2023"],
+		"module": "ESNext",
+		"moduleResolution": "Bundler",
+		"noEmit": true,
+		"noUncheckedIndexedAccess": true,
+		"strict": true,
+		"target": "ES2023",
+		"typeRoots": ["./node_modules/@types"],
+		"types": ["node"]
+	},
+	"include": ["bin/**/*.ts", "lib/**/*.ts"]
+}

@@ -1,0 +1,83 @@
+{
+  "lockfileVersion": 1,
+  "configVersion": 1,
+  "workspaces": {
+    "": {
+      "name": "carolyn-portfolio-infra",
+      "dependencies": {
+        "aws-cdk-lib": "2.261.0",
+        "constructs": "10.5.0",
+      },
+      "devDependencies": {
+        "@types/node": "26.1.1",
+        "aws-cdk": "2.1132.0",
+        "typescript": "5.9.3",
+      },
+    },
+  },
+  "packages": {
+    "@aws-cdk/asset-awscli-v1": ["@aws-cdk/asset-awscli-v1@2.2.282", "", {}, "sha512-7hKMi5tTxDcKGIMIOq14PnY0GBcugW33Uh/2YHDZiEwSxLeFOCYBwhR+BFXONb/EJeVI3RETFgailNZbkcKF6g=="],
+
+    "@aws-cdk/asset-node-proxy-agent-v6": ["@aws-cdk/asset-node-proxy-agent-v6@2.1.2", "", {}, "sha512-pDiuqH+qY3zM9lhhLjbKJ1tnKOHzQ2V4Wr/3qsxyKeKAkuPMI/BVGvZG1PbrikUw949cGVTfVEt4ETKKYnrj0Q=="],
+
+    "@aws-cdk/cloud-assembly-schema": ["@aws-cdk/cloud-assembly-schema@54.12.0", "", { "dependencies": { "jsonschema": "^1.5.0", "semver": "^7.8.5" } }, "sha512-u8G9RZGW7vWq0KpEj1MYAin8yc+Mw7wYU2UjM5C2juZIHavXcerj6q7UsoOWd0N2TWtBw9WT9w3gknqR1GzAmg=="],
+
+    "@types/node": ["@types/node@26.1.1", "", { "dependencies": { "undici-types": "~8.3.0" } }, "sha512-nxAkRSVkN1Y0JC1W8ky/fTfkGsMmcrRsbx+3XoZE+rMOX71kLYTV7fLXpqud1GpbpP5TuffXFqfX7fH2GgZREw=="],
+
+    "aws-cdk": ["aws-cdk@2.1132.0", "", { "bin": { "cdk": "bin/cdk" } }, "sha512-kcIzBZQO+2v+F97iaeI29fdOUQEx44wr0qDb9HXNqdU82V+1ZKI1KuFlHwH2nq7+6iNc1bu60se4hFf+2d7vXg=="],
+
+    "aws-cdk-lib": ["aws-cdk-lib@2.261.0", "", { "dependencies": { "@aws-cdk/asset-awscli-v1": "2.2.282", "@aws-cdk/asset-node-proxy-agent-v6": "^2.1.2", "@aws-cdk/cloud-assembly-api": "^2.2.5", "@aws-cdk/cloud-assembly-schema": "^54.0.0", "@balena/dockerignore": "^1.0.2", "case": "1.6.3", "fs-extra": "^11.3.5", "ignore": "^5.3.2", "jsonschema": "^1.5.0", "mime-types": "^2.1.35", "minimatch": "^10.2.5", "punycode": "^2.3.1", "semver": "^7.8.1", "yaml": "1.10.3" }, "peerDependencies": { "constructs": "^10.5.0" } }, "sha512-e52e3Abjg0HkuRWlWwtSv5+ZiMW1rhCDdL9ff7lzWXInU8xdfLJpuoimfa0IJwjiNGyphppgg52Azx9M80OA0g=="],
+
+    "constructs": ["constructs@10.5.0", "", {}, "sha512-zWjwqIgk4nAWmQGrPnDWv+M2Yly6m7ROyqmmQVLgJiHnWP762It22uWFaF2Pu/sSx0u8WsoUcvt0PZ4DQIQYwQ=="],
+
+    "typescript": ["typescript@5.9.3", "", { "bin": { "tsc": "bin/tsc", "tsserver": "bin/tsserver" } }, "sha512-jl1vZzPDinLr9eUt3J/t7V6FgNEw9QjvBPdysz9KfQDD41fQrC2Y4vKQdiaUpFT4bXlb1RHhLpp8wtm6M5TgSw=="],
+
+    "undici-types": ["undici-types@8.3.0", "", {}, "sha512-j375ScV60dom+YkPFIfTLcOiPxkN/buHz5GobjLhixFuANaNs3C9l4GmrWqejgXWJ7BbJcFYpTEUkS1Ge8bpZQ=="],
+
+    "@aws-cdk/cloud-assembly-schema/jsonschema": ["jsonschema@1.5.0", "", { "bundled": true }, "sha512-K+A9hhqbn0f3pJX17Q/7H6yQfD/5OXgdrR5UE12gMXCiN9D5Xq2o5mddV2QEcX/bjla99ASsAAQUyMCCRWAEhw=="],
+
+    "@aws-cdk/cloud-assembly-schema/semver": ["semver@7.8.5", "", { "bundled": true, "bin": { "semver": "bin/semver.js" } }, "sha512-Y7/KDsb8LjooZpwaqGyulO6DQlksgCncchHGk+sZIY4SBvUocMBEFH5Ur1fI4dV+Jvl0w6cjvucaIi40puRioA=="],
+
+    "aws-cdk-lib/@aws-cdk/cloud-assembly-api": ["@aws-cdk/cloud-assembly-api@2.3.0", "", { "dependencies": { "json-source-map": "^0.6.1", "jsonschema": "^1.5.0", "semver": "^7.8.5" }, "peerDependencies": { "@aws-cdk/cloud-assembly-schema": ">=54.12.0" }, "bundled": true }, "sha512-Z+TYWH9YJGDQSwjORTWvfRFHGK5Gzdp73ElVO8mmZrgndlZgNV2LJOcX1HYRlU/OuR7I+Qo5GLpfc/PM1s7JlQ=="],
+
+    "aws-cdk-lib/@aws-cdk/cloud-assembly-schema": ["@aws-cdk/cloud-assembly-schema@54.12.0", "", { "dependencies": { "jsonschema": "^1.5.0", "semver": "^7.8.5" } }, "sha512-u8G9RZGW7vWq0KpEj1MYAin8yc+Mw7wYU2UjM5C2juZIHavXcerj6q7UsoOWd0N2TWtBw9WT9w3gknqR1GzAmg=="],
+
+    "aws-cdk-lib/@balena/dockerignore": ["@balena/dockerignore@1.0.2", "", { "bundled": true }, "sha512-wMue2Sy4GAVTk6Ic4tJVcnfdau+gx2EnG7S+uAEe+TWJFqE4YoWN4/H8MSLj4eYJKxGg26lZwboEniNiNwZQ6Q=="],
+
+    "aws-cdk-lib/balanced-match": ["balanced-match@4.0.4", "", {}, "sha512-BLrgEcRTwX2o6gGxGOCNyMvGSp35YofuYzw9h1IMTRmKqttAZZVU67bdb9Pr2vUHA8+j3i2tJfjO6C6+4myGTA=="],
+
+    "aws-cdk-lib/brace-expansion": ["brace-expansion@5.0.7", "", { "dependencies": { "balanced-match": "^4.0.2" } }, "sha512-7oFy703dxfY3/NLxC1fh2SUCQ0H9rmAY+5EpDVfXjUTTs+HEwR2nYaqLv+GWcTsumwxPfiz6CzCNkwXwBUwqCA=="],
+
+    "aws-cdk-lib/case": ["case@1.6.3", "", { "bundled": true }, "sha512-mzDSXIPaFwVDvZAHqZ9VlbyF4yyXRuX6IvB06WvPYkqJVO24kX1PPhv9bfpKNFZyxYFmmgo03HUiD8iklmJYRQ=="],
+
+    "aws-cdk-lib/fs-extra": ["fs-extra@11.3.6", "", { "dependencies": { "graceful-fs": "^4.2.0", "jsonfile": "^6.0.1", "universalify": "^2.0.0" }, "bundled": true }, "sha512-w8ZNZr2mKIc7qeNaQ9AVPT1+iFaI+Avd4xudVOvdDJ8VytREi1Ft5Ih7hd9jjehod8vAM5GMsfQ/TpPf4EyoEA=="],
+
+    "aws-cdk-lib/graceful-fs": ["graceful-fs@4.2.11", "", {}, "sha512-RbJ5/jmFcNNCcDV5o9eTnBLJ/HszWV0P73bc+Ff4nS/rJj+YaS6IGyiOL0VoBYX+l1Wrl3k63h/KrH+nhJ0XvQ=="],
+
+    "aws-cdk-lib/ignore": ["ignore@5.3.2", "", { "bundled": true }, "sha512-hsBTNUqQTDwkWtcdYI2i06Y/nUBEsNEDJKjWdigLvegy8kDuJAS8uRlpkkcQpyEXL0Z/pjDy5HBmMjRCJ2gq+g=="],
+
+    "aws-cdk-lib/json-source-map": ["json-source-map@0.6.1", "", {}, "sha512-1QoztHPsMQqhDq0hlXY5ZqcEdUzxQEIxgFkKl4WUp2pgShObl+9ovi4kRh2TfvAfxAoHOJ9vIMEqk3k4iex7tg=="],
+
+    "aws-cdk-lib/jsonfile": ["jsonfile@6.2.1", "", { "dependencies": { "universalify": "^2.0.0" }, "optionalDependencies": { "graceful-fs": "^4.1.6" } }, "sha512-zwOTdL3rFQ/lRdBnntKVOX6k5cKJwEc1HdilT71BWEu7J41gXIB2MRp+vxduPSwZJPWBxEzv4yH1wYLJGUHX4Q=="],
+
+    "aws-cdk-lib/jsonschema": ["jsonschema@1.5.0", "", { "bundled": true }, "sha512-K+A9hhqbn0f3pJX17Q/7H6yQfD/5OXgdrR5UE12gMXCiN9D5Xq2o5mddV2QEcX/bjla99ASsAAQUyMCCRWAEhw=="],
+
+    "aws-cdk-lib/mime-db": ["mime-db@1.52.0", "", {}, "sha512-sPU4uV7dYlvtWJxwwxHD0PuihVNiE7TyAbQ5SWxDCB9mUYvOgroQOwYQQOKPJ8CIbE+1ETVlOoK1UC2nU3gYvg=="],
+
+    "aws-cdk-lib/mime-types": ["mime-types@2.1.35", "", { "dependencies": { "mime-db": "1.52.0" }, "bundled": true }, "sha512-ZDY+bPm5zTTF+YpCrAU9nK0UgICYPT0QtT1NZWFv4s++TNkcgVaT0g6+4R2uI4MjQjzysHB1zxuWL50hzaeXiw=="],
+
+    "aws-cdk-lib/minimatch": ["minimatch@10.2.5", "", { "dependencies": { "brace-expansion": "^5.0.5" }, "bundled": true }, "sha512-MULkVLfKGYDFYejP07QOurDLLQpcjk7Fw+7jXS2R2czRQzR56yHRveU5NDJEOviH+hETZKSkIk5c+T23GjFUMg=="],
+
+    "aws-cdk-lib/punycode": ["punycode@2.3.1", "", { "bundled": true }, "sha512-vYt7UD1U9Wg6138shLtLOvdAu+8DsC/ilFtEVHcH+wydcSpNE20AfSOduf6MkRFahL5FY7X1oU7nKVZFtfq8Fg=="],
+
+    "aws-cdk-lib/semver": ["semver@7.8.5", "", { "bundled": true, "bin": { "semver": "bin/semver.js" } }, "sha512-Y7/KDsb8LjooZpwaqGyulO6DQlksgCncchHGk+sZIY4SBvUocMBEFH5Ur1fI4dV+Jvl0w6cjvucaIi40puRioA=="],
+
+    "aws-cdk-lib/universalify": ["universalify@2.0.1", "", {}, "sha512-gptHNQghINnc/vTGIk0SOFGFNXw7JVrlRUtConJRlvaw6DuX0wO5Jeko9sWrMBhh+PsYAZ7oXAiOnf/UKogyiw=="],
+
+    "aws-cdk-lib/yaml": ["yaml@1.10.3", "", { "bundled": true }, "sha512-vIYeF1u3CjlhAFekPPAk2h/Kv4T3mAkMox5OymRiJQB0spDP10LHvt+K7G9Ny6NuuMAb25/6n1qyUjAcGNf/AA=="],
+
+    "aws-cdk-lib/@aws-cdk/cloud-assembly-schema/jsonschema": ["jsonschema@1.5.0", "", { "bundled": true }, "sha512-K+A9hhqbn0f3pJX17Q/7H6yQfD/5OXgdrR5UE12gMXCiN9D5Xq2o5mddV2QEcX/bjla99ASsAAQUyMCCRWAEhw=="],
+
+    "aws-cdk-lib/@aws-cdk/cloud-assembly-schema/semver": ["semver@7.8.5", "", { "bundled": true, "bin": { "semver": "bin/semver.js" } }, "sha512-Y7/KDsb8LjooZpwaqGyulO6DQlksgCncchHGk+sZIY4SBvUocMBEFH5Ur1fI4dV+Jvl0w6cjvucaIi40puRioA=="],
+  }
+}

@@ -1,6 +1,7 @@
 import { readdir, readFile, stat } from "node:fs/promises";
 import { join, relative } from "node:path";
 import manifest from "@/lib/project-auth-manifest.json";
+import { getContentfulAccessToken } from "@/lib/server-secrets.server";
 import { contentfulFixture } from "@/tests/fixtures/contentful";
 
 const amplifyRoot = ".amplify-hosting";
@@ -98,6 +99,9 @@ for (const file of inspectableFiles) {
 }
 
 const privateValues: string[] = [];
+if (process.env.VERIFY_DEPLOYMENT_SECRETS === "true") {
+	privateValues.push(await getContentfulAccessToken());
+}
 for (const environmentName of [
 	"CONTENTFUL_ACCESS_TOKEN",
 	"PROJECT_AUTH_SECRET",
