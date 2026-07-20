@@ -11,6 +11,10 @@ const amplifyConfigPath = new URL(
 );
 const packagePath = new URL("../../package.json", import.meta.url);
 const amplifySmokePath = new URL("../amplify.smoke.ts", import.meta.url);
+const hostingStackPath = new URL(
+	"../../infra/lib/hosting-stack.ts",
+	import.meta.url,
+);
 
 describe("production deployment workflow", () => {
 	test("rechecks release ownership immediately before starting Amplify", async () => {
@@ -75,6 +79,21 @@ describe("production deployment workflow", () => {
 		);
 	});
 
+	test("matches AWS OIDC trust to the deployment environment", async () => {
+		const [workflow, hostingStack] = await Promise.all([
+			readFile(workflowPath, "utf8"),
+			readFile(hostingStackPath, "utf8"),
+		]);
+
+		expect(workflow).toContain("environment: production");
+		expect(hostingStack).toContain(
+			'"repo:soodoh/carolyn-portfolio:environment:production"',
+		);
+		expect(hostingStack).not.toContain(
+			'"repo:soodoh/carolyn-portfolio:ref:refs/heads/main"',
+		);
+	});
+
 	test("uses a production-shaped fixture suite without production passwords", async () => {
 		const [workflow, packageJson, amplifySmoke] = await Promise.all([
 			readFile(workflowPath, "utf8"),
@@ -86,7 +105,6 @@ describe("production deployment workflow", () => {
 			workflow.indexOf("  playwright:"),
 			workflow.indexOf("  release-production-ref:"),
 		);
-		expect(workflow).toContain("environment: production");
 		expect(playwrightJob).toContain("oven-sh/setup-bun@");
 		expect(playwrightJob).toContain("run: bun install --frozen-lockfile");
 		expect(playwrightJob).toContain("run: bun run test:visual");

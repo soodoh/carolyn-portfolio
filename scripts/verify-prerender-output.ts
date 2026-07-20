@@ -145,11 +145,12 @@ if (artifactMode === "fixture") {
 	);
 }
 
-if (
-	artifactMode === "production" &&
-	process.env.HERMETIC_PRODUCTION_BUILD !== "true"
-) {
-	for (const file of artifactInspectableFiles) {
+if (artifactMode === "production") {
+	const productionAssetFiles =
+		process.env.HERMETIC_PRODUCTION_BUILD === "true"
+			? [join(amplifyRoot, "compute", "default", "index.mjs")]
+			: artifactInspectableFiles;
+	for (const file of productionAssetFiles) {
 		if ((await readFile(file, "utf8")).includes("/test-assets/")) {
 			throw new Error(
 				`Production artifact contains a local visual asset reference: ${file}`,

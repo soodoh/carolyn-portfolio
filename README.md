@@ -125,7 +125,7 @@ bun run synth
 - A retained customer-managed KMS key for SSM
 - The existing Route 53 public zone, imported as `Z32YJCERCJ1WLI`
 - Production apex/`www` and legacy `carolyn.diloreto.com` Amplify associations with permanent canonical redirects
-- GitHub Actions OIDC trust restricted to this repository's `main` ref
+- GitHub Actions OIDC trust restricted to this repository's `production` environment, whose deployment branch policy allows only `main`
 - An Amplify-only deployment role
 - Fourteen-day SSR log retention, a minimal 5xx alarm, and email notifications
 - An account-wide $5 monthly actual/forecast AWS budget warning
@@ -181,6 +181,8 @@ Before provisioning production DNS or relying on Amplify:
 ### Configure GitHub deployment variables
 
 Create a GitHub Actions environment named `production`, restrict it to the selected `main` branch, and leave required reviewers disabled so validated main deployments remain automatic. The deployment job references this environment even though it needs no application credential; production password smoke coverage runs against the hermetic fixture artifact instead of storing a real project password in GitHub.
+
+GitHub includes the environment, rather than the branch ref, in an environment job's OIDC subject. The deployment role therefore trusts exactly `repo:soodoh/carolyn-portfolio:environment:production`. If the job's environment name changes, update the CDK trust policy and deploy the stack before running the workflow again.
 
 Read stack outputs, then configure non-secret repository variables:
 
