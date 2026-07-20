@@ -82,8 +82,14 @@ describe("production deployment workflow", () => {
 			readFile(amplifySmokePath, "utf8"),
 		]);
 
+		const playwrightJob = workflow.slice(
+			workflow.indexOf("  playwright:"),
+			workflow.indexOf("  release-production-ref:"),
+		);
 		expect(workflow).toContain("environment: production");
-		expect(workflow).toContain("run: bun run test:visual");
+		expect(playwrightJob).toContain("oven-sh/setup-bun@");
+		expect(playwrightJob).toContain("run: bun install --frozen-lockfile");
+		expect(playwrightJob).toContain("run: bun run test:visual");
 		expect(packageJson).toContain("HERMETIC_ARTIFACT_TEST=true");
 		expect(packageJson).toContain("build:production:test");
 		expect(workflow).not.toContain("AMPLIFY_PROTECTED_PROJECT_PASSWORD");
