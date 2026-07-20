@@ -1,20 +1,19 @@
 import { writeFile } from "node:fs/promises";
 import { hash } from "bcryptjs";
+import { assertSafeProductionBuildEnvironment } from "@/lib/build-environment";
+import { deriveProjectAuthVersion } from "@/lib/password-utils";
 import { buildProjectAuthManifest } from "@/lib/project-auth-manifest-builder";
-import { fetchContentfulAuthProjects } from "@/lib/project-auth-source";
-import { contentfulFixture } from "@/tests/fixtures/contentful";
+import { getProjectAuthProjects } from "@/lib/project-auth-source";
 
 const BCRYPT_ROUNDS = 10;
 
 async function main(): Promise<void> {
-	const projects =
-		process.env.PLAYWRIGHT_TEST === "true"
-			? Object.values(contentfulFixture.projectInfo).map(
-					({ password, slug }) => ({ password, slug }),
-				)
-			: await fetchContentfulAuthProjects();
-	const manifest = await buildProjectAuthManifest(projects, (password) =>
-		hash(password, BCRYPT_ROUNDS),
+	assertSafeProductionBuildEnvironment(process.env);
+	const projects = await getProjectAuthProjects();
+	const manifest = await buildProjectAuthManifest(
+		projects,
+		(password) => hash(password, BCRYPT_ROUNDS),
+		deriveProjectAuthVersion,
 	);
 
 	const outPath = new URL("../lib/project-auth-manifest.json", import.meta.url);

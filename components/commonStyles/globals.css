@@ -210,3 +210,20 @@
 	--sidebar-border: oklch(1 0 0 / 10%);
 	--sidebar-ring: oklch(0.556 0 0);
 }
+
+@media (prefers-reduced-motion: reduce) {
+	.nonessential-motion {
+		transition: none;
+	}
+
+	:where(
+		[data-slot="dialog-overlay"],
+		[data-slot="dialog-content"],
+		[data-slot="dropdown-menu-content"],
+		[data-slot="sheet-overlay"],
+		[data-slot="sheet-content"]
+	) {
+		animation: none;
+		transition-duration: 0s;
+	}
+}

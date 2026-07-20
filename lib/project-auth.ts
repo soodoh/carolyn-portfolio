@@ -5,3 +5,7 @@ const projectAuth = new Map(Object.entries(manifest));
 export function getProjectAuth(slug: string) {
 	return projectAuth.get(slug);
 }
+
+export function isReleasedProjectSlug(slug: string): boolean {
+	return projectAuth.has(slug);
+}

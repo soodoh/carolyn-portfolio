@@ -28,7 +28,7 @@ function Filter<T extends string>({
 						variant="ghost"
 						aria-pressed={current === name}
 						aria-label={`Choose filter: ${name}`}
-						className="relative h-auto overflow-visible rounded-none px-8 py-4 font-body text-base leading-7 text-dark hover:bg-transparent hover:text-dark focus-visible:border-0 focus-visible:ring-0 focus-visible:[box-shadow:none]"
+						className="relative h-auto overflow-visible rounded-none px-8 py-4 font-body text-base leading-7 text-dark hover:bg-transparent hover:text-dark focus-visible:outline-2 focus-visible:outline-solid focus-visible:outline-offset-[-2px] focus-visible:outline-dark focus-visible:ring-0 focus-visible:ring-offset-0"
 						onClick={() => onChange(name)}
 					>
 						{current === name ? (

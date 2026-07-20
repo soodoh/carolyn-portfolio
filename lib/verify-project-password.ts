@@ -12,16 +12,16 @@ export const verifyProjectPassword = createServerFn({ method: "POST" })
 			return { error: "Please enter a password." };
 		}
 
-		const passwordHash = getProjectAuth(slug)?.passwordHash;
-		if (!passwordHash) {
+		const auth = getProjectAuth(slug);
+		if (!auth?.passwordHash || !auth.authVersion) {
 			return { error: "This project is not password protected." };
 		}
 
-		if (!(await compare(password, passwordHash))) {
+		if (!(await compare(password, auth.passwordHash))) {
 			return { error: "The password you entered is incorrect." };
 		}
 
-		const token = await signToken(slug);
+		const token = await signToken(slug, auth.authVersion);
 		setCookie(`project-auth-${slug}`, token, {
 			httpOnly: true,
 			secure: process.env.NODE_ENV === "production",

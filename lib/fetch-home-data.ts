@@ -1,34 +1,74 @@
+import {
+	type ContentfulDeliveryClient,
+	type ContentSourceLoader,
+	getContentSource,
+} from "@/lib/content-source";
 import type {
 	AboutSkeleton,
 	SocialMediaSkeleton,
 } from "@/lib/contentful-types";
 import {
 	formatImage,
-	getContentfulClient,
+	getAllContentfulEntries,
+	parseExactContentfulEntry,
 	requireContentfulAsset,
 } from "@/lib/contentful-utils";
-import { loadContentfulFixture } from "@/lib/load-contentful-fixture";
-import type { IconType, ImageType, SocialMedia } from "@/lib/types";
+import { parseSocialMediaLink } from "@/lib/social-media-link";
+import { type ImageType, isIconType, type SocialMedia } from "@/lib/types";
 
-function isIconType(value: unknown): value is IconType {
-	return value === "instagram" || value === "linkedin";
+const SOCIAL_MEDIA_CACHE_TTL_MS = 5 * 60 * 1000;
+
+type SocialMediaLoader = () => Promise<SocialMedia[]>;
+
+export function createSocialMediaCache(
+	ttlMs: number,
+): (load: SocialMediaLoader, now?: number) => Promise<SocialMedia[]> {
+	let cached: { expiresAt: number; value: Promise<SocialMedia[]> } | undefined;
+	return (load, now = Date.now()) => {
+		if (cached && cached.expiresAt > now) {
+			return cached.value;
+		}
+		const pending = load();
+		cached = { expiresAt: now + ttlMs, value: pending };
+		void pending.catch(() => {
+			if (cached?.value === pending) {
+				cached = undefined;
+			}
+		});
+		return pending;
+	};
 }
 
-export async function getBackgroundImage(): Promise<ImageType> {
-	if (process.env.PLAYWRIGHT_TEST === "true") {
-		return (await loadContentfulFixture()).backgroundImage;
+const socialMediaCaches = new WeakMap<
+	ContentfulDeliveryClient,
+	ReturnType<typeof createSocialMediaCache>
+>();
+
+function getSocialMediaCache(client: ContentfulDeliveryClient) {
+	let cache = socialMediaCaches.get(client);
+	if (!cache) {
+		cache = createSocialMediaCache(SOCIAL_MEDIA_CACHE_TTL_MS);
+		socialMediaCaches.set(client, cache);
+	}
+	return cache;
+}
+
+export async function getBackgroundImage(
+	loadSource: ContentSourceLoader = getContentSource,
+): Promise<ImageType> {
+	const source = await loadSource();
+	if (source.kind === "fixture") {
+		return source.content.backgroundImage;
 	}
 
-	const contentfulClient = await getContentfulClient();
-	const aboutData = await contentfulClient.getEntries<AboutSkeleton>({
-		content_type: "about",
-		limit: 1,
-		select: ["fields.background"],
-	});
-	const aboutEntry = aboutData.items[0];
-	if (!aboutEntry) {
-		throw new Error("Contentful has no about entry.");
-	}
+	const aboutEntry = parseExactContentfulEntry(
+		await source.client.getEntries<AboutSkeleton>({
+			content_type: "about",
+			limit: 1,
+			select: ["fields.background"],
+		}),
+		"Background image query",
+	);
 	return formatImage(
 		requireContentfulAsset(
 			aboutEntry.fields.background,
@@ -37,20 +77,34 @@ export async function getBackgroundImage(): Promise<ImageType> {
 	);
 }
 
-export async function getSocialMedia(): Promise<SocialMedia[]> {
-	if (process.env.PLAYWRIGHT_TEST === "true") {
-		return (await loadContentfulFixture()).socialMedia;
+export async function getSocialMedia(
+	loadSource: ContentSourceLoader = getContentSource,
+): Promise<SocialMedia[]> {
+	const source = await loadSource();
+	if (source.kind === "fixture") {
+		return source.content.socialMedia;
 	}
 
-	const contentfulClient = await getContentfulClient();
-	const socialMedia = await contentfulClient.getEntries<SocialMediaSkeleton>({
-		content_type: "socialMedia",
-	});
-	return socialMedia.items.map((item) => {
-		const { link, title } = item.fields;
-		if (!isIconType(title) || typeof link !== "string" || !link) {
-			throw new Error(`Social media entry ${item.sys.id} is malformed.`);
-		}
-		return { id: item.sys.id, title, link };
+	return getSocialMediaCache(source.client)(async () => {
+		const socialMedia = await getAllContentfulEntries(
+			(skip, limit) =>
+				source.client.getEntries<SocialMediaSkeleton>({
+					content_type: "socialMedia",
+					limit,
+					skip,
+				}),
+			"Social media query",
+		);
+		return socialMedia.map((item) => {
+			const { link, title } = item.fields;
+			if (!isIconType(title)) {
+				throw new Error(`Social media entry ${item.sys.id} is malformed.`);
+			}
+			return {
+				id: item.sys.id,
+				title,
+				link: parseSocialMediaLink(title, link),
+			};
+		});
 	});
 }

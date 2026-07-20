@@ -23,6 +23,10 @@ export const Route = createRootRoute({
 		meta: [
 			{ charSet: "utf-8" },
 			{
+				name: "release-commit",
+				content: process.env.RELEASE_COMMIT,
+			},
+			{
 				name: "viewport",
 				content: "width=device-width, initial-scale=1",
 			},
@@ -59,7 +63,7 @@ function RootComponent(): JSX.Element {
 	}, []);
 	return (
 		<>
-			<Header isLayout />
+			<Header />
 			<main className="flex-1 flex flex-col">
 				<Outlet />
 			</main>

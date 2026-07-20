@@ -5,14 +5,14 @@ frontend:
       commands:
         - nvm install 24.18.0
         - nvm use 24.18.0
-        - curl -fsSL https://bun.sh/install | bash -s "bun-v1.2.4"
+        - curl -fsSL https://bun.sh/install | bash -s "bun-v1.3.14"
         - $HOME/.bun/bin/bun --version
         - PLAYWRIGHT_CONTAINER=true $HOME/.bun/bin/bun install --frozen-lockfile
     build:
       commands:
         - nvm use 24.18.0
-        - export PATH="$HOME/.bun/bin:$PATH" && bun run build
-        - export PATH="$HOME/.bun/bin:$PATH" && VERIFY_DEPLOYMENT_SECRETS=true bun run verify:prerender
+        - export PATH="$HOME/.bun/bin:$PATH" && NODE_ENV=production AMPLIFY_ARTIFACT_MODE=production PLAYWRIGHT_TEST=false HERMETIC_PRODUCTION_BUILD=false PRODUCTION_BUILD_TEST=false bun run build
+        - export PATH="$HOME/.bun/bin:$PATH" && NODE_ENV=production AMPLIFY_ARTIFACT_MODE=production PLAYWRIGHT_TEST=false HERMETIC_PRODUCTION_BUILD=false PRODUCTION_BUILD_TEST=false VERIFY_DEPLOYMENT_SECRETS=true bun run verify:prerender
   artifacts:
     baseDirectory: .amplify-hosting
     files:

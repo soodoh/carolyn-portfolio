@@ -1,32 +1,50 @@
 import { readdir, readFile, stat } from "node:fs/promises";
 import { join, relative } from "node:path";
+import {
+	getStaticFilePath,
+	getStaticPublicPaths,
+} from "@/lib/amplify-artifact";
+import { assertSafeProductionBuildEnvironment } from "@/lib/build-environment";
 import manifest from "@/lib/project-auth-manifest.json";
-import { getContentfulAccessToken } from "@/lib/server-secrets.server";
-import { contentfulFixture } from "@/tests/fixtures/contentful";
+import {
+	getContentfulAccessToken,
+	getProjectAuthSecret,
+} from "@/lib/server-secrets.server";
 
 const amplifyRoot = ".amplify-hosting";
 const publicRoot = join(amplifyRoot, "static");
 const computeRoot = join(amplifyRoot, "compute", "default");
 const maximumComputeBytes = 220 * 1024 * 1024;
 const intendedRuntime = "nodejs24.x";
+const artifactMode = assertSafeProductionBuildEnvironment(process.env);
 const protectedSlugs = new Set(
 	Object.entries(manifest)
 		.filter(([, auth]) => auth.passwordHash)
 		.map(([slug]) => slug),
 );
-const publicProjectSlugs = contentfulFixture.projects
-	.map((project) => project.slug)
-	.filter((slug) => !protectedSlugs.has(slug));
-const requiredPages = [
-	"index.html",
-	"about/index.html",
-	"photography/index.html",
-	"projects/index.html",
-	...publicProjectSlugs.map((slug) => `projects/${slug}/index.html`),
-];
+const staticPublicPaths = getStaticPublicPaths();
+const requiredPages = staticPublicPaths.map((path) =>
+	path === "/" ? "index.html" : `${path.slice(1)}/index.html`,
+);
 
 for (const page of requiredPages) {
 	await stat(join(publicRoot, page));
+}
+
+const aboutHtml = await readFile(
+	join(publicRoot, "about", "index.html"),
+	"utf8",
+);
+const aboutPortrait = aboutHtml
+	.match(/<img[^>]+alt="Portrait of Carolyn DiLoreto"[^>]*>/)?.[0]
+	.toLowerCase();
+if (
+	!aboutPortrait?.includes('fetchpriority="high"') ||
+	aboutPortrait.includes('loading="lazy"')
+) {
+	throw new Error(
+		"The above-the-fold About portrait must be eager and high priority.",
+	);
 }
 
 async function assertFileMissing(path: string, message: string): Promise<void> {
@@ -51,10 +69,14 @@ await assertFileMissing(
 	join(publicRoot, "resume", "index.html"),
 	"Dynamic resume redirect was prerendered",
 );
-await assertFileMissing(
-	join(publicRoot, "test-assets"),
-	"Local visual-test fixtures were copied into the production artifact",
-);
+if (artifactMode === "fixture") {
+	await stat(join(publicRoot, "test-assets"));
+} else {
+	await assertFileMissing(
+		join(publicRoot, "test-assets"),
+		"Local visual-test fixtures were copied into the production artifact",
+	);
+}
 
 async function findInspectableFiles(directory: string): Promise<string[]> {
 	const files: string[] = [];
@@ -62,7 +84,7 @@ async function findInspectableFiles(directory: string): Promise<string[]> {
 		const path = join(directory, entry.name);
 		if (entry.isDirectory()) {
 			files.push(...(await findInspectableFiles(path)));
-		} else if (/\.(?:html|js|json|map|mjs)$/.test(entry.name)) {
+		} else if (/\.(?:css|html|js|json|map|mjs)$/.test(entry.name)) {
 			files.push(path);
 		}
 	}
@@ -70,6 +92,10 @@ async function findInspectableFiles(directory: string): Promise<string[]> {
 }
 
 const inspectableFiles = await findInspectableFiles(publicRoot);
+const artifactInspectableFiles = await findInspectableFiles(amplifyRoot);
+if (inspectableFiles.some((file) => file.endsWith(".map"))) {
+	throw new Error("Production client source maps must not be published.");
+}
 const actualPages = inspectableFiles
 	.filter((file) => file.endsWith("index.html"))
 	.map((file) => relative(publicRoot, file))
@@ -84,8 +110,14 @@ if (
 	);
 }
 
+const referencedTestAssets = new Set<string>();
 for (const file of inspectableFiles) {
 	const contents = await readFile(file, "utf8");
+	for (const match of contents.matchAll(
+		/\/test-assets\/[A-Za-z0-9_-]+\.jpg/g,
+	)) {
+		referencedTestAssets.add(match[0]);
+	}
 	if (/\$2[aby]\$\d{2}\$/.test(contents)) {
 		throw new Error(`Password hash leaked into public output: ${file}`);
 	}
@@ -98,9 +130,42 @@ for (const file of inspectableFiles) {
 	}
 }
 
+if (artifactMode === "fixture") {
+	if (referencedTestAssets.size === 0) {
+		throw new Error(
+			"Fixture artifact contains no local visual asset references.",
+		);
+	}
+	for (const assetPath of referencedTestAssets) {
+		await stat(join(publicRoot, assetPath.slice(1)));
+	}
+} else if (referencedTestAssets.size > 0) {
+	throw new Error(
+		"Production artifact contains local visual asset references.",
+	);
+}
+
+if (
+	artifactMode === "production" &&
+	process.env.HERMETIC_PRODUCTION_BUILD !== "true"
+) {
+	for (const file of artifactInspectableFiles) {
+		if ((await readFile(file, "utf8")).includes("/test-assets/")) {
+			throw new Error(
+				`Production artifact contains a local visual asset reference: ${file}`,
+			);
+		}
+	}
+}
+
 const privateValues: string[] = [];
 if (process.env.VERIFY_DEPLOYMENT_SECRETS === "true") {
-	privateValues.push(await getContentfulAccessToken());
+	privateValues.push(
+		...(await Promise.all([
+			getContentfulAccessToken(),
+			getProjectAuthSecret(),
+		])),
+	);
 }
 for (const environmentName of [
 	"CONTENTFUL_ACCESS_TOKEN",
@@ -111,7 +176,7 @@ for (const environmentName of [
 		privateValues.push(value);
 	}
 }
-for (const file of await findInspectableFiles(amplifyRoot)) {
+for (const file of artifactInspectableFiles) {
 	const contents = await readFile(file, "utf8");
 	if (privateValues.some((value) => contents.includes(value))) {
 		throw new Error(`A secret value was serialized into the artifact: ${file}`);
@@ -147,6 +212,41 @@ if (
 }
 if (!Array.isArray(deployManifest.routes)) {
 	throw new Error("Amplify deploy manifest is missing routes");
+}
+const actualStaticPaths = deployManifest.routes
+	.filter(
+		(route) =>
+			isObject(route) &&
+			isObject(route.target) &&
+			route.target.kind === "Static" &&
+			route.path !== "/*.*",
+	)
+	.map((route) => (isObject(route) ? route.path : undefined));
+const expectedStaticFiles = staticPublicPaths.map(getStaticFilePath);
+if (
+	actualStaticPaths.length !== expectedStaticFiles.length ||
+	actualStaticPaths.some((path, index) => path !== expectedStaticFiles[index])
+) {
+	throw new Error(
+		`Amplify static routes differ from expected emitted files.\nExpected: ${expectedStaticFiles.join(", ")}\nActual: ${actualStaticPaths.join(", ")}`,
+	);
+}
+for (const slug of protectedSlugs) {
+	if (actualStaticPaths.includes(getStaticFilePath(`/projects/${slug}`))) {
+		throw new Error(`Protected project has a static route: ${slug}`);
+	}
+}
+const assetRoute = deployManifest.routes.at(-2);
+if (
+	!isObject(assetRoute) ||
+	assetRoute.path !== "/*.*" ||
+	!isObject(assetRoute.target) ||
+	assetRoute.target.kind !== "Static" ||
+	!isObject(assetRoute.fallback) ||
+	assetRoute.fallback.kind !== "Compute" ||
+	assetRoute.fallback.src !== "default"
+) {
+	throw new Error("Amplify asset route must fall back from static to compute");
 }
 const catchAllRoute = deployManifest.routes.at(-1);
 if (!isObject(catchAllRoute) || catchAllRoute.path !== "/*") {

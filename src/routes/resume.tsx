@@ -7,6 +7,6 @@ const getResumePageUrl = createServerFn().handler(getResumeUrl);
 export const Route = createFileRoute("/resume")({
 	loader: async () => {
 		const resumeUrl = await getResumePageUrl();
-		throw redirect({ href: resumeUrl, statusCode: 308 });
+		throw redirect({ href: resumeUrl, statusCode: 307 });
 	},
 });

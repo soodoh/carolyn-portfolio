@@ -11,6 +11,7 @@ permissions:
 
 env:
   AMPLIFY_BRANCH: amplify-production
+  AWS_ACCOUNT_ID: "725669362139"
   AWS_REGION: us-west-2
 
 jobs:
@@ -24,7 +25,7 @@ jobs:
       - name: Set up Bun
         uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2
         with:
-          bun-version: 1.2.4
+          bun-version: 1.3.14
 
       - name: Install dependencies
         env:
@@ -40,7 +41,7 @@ jobs:
 
       - name: Validate infrastructure types and template
         working-directory: infra
-        run: bun run typecheck && bun run synth -- --quiet
+        run: bun run typecheck && bun run test && bun run synth -- --quiet
 
   playwright:
     needs: validate
@@ -50,8 +51,18 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
 
-      - name: Run canonical Linux visual tests
-        run: ./scripts/playwright-docker.sh
+      - name: Set up Bun
+        uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2
+        with:
+          bun-version: 1.3.14
+
+      - name: Install dependencies
+        env:
+          PLAYWRIGHT_CONTAINER: "true"
+        run: bun install --frozen-lockfile
+
+      - name: Run production-shaped fixture Playwright tests
+        run: bun run test:visual
 
       - name: Upload Playwright report
         if: always()
@@ -122,6 +133,7 @@ jobs:
   deploy-production:
     if: needs.release-production-ref.outputs.should_deploy == 'true'
     needs: release-production-ref
+    environment: production
     runs-on: ubuntu-24.04-arm
     timeout-minutes: 35
     concurrency:
@@ -166,8 +178,8 @@ jobs:
             echo "Repository variable AMPLIFY_APP_ID is missing or invalid" >&2
             exit 1
           }
-          [[ "$DEPLOYMENT_ROLE_ARN" =~ ^arn:aws:iam::[0-9]{12}:role/ ]] || {
-            echo "Repository variable AMPLIFY_DEPLOYMENT_ROLE_ARN is missing or invalid" >&2
+          [[ "$DEPLOYMENT_ROLE_ARN" =~ ^arn:aws:iam::${AWS_ACCOUNT_ID}:role/ ]] || {
+            echo "Repository variable AMPLIFY_DEPLOYMENT_ROLE_ARN must belong to production account $AWS_ACCOUNT_ID" >&2
             exit 1
           }
 
@@ -179,6 +191,16 @@ jobs:
           role-to-assume: ${{ vars.AMPLIFY_DEPLOYMENT_ROLE_ARN }}
           role-session-name: carolyn-portfolio-production
 
+      - name: Verify production AWS identity
+        if: steps.current.outputs.deploy == 'true'
+        run: |
+          set -euo pipefail
+          caller_account=$(aws sts get-caller-identity --query Account --output text)
+          [[ "$caller_account" == "$AWS_ACCOUNT_ID" ]] || {
+            echo "Authenticated to AWS account $caller_account, expected $AWS_ACCOUNT_ID" >&2
+            exit 1
+          }
+
       - name: Start and monitor exact Amplify release
         id: release
         if: steps.current.outputs.deploy == 'true'
@@ -187,6 +209,16 @@ jobs:
           EXPECTED_SHA: ${{ needs.release-production-ref.outputs.tested_sha }}
         run: |
           set -euo pipefail
+          echo "deployed=false" >> "$GITHUB_OUTPUT"
+
+          remote_main=$(git ls-remote "https://github.com/$GITHUB_REPOSITORY.git" refs/heads/main | cut -f1)
+          if [[ "$remote_main" != "$EXPECTED_SHA" ]]; then
+            {
+              echo "### Production deployment skipped"
+              echo "A newer commit now owns main, so tested commit \`$EXPECTED_SHA\` is obsolete."
+            } >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
 
           job_summary=$(aws amplify start-job \
             --app-id "$AMPLIFY_APP_ID" \
@@ -250,6 +282,7 @@ jobs:
             --query 'app.defaultDomain' \
             --output text)
           deployed_url="https://$AMPLIFY_BRANCH.$default_domain"
+          echo "deployed=true" >> "$GITHUB_OUTPUT"
           echo "url=$deployed_url" >> "$GITHUB_OUTPUT"
           {
             echo "### Amplify production deployment"
@@ -259,7 +292,9 @@ jobs:
           } >> "$GITHUB_STEP_SUMMARY"
 
       - name: Run deployed Amplify smoke tests
-        if: steps.current.outputs.deploy == 'true'
+        if: steps.release.outputs.deployed == 'true'
         env:
-          AMPLIFY_BASE_URL: ${{ steps.release.outputs.url }}
+          AMPLIFY_BASE_URL: https://carolyndiloreto.com
+          AMPLIFY_DEFAULT_ORIGIN: ${{ steps.release.outputs.url }}
+          AMPLIFY_EXPECTED_RELEASE_COMMIT: ${{ needs.release-production-ref.outputs.tested_sha }}
         run: ./scripts/playwright-docker.sh --config=playwright.amplify.config.ts

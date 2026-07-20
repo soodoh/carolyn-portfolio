@@ -22,7 +22,7 @@ function Dropdown<T extends string>({
 }: DropdownProps<T>): JSX.Element {
 	return (
 		<DropdownMenu>
-			<DropdownMenuTrigger className="flex cursor-pointer items-center rounded-sm border border-dark/70 bg-transparent px-2 py-1 font-body text-base leading-7 text-dark outline-none">
+			<DropdownMenuTrigger className="flex cursor-pointer items-center rounded-sm border border-dark/70 bg-transparent px-2 py-1 font-body text-base leading-7 text-dark outline-none focus-visible:outline-2 focus-visible:outline-solid focus-visible:outline-offset-2 focus-visible:outline-dark">
 				{current}
 				<DropdownIcon className="fill-dark ml-2 w-4 h-4" />
 			</DropdownMenuTrigger>

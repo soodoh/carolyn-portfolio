@@ -1,12 +1,20 @@
 import { createFileRoute, notFound } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
-import { getCookie } from "@tanstack/react-start/server";
+import { getCookie, setResponseHeader } from "@tanstack/react-start/server";
 import type { JSX } from "react";
 import PasswordForm from "@/components/password-form";
 import ProjectInfoPage from "@/components/project-info-page";
-import { getProjectInfo, ProjectNotFoundError } from "@/lib/fetch-projects";
-import { verifyToken } from "@/lib/password-utils";
+import {
+	getProjectAuthorizationSnapshot,
+	getProjectPageSnapshot,
+	ProjectNotFoundError,
+} from "@/lib/fetch-projects";
+import { deriveProjectAuthVersion, verifyToken } from "@/lib/password-utils";
 import { getProjectAuth } from "@/lib/project-auth";
+import {
+	loadProjectAfterAuthorization,
+	ProjectAuthorizationDriftError,
+} from "@/lib/project-authorization";
 import {
 	isValidProjectSlug,
 	validateProjectSlug,
@@ -19,23 +27,39 @@ const getProjectPageData = createServerFn({ method: "POST" })
 		if (!auth) {
 			return { notFound: true as const };
 		}
-		if (auth.passwordHash) {
-			const token = getCookie(`project-auth-${slug}`);
-			if (!token || !(await verifyToken(token, slug))) {
+		try {
+			if (auth.passwordHash) {
+				setResponseHeader("Cache-Control", "private, no-store");
+			}
+			const result = await loadProjectAfterAuthorization(
+				slug,
+				auth,
+				() => getProjectAuthorizationSnapshot(slug),
+				async () => {
+					const token = getCookie(`project-auth-${slug}`);
+					return Boolean(
+						auth.authVersion &&
+							token &&
+							(await verifyToken(token, slug, auth.authVersion)),
+					);
+				},
+				() => getProjectPageSnapshot(slug),
+				deriveProjectAuthVersion,
+			);
+			if (!result.authorized) {
 				return { authorized: false as const, slug };
 			}
-		}
-
-		try {
-			const projectInfo = await getProjectInfo(slug);
 			return {
 				authorized: true as const,
-				projectInfo,
+				projectInfo: result.projectInfo,
 				protected: Boolean(auth.passwordHash),
 			};
 		} catch (error) {
 			if (error instanceof ProjectNotFoundError) {
 				return { notFound: true as const };
+			}
+			if (error instanceof ProjectAuthorizationDriftError) {
+				setResponseHeader("Cache-Control", "private, no-store");
 			}
 			throw error;
 		}

@@ -5,7 +5,7 @@ import type { SocialMedia } from "@/lib/types";
 const SocialMediaIcon = ({ icon }: { icon: SocialMedia }) => {
 	return (
 		<a
-			className="flex items-center justify-center rounded-full w-10 h-10 p-2 mx-1 no-underline text-center transition-colors duration-[250ms] ease-in-out hover:bg-dark/25"
+			className="flex items-center justify-center rounded-full w-10 h-10 p-2 mx-1 no-underline text-center transition-colors duration-[250ms] ease-in-out nonessential-motion hover:bg-dark/25"
 			aria-label={`View social media: ${icon.title}`}
 			href={icon.link}
 		>
