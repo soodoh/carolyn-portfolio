@@ -1,9 +1,13 @@
 import { GetParameterCommand, SSMClient } from "@aws-sdk/client-ssm";
+import {
+	CONTENTFUL_ACCESS_TOKEN_PARAMETER,
+	PROJECT_AUTH_SECRET_PARAMETER,
+} from "@/lib/deployment-parameters";
 
-export const CONTENTFUL_ACCESS_TOKEN_PARAMETER =
-	"/carolyn-portfolio/prod/contentful-access-token";
-export const PROJECT_AUTH_SECRET_PARAMETER =
-	"/carolyn-portfolio/prod/project-auth-secret";
+export {
+	CONTENTFUL_ACCESS_TOKEN_PARAMETER,
+	PROJECT_AUTH_SECRET_PARAMETER,
+} from "@/lib/deployment-parameters";
 
 interface SecretDefinition {
 	environmentName: string;

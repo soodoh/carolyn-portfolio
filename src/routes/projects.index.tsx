@@ -23,5 +23,5 @@ export const Route = createFileRoute("/projects/")({
 
 function ProjectsPage(): JSX.Element {
 	const projects = Route.useLoaderData();
-	return <Projects projects={projects} />;
+	return <Projects projects={projects} prioritizeFirst />;
 }

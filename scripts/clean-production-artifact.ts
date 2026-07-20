@@ -1,8 +1,9 @@
-import { rm } from "node:fs/promises";
+import { prepareAmplifyArtifact } from "@/lib/amplify-artifact";
+import { assertSafeProductionBuildEnvironment } from "@/lib/build-environment";
 
-const testAssetsPath = ".amplify-hosting/static/test-assets";
+const mode = assertSafeProductionBuildEnvironment(process.env);
 
-await rm(testAssetsPath, { force: true, recursive: true });
+await prepareAmplifyArtifact(".amplify-hosting", mode);
 process.stdout.write(
-	`Removed production-only fixture output at ${testAssetsPath}\n`,
+	`Prepared ${mode} Amplify artifact with explicit public static routes.\n`,
 );

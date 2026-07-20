@@ -1,4 +1,4 @@
-import { expect, test } from "@playwright/test";
+import { expect, test } from "@/tests/playwright";
 
 test.describe("TanStack Start migration behavior", () => {
 	test("navigates through an internal link without a document reload", async ({
@@ -75,6 +75,8 @@ test.describe("TanStack Start migration behavior", () => {
 	}) => {
 		const unauthorized = await request.get("/projects/magnolia-app");
 		expect(unauthorized.status()).toBe(200);
+		expect(unauthorized.headers()["x-amplify-artifact-target"]).toBe("compute");
+		expect(unauthorized.headers()["cache-control"]).toBe("private, no-store");
 		const unauthorizedHtml = await unauthorized.text();
 		expect(unauthorizedHtml).not.toContain("playwright-password");
 		expect(unauthorizedHtml).not.toContain("Magnolia App");
@@ -119,6 +121,16 @@ test.describe("TanStack Start migration behavior", () => {
 			path: "/",
 			sameSite: "Strict",
 		});
+		if (!authCookie) {
+			throw new Error("Protected project authentication cookie was not set.");
+		}
+		const authorized = await request.get("/projects/magnolia-app", {
+			headers: { cookie: `${authCookie.name}=${authCookie.value}` },
+		});
+		expect(authorized.status()).toBe(200);
+		expect(authorized.headers()["x-amplify-artifact-target"]).toBe("compute");
+		expect(authorized.headers()["cache-control"]).toBe("private, no-store");
+		expect(await authorized.text()).toContain("Magnolia App");
 
 		await page.goto("/projects/nbc-app");
 		await expect(

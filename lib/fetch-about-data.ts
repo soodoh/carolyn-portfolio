@@ -1,13 +1,18 @@
 import { richTextFromMarkdown } from "@contentful/rich-text-from-markdown";
-import type { AboutSkeleton } from "@/lib/contentful-types";
 import {
+	type ContentfulDeliveryClient,
+	type ContentSourceLoader,
+	getContentSource,
+} from "@/lib/content-source";
+import type { AboutSkeleton } from "@/lib/contentful-types";
+import { isContentfulAssetUrl } from "@/lib/contentful-url-policy";
+import {
+	formatAsset,
 	formatImage,
-	formatUrl,
-	getContentfulClient,
+	parseExactContentfulEntry,
 	requireContentfulAsset,
 } from "@/lib/contentful-utils";
-import { loadContentfulFixture } from "@/lib/load-contentful-fixture";
-import type { AboutData } from "@/lib/types";
+import type { AboutData, ImageType } from "@/lib/types";
 
 function requireText(value: unknown, context: string): string {
 	if (typeof value !== "string" || !value) {
@@ -16,71 +21,129 @@ function requireText(value: unknown, context: string): string {
 	return value;
 }
 
-async function getAboutEntry() {
-	const contentfulClient = await getContentfulClient();
-	const aboutData = await contentfulClient.getEntries<AboutSkeleton>({
-		content_type: "about",
-		limit: 1,
-	});
-	const aboutEntry = aboutData.items[0];
-	if (!aboutEntry) {
-		throw new Error("Contentful has no about entry.");
-	}
-	return aboutEntry;
+async function getAboutEntry(client: ContentfulDeliveryClient) {
+	return parseExactContentfulEntry(
+		await client.getEntries<AboutSkeleton>({
+			content_type: "about",
+			limit: 1,
+		}),
+		"About query",
+	);
 }
 
-export async function getAboutData(): Promise<AboutData> {
-	if (process.env.PLAYWRIGHT_TEST === "true") {
-		return (await loadContentfulFixture()).about;
-	}
-
-	const aboutEntry = await getAboutEntry();
+async function formatAboutData(
+	aboutEntry: Awaited<ReturnType<typeof getAboutEntry>>,
+): Promise<AboutData> {
 	const bio = requireText(aboutEntry.fields.bio, "About bio");
-	const [bioDocument, profilePicture] = await Promise.all([
-		richTextFromMarkdown(bio),
-		formatImage(
+	return {
+		profilePicture: formatImage(
 			requireContentfulAsset(
 				aboutEntry.fields.profilePicture,
 				"About profile picture",
 			),
 		),
-	]);
-
-	return {
-		profilePicture,
-		bio: bioDocument,
+		bio: await richTextFromMarkdown(bio),
 		location: requireText(aboutEntry.fields.location, "About location"),
 		email: requireText(aboutEntry.fields.email, "About email"),
 	};
 }
 
-export async function getResumeUrl(): Promise<string> {
-	if (process.env.PLAYWRIGHT_TEST === "true") {
-		return validateResumeUrl((await loadContentfulFixture()).resumeUrl);
-	}
+function formatBackgroundImage(
+	aboutEntry: Awaited<ReturnType<typeof getAboutEntry>>,
+): ImageType {
+	return formatImage(
+		requireContentfulAsset(
+			aboutEntry.fields.background,
+			"About background image",
+		),
+	);
+}
 
-	const aboutEntry = await getAboutEntry();
+function formatResumeUrl(
+	aboutEntry: Awaited<ReturnType<typeof getAboutEntry>>,
+): string {
 	const resumeAsset = requireContentfulAsset(
 		aboutEntry.fields.resume,
 		"About resume",
 	);
-	const fileUrl = resumeAsset.fields.file?.url;
-	if (typeof fileUrl !== "string") {
-		throw new Error("The resume asset is missing a file URL.");
+	return validateResumeUrl(formatAsset(resumeAsset).url);
+}
+
+export function getAboutContent(): Promise<{
+	backgroundImage: ImageType;
+	aboutData: AboutData;
+	resumeUrl: string;
+}> {
+	return getAboutContentFromSource(getContentSource);
+}
+
+export async function getAboutContentFromSource(
+	loadSource: ContentSourceLoader,
+): Promise<{
+	backgroundImage: ImageType;
+	aboutData: AboutData;
+	resumeUrl: string;
+}> {
+	const source = await loadSource();
+	if (source.kind === "fixture") {
+		return {
+			backgroundImage: source.content.backgroundImage,
+			aboutData: source.content.about,
+			resumeUrl: validateResumeUrl(source.content.resumeUrl),
+		};
 	}
-	return validateResumeUrl(formatUrl(fileUrl));
+	const aboutEntry = await getAboutEntry(source.client);
+	return {
+		backgroundImage: formatBackgroundImage(aboutEntry),
+		aboutData: await formatAboutData(aboutEntry),
+		resumeUrl: formatResumeUrl(aboutEntry),
+	};
+}
+
+export function getAboutPageData(): Promise<{
+	backgroundImage: ImageType;
+	aboutData: AboutData;
+}> {
+	return getAboutPageDataFromSource(getContentSource);
+}
+
+export async function getAboutPageDataFromSource(
+	loadSource: ContentSourceLoader,
+): Promise<{
+	backgroundImage: ImageType;
+	aboutData: AboutData;
+}> {
+	const source = await loadSource();
+	if (source.kind === "fixture") {
+		return {
+			backgroundImage: source.content.backgroundImage,
+			aboutData: source.content.about,
+		};
+	}
+	const aboutEntry = await getAboutEntry(source.client);
+	return {
+		backgroundImage: formatBackgroundImage(aboutEntry),
+		aboutData: await formatAboutData(aboutEntry),
+	};
+}
+
+export function getResumeUrl(): Promise<string> {
+	return getResumeUrlFromSource(getContentSource);
+}
+
+export async function getResumeUrlFromSource(
+	loadSource: ContentSourceLoader,
+): Promise<string> {
+	const source = await loadSource();
+	if (source.kind === "fixture") {
+		return validateResumeUrl(source.content.resumeUrl);
+	}
+	return formatResumeUrl(await getAboutEntry(source.client));
 }
 
 export function validateResumeUrl(rawUrl: string): string {
-	const url = new URL(rawUrl);
-	if (
-		url.protocol !== "https:" ||
-		!(
-			url.hostname === "ctfassets.net" ||
-			url.hostname.endsWith(".ctfassets.net")
-		)
-	) {
+	if (!isContentfulAssetUrl(rawUrl)) {
 		throw new Error("The resume must be hosted on Contentful over HTTPS.");
 	}
-	return url.toString();
+	return new URL(rawUrl).toString();
 }

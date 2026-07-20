@@ -4,44 +4,9 @@ import { Link } from "@tanstack/react-router";
 import type { JSX } from "react";
 import LeftArrowIcon from "@/components/icons/left-arrow-icon";
 import ImageWrapper from "@/components/image-wrapper";
-import type { ImagePlaceholder, ImageType, ProjectInfo } from "@/lib/types";
+import { decodeImage } from "@/lib/image-type";
+import type { ProjectInfo } from "@/lib/types";
 import { cn } from "@/lib/utils";
-
-function isImagePlaceholder(value: unknown): value is ImagePlaceholder {
-	return typeof value === "string" && value.startsWith("data:image/");
-}
-
-function getEmbeddedImage(value: unknown): ImageType | undefined {
-	if (
-		typeof value !== "object" ||
-		value === null ||
-		!("id" in value) ||
-		typeof value.id !== "string" ||
-		!("title" in value) ||
-		typeof value.title !== "string" ||
-		!("description" in value) ||
-		typeof value.description !== "string" ||
-		!("url" in value) ||
-		typeof value.url !== "string" ||
-		!("width" in value) ||
-		typeof value.width !== "number" ||
-		!("height" in value) ||
-		typeof value.height !== "number" ||
-		!("placeholder" in value) ||
-		!isImagePlaceholder(value.placeholder)
-	) {
-		return undefined;
-	}
-	return {
-		id: value.id,
-		title: value.title,
-		description: value.description,
-		url: value.url,
-		width: value.width,
-		height: value.height,
-		placeholder: value.placeholder,
-	};
-}
 
 const ProjectInfoPage = ({
 	projectInfo,
@@ -53,7 +18,7 @@ const ProjectInfoPage = ({
 			<Link
 				aria-label="Go back"
 				to="/projects"
-				className="self-start transition-all duration-[250ms] ease-in-out bg-transparent border border-dark/50 text-dark inline-flex items-center no-underline px-4 py-2 text-[0.9rem] mb-12 hover:bg-dark/10 hover:border-dark [&_svg]:mr-3 [&_svg]:w-6 [&_svg]:fill-dark"
+				className="self-start transition-all duration-[250ms] ease-in-out nonessential-motion bg-transparent border border-dark/50 text-dark inline-flex items-center no-underline px-4 py-2 text-[0.9rem] mb-12 hover:bg-dark/10 hover:border-dark [&_svg]:mr-3 [&_svg]:w-6 [&_svg]:fill-dark"
 			>
 				<LeftArrowIcon />
 				Go Back
@@ -74,8 +39,10 @@ const ProjectInfoPage = ({
 						<iframe
 							src={projectInfo.videoLink}
 							title="Video Player"
-							allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; fullscreen; picture-in-picture; web-share"
-							sandbox="allow-scripts allow-presentation allow-popups"
+							loading="lazy"
+							allow="accelerometer; autoplay; encrypted-media; gyroscope; fullscreen; picture-in-picture"
+							referrerPolicy="no-referrer"
+							sandbox="allow-scripts allow-presentation"
 							allowFullScreen
 						/>
 					</div>
@@ -83,6 +50,7 @@ const ProjectInfoPage = ({
 					<div className="w-full max-md:row-start-1 max-md:mb-8">
 						<ImageWrapper
 							image={projectInfo.coverImage}
+							priority
 							sizes="(max-width: 800px) calc(100vw - 48px), 500px"
 						/>
 					</div>
@@ -94,9 +62,12 @@ const ProjectInfoPage = ({
 					renderNode: {
 						[BLOCKS.TABLE]: () => null,
 						[BLOCKS.EMBEDDED_ASSET]: (node) => {
-							const image = getEmbeddedImage(node.data.image);
+							const image = decodeImage(node.data.image);
 							return image ? (
-								<ImageWrapper sizes="100vw" image={image} />
+								<ImageWrapper
+									sizes="(max-width: 800px) calc(100vw - 80px), (max-width: 1000px) calc(100vw - 176px), 824px"
+									image={image}
+								/>
 							) : null;
 						},
 					},
@@ -105,7 +76,7 @@ const ProjectInfoPage = ({
 			<Link
 				aria-label="View more work"
 				to="/projects"
-				className="bg-dark text-light-text no-underline mx-auto inline px-4 py-2 text-[0.9rem] transition-all duration-[250ms] ease-in-out hover:shadow-[0_0.2rem_0.3rem_var(--color-dark)]"
+				className="bg-dark text-light-text no-underline mx-auto inline px-4 py-2 text-[0.9rem] transition-all duration-[250ms] ease-in-out nonessential-motion hover:shadow-[0_0.2rem_0.3rem_var(--color-dark)]"
 			>
 				View More Work
 			</Link>

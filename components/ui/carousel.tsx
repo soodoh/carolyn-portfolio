@@ -20,11 +20,17 @@ type UseCarouselParameters = Parameters<typeof useEmblaCarousel>;
 type CarouselOptions = UseCarouselParameters[0];
 type CarouselPlugin = UseCarouselParameters[1];
 
+type CarouselNavigation = {
+	scrollNext: () => void;
+	scrollPrev: () => void;
+};
+
 type CarouselProps = {
 	opts?: CarouselOptions;
 	plugins?: CarouselPlugin;
 	orientation?: "horizontal" | "vertical";
 	setApi?: (api: CarouselApi) => void;
+	setNavigation?: (navigation: CarouselNavigation) => void;
 };
 
 type CarouselContextProps = {
@@ -50,10 +56,29 @@ function useCarousel(): CarouselContextProps {
 	return context;
 }
 
+function usePrefersReducedMotion(): boolean {
+	const [prefersReducedMotion, setPrefersReducedMotion] = useState(
+		() =>
+			typeof window !== "undefined" &&
+			window.matchMedia("(prefers-reduced-motion: reduce)").matches,
+	);
+
+	useEffect(() => {
+		const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+		const updatePreference = () => setPrefersReducedMotion(mediaQuery.matches);
+		updatePreference();
+		mediaQuery.addEventListener("change", updatePreference);
+		return () => mediaQuery.removeEventListener("change", updatePreference);
+	}, []);
+
+	return prefersReducedMotion;
+}
+
 function Carousel({
 	orientation = "horizontal",
 	opts,
 	setApi,
+	setNavigation,
 	plugins,
 	className,
 	children,
@@ -68,6 +93,7 @@ function Carousel({
 	);
 	const [canScrollPrev, setCanScrollPrev] = useState(false);
 	const [canScrollNext, setCanScrollNext] = useState(false);
+	const prefersReducedMotion = usePrefersReducedMotion();
 
 	const onSelect = useCallback((carouselApi: CarouselApi) => {
 		if (!carouselApi) {
@@ -78,12 +104,16 @@ function Carousel({
 	}, []);
 
 	const scrollPrev = useCallback(() => {
-		api?.scrollPrev();
-	}, [api]);
+		api?.scrollPrev(prefersReducedMotion);
+	}, [api, prefersReducedMotion]);
 
 	const scrollNext = useCallback(() => {
-		api?.scrollNext();
-	}, [api]);
+		api?.scrollNext(prefersReducedMotion);
+	}, [api, prefersReducedMotion]);
+	const navigation = useMemo(
+		() => ({ scrollNext, scrollPrev }),
+		[scrollNext, scrollPrev],
+	);
 
 	const handleKeyDown = useCallback(
 		(event: KeyboardEvent<HTMLDivElement>) => {
@@ -104,6 +134,13 @@ function Carousel({
 		}
 		setApi(api);
 	}, [api, setApi]);
+
+	useEffect(() => {
+		if (!api || !setNavigation) {
+			return;
+		}
+		setNavigation(navigation);
+	}, [api, navigation, setNavigation]);
 
 	useEffect(() => {
 		if (!api) {
@@ -274,6 +311,7 @@ export {
 	type CarouselApi,
 	CarouselContent,
 	CarouselItem,
+	type CarouselNavigation,
 	CarouselNext,
 	CarouselPrevious,
 };

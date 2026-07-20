@@ -16,7 +16,7 @@ AWS Amplify Hosting serves production through Route 53. `www.carolyndiloreto.com
 - **CMS:** Contentful
 - **Images:** `@unpic/react` with Contentful image transforms
 - **Styling:** Tailwind CSS v4, shadcn/ui, and Radix UI
-- **Package manager:** Bun 1.2.4 in CI and Amplify
+- **Package manager:** Bun 1.3.14 in CI and Amplify
 - **Testing:** Bun unit tests and canonical Playwright behavior/visual tests
 
 ## Local development
@@ -24,7 +24,7 @@ AWS Amplify Hosting serves production through Route 53. `www.carolyndiloreto.com
 ### Prerequisites
 
 - Node.js 24 (see `.nvmrc`)
-- Bun 1.2.4
+- Bun 1.3.14
 - Access to the project's Contentful delivery API
 
 ```bash
@@ -58,14 +58,16 @@ bun run validate
 bun run test:visual
 ```
 
-`bun run build` refreshes the auth manifest, prerenders public routes, and emits Amplify's deployment contract under `.amplify-hosting/`:
+`bun run build` refreshes the auth manifest, prerenders persistent public routes, and emits Amplify's deployment contract under `.amplify-hosting/`:
 
-- `static/` contains public assets and prerendered public pages.
+- `static/` contains public assets and prerendered `/`, `/about`, `/projects`, and `/photography` pages.
 - `compute/default/server.js` starts the Node.js 24 SSR server.
-- `deploy-manifest.json` retains Nitro's default static-with-compute-fallback routing.
-- `static/test-assets/` is deleted after the build so local visual fixtures are never deployed.
+- `deploy-manifest.json` is explicitly rewritten with exact static routes for those four persistent pages, followed by Nitro's generated static-asset route with compute fallback and its generated compute catch-all.
+- Project details, `/resume`, server functions, missing static assets, and unknown paths therefore remain compute-backed. Keeping every project detail dynamic makes clean project URLs independent of authorization changes and avoids unused static routes.
+- Amplify permits at most 25 deployment routes. The build fails before publishing if the four exact public routes plus the two generated fallback routes exceed that limit.
+- Fixture builds use the checked-in Contentful JSON and `public/test-assets/`. Production builds use the live Contentful client, leave `public/test-assets/` unchanged, and remove the copied `static/test-assets/` directory from the emitted artifact.
 
-`bun run verify:prerender` checks the exact static page set, keeps protected projects and `/resume` dynamic, rejects public bcrypt hashes and configured secret values, validates the deployment manifest/runtime, and enforces Amplify's 220 MiB uncompressed compute limit.
+`bun run verify:prerender` checks the exact static page set, keeps protected projects and `/resume` dynamic, rejects public bcrypt hashes and configured secret values, validates the replacement route order and runtime, and enforces Amplify's 220 MiB uncompressed compute limit. Amplify commands explicitly set production artifact mode and disable Playwright/hermetic fixture flags; production entrypoints reject those flags unless the repository's explicit hermetic production-test command is running.
 
 | Command | Description |
 | --- | --- |
@@ -75,12 +77,12 @@ bun run test:visual
 | `bun run validate` | Run lint, unit tests, typecheck, build, and artifact checks |
 | `bun run test:unit` | Run focused Bun unit tests |
 | `bun run test:amplify` | Run deployed Amplify smoke tests against `AMPLIFY_BASE_URL` |
-| `bun run test:visual` | Run canonical ARM64 Playwright behavior/visual tests |
-| `bun run test:visual:update` | Update reviewed canonical screenshots |
+| `bun run test:visual` | Build a production-shaped fixture artifact, then run canonical ARM64 Playwright behavior/visual tests against it |
+| `bun run test:visual:update` | Rebuild the production-shaped fixture artifact and update reviewed canonical screenshots |
 
 ## Application architecture
 
-TanStack Start routes live in `src/routes/`. Public pages and public project slugs are prerendered. Protected project slugs, `/resume`, server functions, and unknown routes use Amplify SSR compute.
+TanStack Start routes live in `src/routes/`. The four persistent public index pages are prerendered and installed as exact Amplify static routes. Every project detail slug, `/resume`, server functions, missing assets, and unknown routes use the generated Amplify compute fallbacks.
 
 | Route | Behavior |
 | --- | --- |
@@ -89,9 +91,9 @@ TanStack Start routes live in `src/routes/`. Public pages and public project slu
 | `/projects` | Filterable project grid |
 | `/projects/$slug` | Public detail or project-specific password gate |
 | `/photography` | On-demand album server functions and gallery |
-| `/resume` | Dynamic HTTP 308 redirect to an allowed HTTPS Contentful asset |
+| `/resume` | Dynamic, non-permanent HTTP 307 redirect to the current allowed HTTPS Contentful asset; it is never prerendered or cacheable as a permanent redirect |
 
-Protected routes fail closed against the generated auth manifest. Successful authentication sets a project-specific HTTP-only, Secure, SameSite=Strict cookie. The project loader validates that cookie before fetching or returning protected Contentful data. Passwords are bcrypt-verified only in server functions; hashes remain in compute and are rejected from public output.
+Protected routes fail closed against the generated auth manifest. Successful authentication sets a project-specific HTTP-only, Secure, SameSite=Strict cookie. The project loader first fetches only the matching slug/password authorization state and validates it against the release manifest. For protected projects it then verifies the cookie before fetching full detail content, and revalidates the detail query's authorization state before returning content so changes between queries fail closed. Passwords are bcrypt-verified only in server functions; hashes remain in compute and are rejected from public output.
 
 Production secrets are loaded through `lib/server-secrets.server.ts`:
 
@@ -102,12 +104,14 @@ Production secrets are loaded through `lib/server-secrets.server.ts`:
 
 ## AWS infrastructure
 
-The self-contained CDK project is under `infra/` with its own package manifest and lockfile.
+The CDK project is under `infra/` with its own package manifest and lockfile. It imports shared deployment parameters and Amplify clean-URL policy from the repository root, but it does not import or depend on the generated project auth manifest. Application and infrastructure validation remain independent; generate the manifest only for application development and builds.
 
 ```bash
+bun run validate
 cd infra
 bun install --frozen-lockfile
 bun run typecheck
+bun run test
 bun run synth
 ```
 
@@ -115,9 +119,9 @@ bun run synth
 
 - An Amplify `WEB_COMPUTE` app and `amplify-production` branch
 - Disabled auto-builds and pull-request previews
-- A no-cookie managed cache policy for protected SSR responses
-- A build/service/logging role restricted to the Contentful parameter, its KMS encryption context, and Amplify log groups
-- A branch compute role restricted to the two production parameters and their KMS encryption contexts
+- A cookie-aware managed cache policy plus explicit `private, no-store` protected-project responses
+- A build/service/logging role restricted to the Contentful and project-auth parameters, their KMS encryption contexts, and Amplify log groups
+- A branch compute role restricted to the same two production parameters and their KMS encryption contexts
 - A retained customer-managed KMS key for SSM
 - The existing Route 53 public zone, imported as `Z32YJCERCJ1WLI`
 - Production apex/`www` and legacy `carolyn.diloreto.com` Amplify associations with permanent canonical redirects
@@ -133,9 +137,14 @@ Route 53 is authoritative for `carolyndiloreto.com`, and `EnableDomainAssociatio
 Infrastructure deployment is allowed only after local validation. The target account was not bootstrapped when migration work began.
 
 ```bash
+PRODUCTION_ACCOUNT_ID=725669362139
 ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
+if [ "$ACCOUNT_ID" != "$PRODUCTION_ACCOUNT_ID" ]; then
+  echo "Refusing to bootstrap AWS account $ACCOUNT_ID; expected $PRODUCTION_ACCOUNT_ID" >&2
+  exit 1
+fi
 cd infra
-bunx cdk bootstrap "aws://$ACCOUNT_ID/us-west-2"
+bunx cdk bootstrap "aws://$PRODUCTION_ACCOUNT_ID/us-west-2"
 ```
 
 For the first connected-app creation, authorize the regional Amplify GitHub App for only `soodoh/carolyn-portfolio`. If the API requires a bootstrap token, store a JSON object with a `token` key in a temporary `us-west-2` Secrets Manager secret. Pass only that secret ARN to CDK; never pass the token through CDK context or a CloudFormation parameter.
@@ -164,12 +173,14 @@ At cutover, create a new Contentful delivery token and a new `openssl rand -hex 
 Before provisioning production DNS or relying on Amplify:
 
 1. Create temporary production parameter values with the stack KMS key.
-2. Trigger one connected Amplify build and confirm auth-manifest generation reads Contentful through the Amplify service role.
+2. Trigger one connected Amplify build and confirm auth-manifest generation reads the Contentful token and project-auth secret through the Amplify service role.
 3. Request a dynamic route on the Amplify hostname and confirm SSR compute reads both parameters through the compute role.
 4. Confirm no value appears in build logs, CloudWatch logs, `.amplify-hosting`, Amplify environment variables, or the synthesized template.
 5. If build-time SSM access fails, stop. Do not fall back to plaintext Amplify variables or long-lived AWS keys.
 
 ### Configure GitHub deployment variables
+
+Create a GitHub Actions environment named `production`, restrict it to the selected `main` branch, and leave required reviewers disabled so validated main deployments remain automatic. The deployment job references this environment even though it needs no application credential; production password smoke coverage runs against the hermetic fixture artifact instead of storing a real project password in GitHub.
 
 Read stack outputs, then configure non-secret repository variables:
 
@@ -197,19 +208,18 @@ AMPLIFY_BASE_URL=https://carolyndiloreto.com \
   bun run test:amplify
 ```
 
-The production workflow runs this suite without credentials after each successful Amplify release. Set `AMPLIFY_PROTECTED_PROJECT_PASSWORD` only in a secure invoking process to add the valid-password checks; the suite otherwise skips that credentialed test. The suite verifies:
+The production workflow runs this small deployment-integration suite without application credentials after each successful Amplify release. Full behavior, visual, valid-password, secure-cookie, and project-cookie-isolation coverage runs earlier against a production-shaped Amplify artifact built from the stable checked-in Contentful fixture. The live suite verifies only behavior that the fixture artifact cannot prove:
 
-- `/`, `/about`, `/projects`, `/photography`, and a public project
-- Protected gate without protected data or bcrypt leakage
-- Invalid-password behavior
-- Photography album server calls
-- `/resume` returning 308 to an allowed Contentful HTTPS asset
-- A real 404 status/page and static asset delivery
-- Canonical `www` and `carolyn.diloreto.com` redirects with path/query preservation
+- The expected release is available from canonical and default Amplify origins
+- `/`, `/about`, `/projects`, `/photography`, and a public project use live production content successfully
+- The protected gate does not expose protected data or bcrypt hashes and rejects an invalid password
+- Live photography server functions can read Contentful data and return healthy Contentful images
+- `/resume` returns a non-permanent 307 to the current allowed Contentful HTTPS asset
+- A real 404 status/page, static asset delivery, and canonical domain redirects work through Amplify
 
-The credentialed test additionally verifies valid-password behavior, secure cookie attributes, and project-cookie isolation. Separately, from a secure operations shell, confirm the Amplify job commit ID equals the validated GitHub SHA, the `5xxErrors` metric remains zero, and CloudWatch/build logs and artifacts do not contain either production secret value.
+The production-shaped fixture artifact uses the same source, build command, SSR runtime, route manifest, and artifact server as production, but it is not byte-identical to the deployed artifact because Amplify rebuilds with live Contentful data. The minimal live suite covers that integration boundary without storing a real project password in GitHub. Separately, from a secure operations shell, confirm the Amplify job commit ID equals the validated GitHub SHA, the `5xxErrors` metric remains zero, and CloudWatch/build logs and artifacts do not contain either production secret value.
 
-Keep Nitro's generated routing until POST server functions, protected fallbacks, and SSR 404 behavior have been verified in production.
+Keep the generated asset fallback and compute catch-all in the explicit route replacement until POST server functions, protected/dynamic fallbacks, and SSR 404 behavior have been verified in production.
 
 ## DNS operations
 
@@ -271,13 +281,13 @@ Current public pricing assumptions, before free-tier credits:
 | Amplify SSR duration | $0.20/GB-hour |
 | AWS Budget monitoring | Free for notification-only budgets |
 
-Expected fixed baseline is roughly $1.60/month plus low logs, build, CDN, transfer, DNS query, and SSR usage. Data transfer is the largest likely variable. Amplify WAF is intentionally omitted because its Amplify charge alone is $15/month. PR previews, staging branches, and unnecessary alarms are disabled.
+Expected fixed baseline is roughly $1.60/month plus low logs, build, CDN, transfer, DNS query, and SSR usage. Data transfer is the largest likely variable. Amplify WAF is intentionally omitted because its Amplify integration charge alone is $15/month before normal WAF charges. A DynamoDB-backed password-attempt limiter is also intentionally omitted while traffic and abuse remain negligible; it would add trusted client-IP handling, atomic counter/TTL policy, IAM, and failure modes disproportionate to the current risk. Revisit distributed limiting if invalid-password traffic or SSR cost materially increases. PR previews, staging branches, and unnecessary alarms are disabled.
 
 After one complete billing week, review Cost Explorer by service, Amplify build minutes/data transfer/SSR use, CloudWatch ingestion, KMS, and Route 53. Recalculate the monthly projection and investigate any forecast approaching the $5 warning.
 
 ## Visual testing
 
-Visual tests run in a pinned Linux ARM64 Playwright container so local and CI rendering is identical. An ARM64 Docker engine must be running.
+Visual tests first build the production artifact path with a live-shaped transformation of the checked-in Contentful fixture, then run the full browser suite against the emitted Amplify bundle in a pinned Linux ARM64 Playwright container. Hermetic Contentful image URLs are fulfilled from the fixture assets inside Playwright, preserving stable screenshots while exercising production routing and SSR packaging. An ARM64 Docker engine must be running.
 
 ```bash
 bun run test:visual

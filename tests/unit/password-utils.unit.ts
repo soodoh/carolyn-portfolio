@@ -7,10 +7,15 @@ import {
 	setSystemTime,
 	test,
 } from "bun:test";
-import { verifyToken } from "@/lib/password-utils";
+import {
+	deriveProjectAuthVersion,
+	signToken,
+	verifyToken,
+} from "@/lib/password-utils";
 
 const TEST_SECRET = "password-utils-test-secret";
 const SLUG = "magnolia-app";
+const AUTH_VERSION = "auth-version-one";
 const TOKEN_TTL_SECONDS = 7 * 24 * 60 * 60;
 const TOKEN_CLOCK_SKEW_SECONDS = 5 * 60;
 const NOW_SECONDS = 2_000_000_000;
@@ -34,7 +39,11 @@ afterAll(() => {
 	}
 });
 
-async function createToken(slug: string, timestamp: string): Promise<string> {
+async function createToken(
+	slug: string,
+	timestamp: string,
+	authVersion = AUTH_VERSION,
+): Promise<string> {
 	const encoder = new TextEncoder();
 	const key = await crypto.subtle.importKey(
 		"raw",
@@ -46,7 +55,7 @@ async function createToken(slug: string, timestamp: string): Promise<string> {
 	const signature = await crypto.subtle.sign(
 		"HMAC",
 		key,
-		encoder.encode(`${slug}:${timestamp}`),
+		encoder.encode(`${slug}:${authVersion}:${timestamp}`),
 	);
 	const encodedSignature = [...new Uint8Array(signature)]
 		.map((byte) => byte.toString(16).padStart(2, "0"))
@@ -59,18 +68,24 @@ describe("project auth tokens", () => {
 		setSystemTime(NOW_SECONDS * 1000);
 
 		expect(
-			await verifyToken(await createToken(SLUG, String(NOW_SECONDS)), SLUG),
+			await verifyToken(
+				await createToken(SLUG, String(NOW_SECONDS)),
+				SLUG,
+				AUTH_VERSION,
+			),
 		).toBe(true);
 		expect(
 			await verifyToken(
 				await createToken(SLUG, String(NOW_SECONDS - TOKEN_TTL_SECONDS)),
 				SLUG,
+				AUTH_VERSION,
 			),
 		).toBe(true);
 		expect(
 			await verifyToken(
 				await createToken(SLUG, String(NOW_SECONDS + TOKEN_CLOCK_SKEW_SECONDS)),
 				SLUG,
+				AUTH_VERSION,
 			),
 		).toBe(true);
 	});
@@ -82,6 +97,7 @@ describe("project auth tokens", () => {
 			await verifyToken(
 				await createToken(SLUG, String(NOW_SECONDS - TOKEN_TTL_SECONDS - 1)),
 				SLUG,
+				AUTH_VERSION,
 			),
 		).toBe(false);
 		expect(
@@ -91,6 +107,7 @@ describe("project auth tokens", () => {
 					String(NOW_SECONDS + TOKEN_CLOCK_SKEW_SECONDS + 1),
 				),
 				SLUG,
+				AUTH_VERSION,
 			),
 		).toBe(false);
 	});
@@ -107,9 +124,31 @@ describe("project auth tokens", () => {
 			"123abc",
 			String(Number.MAX_SAFE_INTEGER + 1),
 		]) {
-			expect(await verifyToken(await createToken(SLUG, timestamp), SLUG)).toBe(
-				false,
-			);
+			expect(
+				await verifyToken(
+					await createToken(SLUG, timestamp),
+					SLUG,
+					AUTH_VERSION,
+				),
+			).toBe(false);
 		}
+	});
+
+	test("derives stable password-specific auth versions", async () => {
+		const version = await deriveProjectAuthVersion(SLUG, "first-password");
+		expect(await deriveProjectAuthVersion(SLUG, "first-password")).toBe(
+			version,
+		);
+		expect(await deriveProjectAuthVersion(SLUG, "second-password")).not.toBe(
+			version,
+		);
+	});
+
+	test("revokes a token when the project auth version changes", async () => {
+		setSystemTime(NOW_SECONDS * 1000);
+		const token = await signToken(SLUG, AUTH_VERSION);
+
+		expect(await verifyToken(token, SLUG, AUTH_VERSION)).toBe(true);
+		expect(await verifyToken(token, SLUG, "auth-version-two")).toBe(false);
 	});
 });

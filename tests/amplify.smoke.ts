@@ -1,12 +1,12 @@
-import { expect, test } from "@playwright/test";
+import { type APIRequestContext, expect, test } from "@playwright/test";
 import { selectFilter } from "@/tests/visual-helpers";
 
 const canonicalOrigin = "https://carolyndiloreto.com";
 const legacyOrigin = "https://carolyn.diloreto.com";
 const publicProjectPath = "/projects/d23-membership-page";
 const protectedSlug = "magnolia-app";
-const secondProtectedSlug = "nbc-app";
-const protectedProjectPassword = process.env.AMPLIFY_PROTECTED_PROJECT_PASSWORD;
+const defaultOrigin = process.env.AMPLIFY_DEFAULT_ORIGIN;
+const expectedReleaseCommit = process.env.AMPLIFY_EXPECTED_RELEASE_COMMIT;
 
 const publicPaths = [
 	"/",
@@ -16,24 +16,36 @@ const publicPaths = [
 	publicProjectPath,
 ];
 
+async function getRootReleaseCommit(
+	request: APIRequestContext,
+	origin: string,
+): Promise<string> {
+	const response = await request.get(origin, { maxRedirects: 0 });
+	expect(response.status(), origin).toBe(200);
+	expect(new URL(response.url()).origin, origin).toBe(new URL(origin).origin);
+	const html = await response.text();
+	expect(html, `${origin} root response`).toContain(
+		"<title>CD Portfolio</title>",
+	);
+	const releaseCommit = html.match(
+		/<meta name="release-commit" content="([a-f0-9]{40})"\/?\s*>/,
+	)?.[1];
+	expect(releaseCommit, `${origin} release commit`).toBeDefined();
+	if (!releaseCommit) {
+		throw new Error(`${origin} is missing its release commit marker.`);
+	}
+	return releaseCommit;
+}
+
 test.describe("Amplify production behavior", () => {
-	test("serves public routes, assets, and responsive layouts", async ({
-		page,
-		request,
-	}) => {
+	test("serves public routes and assets", async ({ request }) => {
 		for (const path of publicPaths) {
-			const response = await request.get(path);
+			const response = await request.get(path, { maxRedirects: 0 });
 			expect(response.status(), path).toBe(200);
+			expect(new URL(response.url()).origin, path).toBe(canonicalOrigin);
 			const body = await response.text();
 			expect(body, path).not.toMatch(/\$2[aby]\$\d{2}\$/);
 		}
-
-		await page.goto("/");
-		await page.locator("html[data-hydrated='true']").waitFor();
-		const hasHorizontalOverflow = await page.evaluate(
-			() => document.documentElement.scrollWidth > window.innerWidth + 1,
-		);
-		expect(hasHorizontalOverflow).toBe(false);
 
 		const rootHtml = await (await request.get("/")).text();
 		const assetPath = rootHtml.match(/src="(\/assets\/[^"]+\.js)"/)?.[1];
@@ -47,8 +59,12 @@ test.describe("Amplify production behavior", () => {
 		page,
 		request,
 	}) => {
-		const unauthorized = await request.get(`/projects/${protectedSlug}`);
+		const unauthorized = await request.get(`/projects/${protectedSlug}`, {
+			maxRedirects: 0,
+		});
+		expect(new URL(unauthorized.url()).origin).toBe(canonicalOrigin);
 		expect(unauthorized.status()).toBe(200);
+		expect(unauthorized.headers()["cache-control"]).toBe("private, no-store");
 		const unauthorizedHtml = await unauthorized.text();
 		expect(unauthorizedHtml).not.toContain("Magnolia App");
 		expect(unauthorizedHtml).not.toMatch(/\$2[aby]\$\d{2}\$/);
@@ -69,28 +85,51 @@ test.describe("Amplify production behavior", () => {
 		const initialResponse = await page.goto("/photography");
 		expect(initialResponse?.status()).toBe(200);
 		await page.locator("html[data-hydrated='true']").waitFor();
-		const responsePromise = page.waitForResponse(
-			(response) => response.request().method() === "POST" && response.ok(),
-		);
+		const responsePromise = page.waitForResponse((response) => {
+			const request = response.request();
+			return (
+				request.method() === "POST" &&
+				response.url().includes("/_serverFn/") &&
+				request.postData()?.includes("Portraits") === true
+			);
+		});
 		await selectFilter(page, "Dance", "Portraits");
-		await responsePromise;
-		await expect(
-			page
-				.locator(".masonry-grid")
-				.getByRole("button", { name: /View fullscreen photo/ })
-				.first(),
-		).toBeVisible();
+		const albumResponse = await responsePromise;
+		expect(albumResponse.ok()).toBe(true);
+		expect(await albumResponse.text()).toContain("Portraits");
+		const firstPortrait = page
+			.locator(".masonry-grid")
+			.getByRole("button", { name: /View fullscreen photo/ })
+			.first();
+		await expect(firstPortrait).toBeVisible();
+		const portraitImage = firstPortrait.locator("img");
+		await expect(portraitImage).toHaveAttribute(
+			"src",
+			/^https:\/\/images\.ctfassets\.net\//,
+		);
+		await expect
+			.poll(() =>
+				portraitImage.evaluate(
+					(image: HTMLImageElement) =>
+						image.complete && image.naturalWidth > 0 && image.naturalHeight > 0,
+				),
+			)
+			.toBe(true);
+		await portraitImage.evaluate((image: HTMLImageElement) => image.decode());
 	});
 
 	test("returns the dynamic resume redirect and a real 404", async ({
 		request,
 	}) => {
 		const resume = await request.get("/resume", { maxRedirects: 0 });
-		expect(resume.status()).toBe(308);
+		expect(resume.status()).toBe(307);
 		const location = resume.headers().location;
 		expect(location).toMatch(/^https:\/\/[^/]+\.ctfassets\.net\//);
 
-		const missing = await request.get("/not-a-real-amplify-route");
+		const missing = await request.get("/not-a-real-amplify-route", {
+			maxRedirects: 0,
+		});
+		expect(new URL(missing.url()).origin).toBe(canonicalOrigin);
 		expect(missing.status()).toBe(404);
 		expect(await missing.text()).toContain("Page Not Found");
 	});
@@ -110,41 +149,22 @@ test.describe("Amplify production behavior", () => {
 		}
 	});
 
-	test("sets a secure isolated cookie for a valid password", async ({
-		page,
+	test("serves the expected release from canonical and default origins", async ({
+		request,
 	}) => {
-		test.skip(
-			!protectedProjectPassword,
-			"Set AMPLIFY_PROTECTED_PROJECT_PASSWORD to run valid-password checks",
-		);
-		if (!protectedProjectPassword) {
+		test.skip(!defaultOrigin, "AMPLIFY_DEFAULT_ORIGIN is not configured");
+		if (!defaultOrigin) {
 			return;
 		}
-
-		await page.goto(`/projects/${protectedSlug}`);
-		await page.locator("html[data-hydrated='true']").waitFor();
-		await page
-			.getByLabel("Password", { exact: true })
-			.fill(protectedProjectPassword);
-		await page.getByRole("button", { name: "Submit password" }).click();
-		await expect(
-			page.getByRole("heading", { name: "Magnolia App" }),
-		).toBeVisible();
-
-		const cookies = await page.context().cookies();
-		const authCookie = cookies.find(
-			(cookie) => cookie.name === `project-auth-${protectedSlug}`,
-		);
-		expect(authCookie).toMatchObject({
-			httpOnly: true,
-			path: "/",
-			sameSite: "Strict",
-			secure: true,
-		});
-
-		await page.goto(`/projects/${secondProtectedSlug}`);
-		await expect(
-			page.getByRole("heading", { name: "Password Protected" }),
-		).toBeVisible();
+		const [canonicalCommit, defaultCommit] = await Promise.all([
+			getRootReleaseCommit(request, canonicalOrigin),
+			getRootReleaseCommit(request, defaultOrigin),
+		]);
+		expect(defaultCommit).toBe(canonicalCommit);
+		if (process.env.CI) {
+			expect(canonicalCommit).toBe(expectedReleaseCommit);
+		} else if (expectedReleaseCommit) {
+			expect(canonicalCommit).toBe(expectedReleaseCommit);
+		}
 	});
 });

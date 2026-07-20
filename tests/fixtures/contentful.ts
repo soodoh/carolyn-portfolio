@@ -1,6 +1,6 @@
-import type { ContentfulFixture } from "@/lib/contentful-fixture-types";
+import { parseContentfulFixture } from "@/lib/contentful-fixture-types";
 import rawFixture from "@/tests/fixtures/contentful.json";
 
-export const contentfulFixture: ContentfulFixture = JSON.parse(
-	JSON.stringify(rawFixture),
+export const contentfulFixture = parseContentfulFixture(
+	JSON.parse(JSON.stringify(rawFixture)),
 );

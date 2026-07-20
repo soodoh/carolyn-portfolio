@@ -1,5 +1,9 @@
 import type { EntryFieldTypes, EntrySkeletonType } from "contentful";
-import { getContentfulClient } from "@/lib/contentful-utils";
+import type { ContentfulDeliveryClient } from "@/lib/content-source";
+import {
+	getAllContentfulEntries,
+	getContentfulClient,
+} from "@/lib/contentful-utils";
 import type { ProjectAuthSource } from "@/lib/project-auth-manifest-builder";
 
 const CONTENTFUL_PAGE_SIZE = 1000;
@@ -12,36 +16,43 @@ type AuthProjectSkeleton = EntrySkeletonType<
 	"project"
 >;
 
-export async function fetchContentfulAuthProjects(): Promise<
-	ProjectAuthSource[]
-> {
-	const client = await getContentfulClient();
-	const projects: ProjectAuthSource[] = [];
-	let skip = 0;
-	let total = 0;
+export async function getProjectAuthProjects(): Promise<ProjectAuthSource[]> {
+	if (process.env.PLAYWRIGHT_TEST === "true") {
+		const { contentfulFixture } = await import("@/tests/fixtures/contentful");
+		return Object.values(contentfulFixture.projectInfo).map(
+			({ password, slug }) => ({ password, slug }),
+		);
+	}
+	return fetchContentfulAuthProjects();
+}
 
-	do {
-		const entries = await client.getEntries<AuthProjectSkeleton>({
-			content_type: "project",
-			select: ["fields.slug", "fields.password"],
-			limit: CONTENTFUL_PAGE_SIZE,
-			skip,
-		});
-		total = entries.total;
-
-		for (const item of entries.items) {
-			const { password, slug } = item.fields;
-			if (typeof slug !== "string") {
-				throw new Error(`Project ${item.sys.id} is missing a slug.`);
-			}
-			projects.push({
-				slug,
-				password:
-					typeof password === "string" && password ? password : undefined,
-			});
+export async function fetchContentfulAuthProjects(
+	injectedClient?: ContentfulDeliveryClient,
+): Promise<ProjectAuthSource[]> {
+	const client: ContentfulDeliveryClient =
+		injectedClient ?? (await getContentfulClient());
+	const entries = await getAllContentfulEntries(
+		(skip, limit) =>
+			client.getEntries<AuthProjectSkeleton>({
+				content_type: "project",
+				select: ["fields.slug", "fields.password"],
+				limit,
+				skip,
+			}),
+		"Project authorization query",
+		CONTENTFUL_PAGE_SIZE,
+	);
+	return entries.map((item) => {
+		const { password, slug } = item.fields;
+		if (typeof slug !== "string") {
+			throw new Error(`Project ${item.sys.id} is missing a slug.`);
 		}
-		skip += entries.items.length;
-	} while (skip < total);
-
-	return projects;
+		if (password !== undefined && typeof password !== "string") {
+			throw new Error(`Project ${item.sys.id} has a malformed password field.`);
+		}
+		return {
+			slug,
+			password: password || undefined,
+		};
+	});
 }

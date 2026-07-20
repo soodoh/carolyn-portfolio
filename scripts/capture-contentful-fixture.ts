@@ -1,13 +1,18 @@
-import { mkdir, rename, rm, writeFile } from "node:fs/promises";
+import { mkdir, rm, writeFile } from "node:fs/promises";
 import type { Node as RichTextNode } from "@contentful/rich-text-types";
 import pAll from "p-all";
 import sharp from "sharp";
-import { getAboutData, getResumeUrl } from "@/lib/fetch-about-data";
-import { getBackgroundImage, getSocialMedia } from "@/lib/fetch-home-data";
+import { getAboutContent } from "@/lib/fetch-about-data";
+import { getSocialMedia } from "@/lib/fetch-home-data";
 import getAlbums from "@/lib/fetch-photos";
-import { getProjectInfo, getProjects } from "@/lib/fetch-projects";
-import { fetchContentfulAuthProjects } from "@/lib/project-auth-source";
+import { decodeImage } from "@/lib/image-type";
 import type { ImageType } from "@/lib/types";
+import { loadContentfulFixtureProjects } from "@/scripts/contentful-fixture-projects";
+import {
+	recoverFixtureOutputs,
+	replaceFixtureOutputs,
+	withFixtureOutputLock,
+} from "@/scripts/fixture-output-transaction";
 
 const assetDirectory = new URL("../public/test-assets/", import.meta.url);
 const stagedAssetDirectory = new URL(
@@ -26,27 +31,27 @@ const stagedOutputPath = new URL(
 	"../tests/fixtures/contentful.json.tmp",
 	import.meta.url,
 );
-
-function isImage(value: unknown): value is ImageType {
-	return (
-		typeof value === "object" &&
-		value !== null &&
-		"id" in value &&
-		typeof value.id === "string" &&
-		"title" in value &&
-		typeof value.title === "string" &&
-		"description" in value &&
-		typeof value.description === "string" &&
-		"url" in value &&
-		typeof value.url === "string" &&
-		"width" in value &&
-		typeof value.width === "number" &&
-		"height" in value &&
-		typeof value.height === "number" &&
-		"placeholder" in value &&
-		typeof value.placeholder === "string"
-	);
-}
+const backupOutputPath = new URL(
+	"../tests/fixtures/contentful.json.backup",
+	import.meta.url,
+);
+const commitMarkerPath = new URL(
+	"../tests/fixtures/.contentful-fixture-commit",
+	import.meta.url,
+);
+const fixtureLockPath = new URL(
+	"../tests/fixtures/.contentful-fixture.lock",
+	import.meta.url,
+);
+const fixtureOutputPaths = {
+	assetDirectory,
+	backupAssetDirectory,
+	backupOutputPath,
+	commitMarkerPath,
+	outputPath,
+	stagedAssetDirectory,
+	stagedOutputPath,
+};
 
 function isRichTextNode(value: unknown): value is RichTextNode {
 	return (
@@ -62,8 +67,9 @@ function isRichTextNode(value: unknown): value is RichTextNode {
 
 function getRichTextImages(node: RichTextNode): ImageType[] {
 	const images: ImageType[] = [];
-	if (isImage(node.data.image)) {
-		images.push(node.data.image);
+	const image = decodeImage(node.data.image);
+	if (image) {
+		images.push(image);
 	}
 	if ("content" in node && Array.isArray(node.content)) {
 		for (const child of node.content) {
@@ -79,8 +85,8 @@ function replaceRichTextImages(
 	node: RichTextNode,
 	capturedImages: Map<string, ImageType>,
 ): void {
-	if (isImage(node.data.image)) {
-		const original = node.data.image;
+	const original = decodeImage(node.data.image);
+	if (original) {
 		const captured = capturedImages.get(original.id);
 		if (!captured) {
 			throw new Error(`Missing captured rich-text image ${original.id}`);
@@ -141,118 +147,119 @@ function requireCapturedImage(
 }
 
 async function main(): Promise<void> {
-	await Promise.all([
-		rm(stagedAssetDirectory, { recursive: true, force: true }),
-		rm(backupAssetDirectory, { recursive: true, force: true }),
-		rm(stagedOutputPath, { force: true }),
-	]);
-	await mkdir(stagedAssetDirectory, { recursive: true });
-
-	const [projects, about, backgroundImage, socialMedia, albums, authProjects] =
-		await Promise.all([
-			getProjects(),
-			getAboutData(),
-			getBackgroundImage(),
-			getSocialMedia(),
-			getAlbums(),
-			fetchContentfulAuthProjects(),
-		]);
-	const projectInfos = await Promise.all(
-		projects.map((project) => getProjectInfo(project.slug)),
-	);
-
-	const uniqueImages = new Map<string, ImageType>();
-	const addImage = (image: ImageType) => {
-		const existing = uniqueImages.get(image.id);
-		if (existing && existing.url !== image.url) {
-			throw new Error(`Image ID ${image.id} refers to multiple URLs.`);
-		}
-		uniqueImages.set(image.id, image);
-	};
-	addImage(backgroundImage);
-	addImage(about.profilePicture);
-	for (const project of projects) {
-		addImage(project.coverImage);
-	}
-	for (const projectInfo of projectInfos) {
-		for (const image of getRichTextImages(projectInfo.description)) {
-			addImage(image);
-		}
-	}
-	for (const album of albums) {
-		for (const photo of album.photos) {
-			addImage(photo);
-		}
-	}
-
-	const captureTasks = [...uniqueImages.values()].map(
-		(image) => async () => captureImage(image),
-	);
-	const capturedImages = new Map(
-		(await pAll(captureTasks, { concurrency: 8 })).map((image) => [
-			image.id,
-			image,
-		]),
-	);
-	for (const projectInfo of projectInfos) {
-		replaceRichTextImages(projectInfo.description, capturedImages);
-	}
-
-	const protectedSlugs = new Set(
-		authProjects
-			.filter((project) => project.password)
-			.map((project) => project.slug),
-	);
-	const capturedProjects = projects.map((project) => ({
-		...project,
-		coverImage: requireCapturedImage(project.coverImage, capturedImages),
-	}));
-	const projectEntries = projectInfos.map((projectInfo) => [
-		projectInfo.slug,
-		{
-			...projectInfo,
-			coverImage: requireCapturedImage(projectInfo.coverImage, capturedImages),
-			password: protectedSlugs.has(projectInfo.slug)
-				? "playwright-password"
-				: undefined,
-		},
-	]);
-	const fixture = {
-		backgroundImage: requireCapturedImage(backgroundImage, capturedImages),
-		socialMedia,
-		about: {
-			...about,
-			profilePicture: requireCapturedImage(
-				about.profilePicture,
-				capturedImages,
-			),
-		},
-		resumeUrl: await getResumeUrl(),
-		projects: capturedProjects,
-		projectInfo: Object.fromEntries(projectEntries),
-		albums: albums.map((album) => ({
-			...album,
-			photos: album.photos.map((photo) =>
-				requireCapturedImage(photo, capturedImages),
-			),
-		})),
-	};
-	await writeFile(stagedOutputPath, `${JSON.stringify(fixture, null, "\t")}\n`);
-
-	await rename(assetDirectory, backupAssetDirectory);
 	try {
-		await rename(stagedAssetDirectory, assetDirectory);
-		await rename(stagedOutputPath, outputPath);
-		await rm(backupAssetDirectory, { recursive: true, force: true });
-	} catch (error) {
-		await rm(assetDirectory, { recursive: true, force: true });
-		await rename(backupAssetDirectory, assetDirectory);
-		throw error;
-	}
+		await recoverFixtureOutputs(fixtureOutputPaths);
+		await Promise.all([
+			rm(stagedAssetDirectory, { recursive: true, force: true }),
+			rm(stagedOutputPath, { force: true }),
+		]);
+		await mkdir(stagedAssetDirectory, { recursive: true });
 
-	process.stdout.write(
-		`Contentful fixture written with ${capturedImages.size} local visual assets.\n`,
-	);
+		const [projectRecords, aboutContent, socialMedia, albums] =
+			await Promise.all([
+				loadContentfulFixtureProjects(),
+				getAboutContent(),
+				getSocialMedia(),
+				getAlbums(),
+			]);
+		const { authProjects, projectInfos, projects } = projectRecords;
+		const { aboutData: about, backgroundImage, resumeUrl } = aboutContent;
+
+		const uniqueImages = new Map<string, ImageType>();
+		const addImage = (image: ImageType) => {
+			const existing = uniqueImages.get(image.id);
+			if (existing && existing.url !== image.url) {
+				throw new Error(`Image ID ${image.id} refers to multiple URLs.`);
+			}
+			uniqueImages.set(image.id, image);
+		};
+		addImage(backgroundImage);
+		addImage(about.profilePicture);
+		for (const project of projects) {
+			addImage(project.coverImage);
+		}
+		for (const projectInfo of projectInfos) {
+			for (const image of getRichTextImages(projectInfo.description)) {
+				addImage(image);
+			}
+		}
+		for (const album of albums) {
+			for (const photo of album.photos) {
+				addImage(photo);
+			}
+		}
+
+		const captureTasks = [...uniqueImages.values()].map(
+			(image) => async () => captureImage(image),
+		);
+		const capturedImages = new Map(
+			(await pAll(captureTasks, { concurrency: 8 })).map((image) => [
+				image.id,
+				image,
+			]),
+		);
+		for (const projectInfo of projectInfos) {
+			replaceRichTextImages(projectInfo.description, capturedImages);
+		}
+
+		const protectedSlugs = new Set(
+			authProjects
+				.filter((project) => project.password)
+				.map((project) => project.slug),
+		);
+		const capturedProjects = projects.map((project) => ({
+			...project,
+			coverImage: requireCapturedImage(project.coverImage, capturedImages),
+		}));
+		const projectEntries = projectInfos.map((projectInfo) => [
+			projectInfo.slug,
+			{
+				...projectInfo,
+				coverImage: requireCapturedImage(
+					projectInfo.coverImage,
+					capturedImages,
+				),
+				password: protectedSlugs.has(projectInfo.slug)
+					? "playwright-password"
+					: undefined,
+			},
+		]);
+		const fixture = {
+			backgroundImage: requireCapturedImage(backgroundImage, capturedImages),
+			socialMedia,
+			about: {
+				...about,
+				profilePicture: requireCapturedImage(
+					about.profilePicture,
+					capturedImages,
+				),
+			},
+			resumeUrl,
+			projects: capturedProjects,
+			projectInfo: Object.fromEntries(projectEntries),
+			albums: albums.map((album) => ({
+				...album,
+				photos: album.photos.map((photo) =>
+					requireCapturedImage(photo, capturedImages),
+				),
+			})),
+		};
+		await writeFile(
+			stagedOutputPath,
+			`${JSON.stringify(fixture, null, "\t")}\n`,
+		);
+
+		await replaceFixtureOutputs(fixtureOutputPaths);
+
+		process.stdout.write(
+			`Contentful fixture written with ${capturedImages.size} local visual assets.\n`,
+		);
+	} finally {
+		await Promise.all([
+			rm(stagedAssetDirectory, { recursive: true, force: true }),
+			rm(stagedOutputPath, { force: true }),
+		]);
+	}
 }
 
-await main();
+await withFixtureOutputLock(fixtureLockPath, main);

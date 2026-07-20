@@ -34,17 +34,19 @@ import { HostedZone } from "aws-cdk-lib/aws-route53";
 import { Topic } from "aws-cdk-lib/aws-sns";
 import { EmailSubscription } from "aws-cdk-lib/aws-sns-subscriptions";
 import type { Construct } from "constructs";
+import { getCleanUrlRules } from "../../lib/amplify-artifact";
+import {
+	CONTENTFUL_ACCESS_TOKEN_PARAMETER,
+	PRODUCTION_SECRET_PARAMETERS,
+	PROJECT_AUTH_SECRET_PARAMETER,
+} from "../../lib/deployment-parameters";
+import { PRODUCTION_AWS_ACCOUNT, PRODUCTION_AWS_REGION } from "./environment";
 
-const AWS_REGION = "us-west-2";
 const DOMAIN_NAME = "carolyndiloreto.com";
 const LEGACY_DOMAIN_NAME = "diloreto.com";
 const LEGACY_DOMAIN_PREFIX = "carolyn";
 const REPOSITORY_URL = "https://github.com/soodoh/carolyn-portfolio";
 const PRODUCTION_BRANCH = "amplify-production";
-const CONTENTFUL_ACCESS_TOKEN_PARAMETER =
-	"/carolyn-portfolio/prod/contentful-access-token";
-const PROJECT_AUTH_SECRET_PARAMETER =
-	"/carolyn-portfolio/prod/project-auth-secret";
 
 // Route 53 Registrar created this zone when the domain was registered. It is
 // imported so CDK does not create a duplicate hosted zone during migration.
@@ -60,8 +62,15 @@ export class HostingStack extends Stack {
 	constructor(scope: Construct, id: string, props: StackProps) {
 		super(scope, id, props);
 
-		if (Stack.of(this).region !== AWS_REGION) {
-			throw new Error(`This stack must be deployed in ${AWS_REGION}`);
+		if (Stack.of(this).account !== PRODUCTION_AWS_ACCOUNT) {
+			throw new Error(
+				`This stack must be deployed in AWS account ${PRODUCTION_AWS_ACCOUNT}`,
+			);
+		}
+		if (Stack.of(this).region !== PRODUCTION_AWS_REGION) {
+			throw new Error(
+				`This stack must be deployed in ${PRODUCTION_AWS_REGION}`,
+			);
 		}
 
 		const contentfulSpaceId = new CfnParameter(this, "ContentfulSpaceId", {
@@ -132,11 +141,8 @@ export class HostingStack extends Stack {
 			targetKey: secretKey,
 		});
 
-		const contentfulParameterArn = this.parameterArn(
-			CONTENTFUL_ACCESS_TOKEN_PARAMETER,
-		);
-		const projectAuthParameterArn = this.parameterArn(
-			PROJECT_AUTH_SECRET_PARAMETER,
+		const productionSecretParameterArns = PRODUCTION_SECRET_PARAMETERS.map(
+			(parameterName) => this.parameterArn(parameterName),
 		);
 
 		const amplifySourceArn = this.formatArn({
@@ -154,12 +160,12 @@ export class HostingStack extends Stack {
 		const amplifyServiceRole = new Role(this, "AmplifyServiceAndLoggingRole", {
 			assumedBy: amplifyServicePrincipal,
 			description:
-				"Allows Amplify builds to read Contentful and Amplify SSR to publish bounded CloudWatch logs",
+				"Allows Amplify builds to read production secrets and Amplify SSR to publish bounded CloudWatch logs",
 		});
 		amplifyServiceRole.addToPolicy(
 			new PolicyStatement({
 				actions: ["ssm:GetParameter"],
-				resources: [contentfulParameterArn],
+				resources: productionSecretParameterArns,
 			}),
 		);
 		amplifyServiceRole.addToPolicy(
@@ -167,7 +173,8 @@ export class HostingStack extends Stack {
 				actions: ["kms:Decrypt"],
 				conditions: {
 					StringEquals: {
-						"kms:EncryptionContext:PARAMETER_ARN": contentfulParameterArn,
+						"kms:EncryptionContext:PARAMETER_ARN":
+							productionSecretParameterArns,
 					},
 				},
 				resources: [secretKey.keyArn],
@@ -219,7 +226,7 @@ export class HostingStack extends Stack {
 		);
 		const amplifyApp = new CfnApp(this, "AmplifyApp", {
 			accessToken: githubAccessToken,
-			cacheConfig: { type: "AMPLIFY_MANAGED_NO_COOKIES" },
+			cacheConfig: { type: "AMPLIFY_MANAGED" },
 			customRules: [
 				{
 					source: `https://www.${DOMAIN_NAME}`,
@@ -231,6 +238,7 @@ export class HostingStack extends Stack {
 					status: "301",
 					target: `https://${DOMAIN_NAME}`,
 				},
+				...getCleanUrlRules(),
 			],
 			description: "Carolyn DiLoreto portfolio production hosting",
 			enableBranchAutoDeletion: false,
@@ -252,7 +260,7 @@ export class HostingStack extends Stack {
 		amplifyComputeRole.addToPolicy(
 			new PolicyStatement({
 				actions: ["ssm:GetParameter"],
-				resources: [contentfulParameterArn, projectAuthParameterArn],
+				resources: productionSecretParameterArns,
 			}),
 		);
 		amplifyComputeRole.addToPolicy(
@@ -260,10 +268,8 @@ export class HostingStack extends Stack {
 				actions: ["kms:Decrypt"],
 				conditions: {
 					StringEquals: {
-						"kms:EncryptionContext:PARAMETER_ARN": [
-							contentfulParameterArn,
-							projectAuthParameterArn,
-						],
+						"kms:EncryptionContext:PARAMETER_ARN":
+							productionSecretParameterArns,
 					},
 				},
 				resources: [secretKey.keyArn],

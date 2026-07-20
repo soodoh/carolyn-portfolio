@@ -2,19 +2,12 @@ import { createFileRoute } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
 import type { JSX } from "react";
 import PhotographyContent from "@/components/photography-content";
-import { getAlbumNames, getFirstAlbum } from "@/lib/fetch-photos";
+import { getInitialPhotographyData } from "@/lib/fetch-photos";
 import { containerClass } from "@/lib/utils";
 
-const getPhotographyPageData = createServerFn().handler(async () => {
-	const [albumNames, initialAlbum] = await Promise.all([
-		getAlbumNames(),
-		getFirstAlbum(),
-	]);
-	if (albumNames[0] !== initialAlbum.name) {
-		throw new Error("Photography album order is inconsistent.");
-	}
-	return { albumNames, initialAlbum };
-});
+const getPhotographyPageData = createServerFn().handler(
+	getInitialPhotographyData,
+);
 
 export const Route = createFileRoute("/photography")({
 	loader: () => getPhotographyPageData(),

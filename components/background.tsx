@@ -18,6 +18,7 @@ const Background = ({
 			className={cn("bg-dark h-screen absolute inset-0 -z-1", fixed && "fixed")}
 		>
 			<ImageWrapper
+				alt=""
 				className="w-full h-full object-cover"
 				priority
 				image={image}

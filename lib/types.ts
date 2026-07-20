@@ -20,9 +20,27 @@ export type Album = {
 	photos: ImageType[];
 };
 
-export type IconType = "instagram" | "linkedin";
-export type ProjectType = "Design" | "Film" | "Interactive" | "Animation";
+export const ICON_TYPES = ["instagram", "linkedin"] as const;
+export type IconType = (typeof ICON_TYPES)[number];
+
+export const PROJECT_TYPES = [
+	"Design",
+	"Film",
+	"Interactive",
+	"Animation",
+] as const;
+export type ProjectType = (typeof PROJECT_TYPES)[number];
 export type ProjectFilter = "All" | ProjectType;
+
+export function isIconType(value: unknown): value is IconType {
+	return typeof value === "string" && ICON_TYPES.some((icon) => icon === value);
+}
+
+export function isProjectType(value: unknown): value is ProjectType {
+	return (
+		typeof value === "string" && PROJECT_TYPES.some((type) => type === value)
+	);
+}
 
 export type SocialMedia = {
 	id: string;

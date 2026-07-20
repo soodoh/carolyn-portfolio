@@ -9,6 +9,7 @@ bun-debug.log*
 /playwright-report/
 /test-results/
 /.pi-subagents/
+/.playwright-mcp/
 
 # TanStack Start
 /.output/
@@ -45,3 +46,11 @@ bun-debug.log*
 
 # Generated auth manifest
 lib/project-auth-manifest.json
+
+# Fixture/build transaction recovery artifacts
+/public/.test-assets-staging/
+/public/.test-assets-backup/
+/tests/fixtures/contentful.json.tmp
+/tests/fixtures/contentful.json.backup
+/tests/fixtures/.contentful-fixture-commit
+/tests/fixtures/.contentful-fixture.lock

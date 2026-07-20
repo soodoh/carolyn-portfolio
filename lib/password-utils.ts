@@ -35,9 +35,19 @@ async function hmacVerify(data: string, signature: string): Promise<boolean> {
 	return mismatchCount === 0;
 }
 
-export async function signToken(slug: string): Promise<string> {
+export function deriveProjectAuthVersion(
+	slug: string,
+	password: string,
+): Promise<string> {
+	return hmacSign(`project-auth-version:${slug}:${password}`);
+}
+
+export async function signToken(
+	slug: string,
+	authVersion: string,
+): Promise<string> {
 	const timestamp = Math.floor(Date.now() / 1000).toString();
-	const data = `${slug}:${timestamp}`;
+	const data = `${slug}:${authVersion}:${timestamp}`;
 	const signature = await hmacSign(data);
 	return `${slug}.${timestamp}.${signature}`;
 }
@@ -45,6 +55,7 @@ export async function signToken(slug: string): Promise<string> {
 export async function verifyToken(
 	token: string,
 	slug: string,
+	authVersion: string,
 ): Promise<boolean> {
 	const parts = token.split(".");
 	if (parts.length !== 3) {
@@ -67,7 +78,7 @@ export async function verifyToken(
 		return false;
 	}
 
-	return hmacVerify(`${tokenSlug}:${timestamp}`, signature);
+	return hmacVerify(`${tokenSlug}:${authVersion}:${timestamp}`, signature);
 }
 
 export const COOKIE_MAX_AGE = TOKEN_TTL_SECONDS;
