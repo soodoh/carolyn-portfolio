@@ -454,6 +454,38 @@ describe("live Contentful contracts", () => {
 		).rejects.toThrow("did not return exactly one project");
 	});
 
+	test("accepts Contentful download-host images in project markdown", async () => {
+		const imageUrl =
+			"https://downloads.contentful.com/space/download-image/version/image.gif";
+		const { assetRequests, client } = createFakeClient(
+			[
+				collection([
+					entry("project-detail", {
+						title: "Project detail",
+						slug: "project-detail",
+						summary: "Detail summary",
+						coverImage: imageAsset("detail-cover"),
+						projectType: ["Interactive"],
+						description: `![Downloaded animation](${imageUrl})`,
+					}),
+				]),
+			],
+			imageAsset(
+				"download-image",
+				"//downloads.ctfassets.net/space/download-image/version/image.gif",
+			),
+		);
+
+		const project = await getProjectInfoFromSource(
+			"project-detail",
+			liveSource(client),
+		);
+		expect(assetRequests).toEqual(["download-image"]);
+		expect(JSON.stringify(project.description)).toContain(
+			"https://downloads.ctfassets.net/space/download-image/version/image.gif",
+		);
+	});
+
 	test("shares one retryable asset loader within each project detail fetch", async () => {
 		const imageUrl =
 			"https://images.ctfassets.net/space/repeated-image/version/image.jpg";

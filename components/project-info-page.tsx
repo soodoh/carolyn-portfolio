@@ -40,9 +40,9 @@ const ProjectInfoPage = ({
 							src={projectInfo.videoLink}
 							title="Video Player"
 							loading="lazy"
-							allow="accelerometer; autoplay; encrypted-media; gyroscope; fullscreen; picture-in-picture"
-							referrerPolicy="no-referrer"
-							sandbox="allow-scripts allow-presentation"
+							allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; fullscreen; picture-in-picture; web-share"
+							referrerPolicy="strict-origin-when-cross-origin"
+							sandbox="allow-scripts allow-same-origin allow-presentation allow-popups"
 							allowFullScreen
 						/>
 					</div>

@@ -194,24 +194,38 @@ test.describe("Projects visual states", () => {
 		});
 	});
 
+	test("configures Vimeo and YouTube embeds for playback", async ({ page }) => {
+		for (const project of [
+			{ path: "/projects/em-body", origin: "https://player.vimeo.com" },
+			{ path: "/projects/plantum", origin: "https://www.youtube.com" },
+		]) {
+			await page.goto(project.path);
+			const videoPlayer = page.getByTitle("Video Player");
+			await expect(videoPlayer).toBeVisible();
+			await expect(videoPlayer).toHaveAttribute(
+				"sandbox",
+				"allow-scripts allow-same-origin allow-presentation allow-popups",
+			);
+			await expect(videoPlayer).toHaveAttribute(
+				"referrerpolicy",
+				"strict-origin-when-cross-origin",
+			);
+			await expect(videoPlayer).toHaveAttribute(
+				"allow",
+				"accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; fullscreen; picture-in-picture; web-share",
+			);
+			const source = await videoPlayer.getAttribute("src");
+			if (!source) {
+				throw new Error("Video player is missing its source URL.");
+			}
+			expect(new URL(source).origin).toBe(project.origin);
+		}
+	});
+
 	test("matches a video project", async ({ page }) => {
 		await page.goto("/projects/em-body");
 		const videoPlayer = page.getByTitle("Video Player");
 		await expect(videoPlayer).toBeVisible();
-		await expect(videoPlayer).toHaveAttribute(
-			"sandbox",
-			"allow-scripts allow-presentation",
-		);
-		await expect(videoPlayer).toHaveAttribute("referrerpolicy", "no-referrer");
-		await expect(videoPlayer).toHaveAttribute(
-			"allow",
-			"accelerometer; autoplay; encrypted-media; gyroscope; fullscreen; picture-in-picture",
-		);
-		const source = await videoPlayer.getAttribute("src");
-		if (!source) {
-			throw new Error("Video player is missing its source URL.");
-		}
-		expect(new URL(source).origin).toBe("https://player.vimeo.com");
 		await expectFullPageScreenshot(page, "project-video.png", {
 			expectedPath: "/projects/em-body",
 			capture: "page",

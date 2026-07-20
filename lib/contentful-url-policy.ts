@@ -1,5 +1,6 @@
 const CONTENTFUL_IMAGE_HOSTS = new Set([
 	"downloads.contentful.com",
+	"downloads.ctfassets.net",
 	"images.contentful.com",
 	"images.ctfassets.net",
 ]);

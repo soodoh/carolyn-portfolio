@@ -438,6 +438,11 @@ describe("Contentful boundaries", () => {
 		).toBe("legacy_asset");
 		expect(
 			getContentfulAssetId(
+				"https://downloads.ctfassets.net/space/download_asset/version/image.gif",
+			),
+		).toBe("download_asset");
+		expect(
+			getContentfulAssetId(
 				"https://images.contentful.com/rcuybrzofove/DgiExY3V20GNhotAOkooW/dcd8a8b195022f342790c3a7b5f7af49/Motion_Design_tracker.png",
 			),
 		).toBe("DgiExY3V20GNhotAOkooW");
