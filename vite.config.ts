@@ -4,13 +4,16 @@ import viteReact from "@vitejs/plugin-react";
 import { nitro } from "nitro/vite";
 import { defineConfig, loadEnv } from "vite";
 import { getStaticPublicPaths } from "./lib/amplify-artifact";
+import { getArtifactMode } from "./lib/build-environment";
 
 const staticPublicPaths = new Set(getStaticPublicPaths());
 
 export default defineConfig(({ mode }) => {
 	Object.assign(process.env, loadEnv(mode, process.cwd(), ""));
+	const artifactMode = getArtifactMode(process.env);
 
 	return {
+		publicDir: false,
 		define: {
 			"process.env.RELEASE_COMMIT": JSON.stringify(
 				process.env.AWS_COMMIT_ID ?? process.env.GITHUB_SHA ?? "local",
@@ -32,6 +35,14 @@ export default defineConfig(({ mode }) => {
 			nitro({
 				preset: "aws_amplify",
 				awsAmplify: { runtime: "nodejs24.x" },
+				publicAssets: [
+					{
+						dir: "public",
+						maxAge: 0,
+						ignore:
+							artifactMode === "production" ? ["public/test-assets/**"] : [],
+					},
+				],
 			}),
 			tanstackStart({
 				prerender: {
