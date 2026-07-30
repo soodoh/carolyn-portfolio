@@ -123,7 +123,9 @@ test.describe("emitted Amplify artifact", () => {
 		expect(imageResponses.get(imageUrl)).toBe(200);
 	});
 
-	test("preserves compute redirects and 404 responses", async ({ request }) => {
+	test("preserves compute redirect and client error semantics", async ({
+		request,
+	}) => {
 		const resume = await request.get("/resume", { maxRedirects: 0 });
 		expect(resume.status()).toBe(307);
 		expectArtifactTarget(resume, "compute");
@@ -137,5 +139,23 @@ test.describe("emitted Amplify artifact", () => {
 		expect(missing.status()).toBe(404);
 		expectArtifactTarget(missing, "compute");
 		expect(await missing.text()).toContain("Page Not Found");
+
+		for (const accept of ["application/json", "text/event-stream"]) {
+			const unacceptable = await request.get("/not-an-artifact-route", {
+				headers: { Accept: accept },
+				maxRedirects: 0,
+			});
+			expect(unacceptable.status(), accept).toBe(406);
+			expectArtifactTarget(unacceptable, "compute");
+			expect(unacceptable.headers().vary).toBe("Accept");
+		}
+
+		const unacceptablePost = await request.post("/not-an-artifact-route", {
+			data: {},
+			headers: { Accept: "application/json" },
+			maxRedirects: 0,
+		});
+		expect(unacceptablePost.status()).toBe(406);
+		expectArtifactTarget(unacceptablePost, "compute");
 	});
 });

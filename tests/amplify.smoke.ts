@@ -118,7 +118,7 @@ test.describe("Amplify production behavior", () => {
 		await portraitImage.evaluate((image: HTMLImageElement) => image.decode());
 	});
 
-	test("returns the dynamic resume redirect and a real 404", async ({
+	test("returns correct redirect and client error statuses", async ({
 		request,
 	}) => {
 		const resume = await request.get("/resume", { maxRedirects: 0 });
@@ -132,6 +132,24 @@ test.describe("Amplify production behavior", () => {
 		expect(new URL(missing.url()).origin).toBe(canonicalOrigin);
 		expect(missing.status()).toBe(404);
 		expect(await missing.text()).toContain("Page Not Found");
+
+		for (const accept of ["application/json", "text/event-stream"]) {
+			const unacceptable = await request.get("/not-a-real-amplify-route", {
+				headers: { Accept: accept },
+				maxRedirects: 0,
+			});
+			expect(new URL(unacceptable.url()).origin, accept).toBe(canonicalOrigin);
+			expect(unacceptable.status(), accept).toBe(406);
+			expect(unacceptable.headers().vary).toBe("Accept");
+		}
+
+		const unacceptablePost = await request.post("/not-a-real-amplify-route", {
+			data: {},
+			headers: { Accept: "application/json" },
+			maxRedirects: 0,
+		});
+		expect(new URL(unacceptablePost.url()).origin).toBe(canonicalOrigin);
+		expect(unacceptablePost.status()).toBe(406);
 	});
 
 	test("preserves paths and queries when redirecting domain aliases", async ({
