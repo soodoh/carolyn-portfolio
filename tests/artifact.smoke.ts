@@ -140,6 +140,10 @@ test.describe("emitted Amplify artifact", () => {
 		expectArtifactTarget(missing, "compute");
 		expect(await missing.text()).toContain("Page Not Found");
 
+		const malformed = await request.get("/%c0%afapp", { maxRedirects: 0 });
+		expect(malformed.status()).toBe(400);
+		expectArtifactTarget(malformed, "compute");
+
 		for (const accept of ["application/json", "text/event-stream"]) {
 			const unacceptable = await request.get("/not-an-artifact-route", {
 				headers: { Accept: accept },
