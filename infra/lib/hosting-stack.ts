@@ -16,6 +16,7 @@ import { CfnBudget } from "aws-cdk-lib/aws-budgets";
 import {
 	Alarm,
 	ComparisonOperator,
+	MathExpression,
 	Metric,
 	TreatMissingData,
 } from "aws-cdk-lib/aws-cloudwatch";
@@ -338,17 +339,32 @@ export class HostingStack extends Stack {
 		);
 		const serverErrorAlarm = new Alarm(this, "Amplify5xxAlarm", {
 			alarmDescription:
-				"At least one Amplify Hosting 5xx response in five minutes",
+				"Amplify Hosting 5xx rate is at least 2% with 20 or more requests in two of three five-minute periods",
 			comparisonOperator: ComparisonOperator.GREATER_THAN_OR_EQUAL_TO_THRESHOLD,
-			evaluationPeriods: 1,
-			metric: new Metric({
-				dimensionsMap: { App: amplifyApp.attrAppId },
-				metricName: "5xxErrors",
-				namespace: "AWS/AmplifyHosting",
+			datapointsToAlarm: 2,
+			evaluationPeriods: 3,
+			metric: new MathExpression({
+				expression: "IF(requests >= 20, 100 * errors / requests, 0)",
+				label: "Amplify Hosting 5xx error rate (%)",
 				period: Duration.minutes(5),
-				statistic: "Sum",
+				usingMetrics: {
+					errors: new Metric({
+						dimensionsMap: { App: amplifyApp.attrAppId },
+						metricName: "5xxErrors",
+						namespace: "AWS/AmplifyHosting",
+						period: Duration.minutes(5),
+						statistic: "Sum",
+					}),
+					requests: new Metric({
+						dimensionsMap: { App: amplifyApp.attrAppId },
+						metricName: "Requests",
+						namespace: "AWS/AmplifyHosting",
+						period: Duration.minutes(5),
+						statistic: "Sum",
+					}),
+				},
 			}),
-			threshold: 1,
+			threshold: 2,
 			treatMissingData: TreatMissingData.NOT_BREACHING,
 		});
 		serverErrorAlarm.addAlarmAction(new SnsAction(alarmTopic));

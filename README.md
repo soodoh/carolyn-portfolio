@@ -127,7 +127,7 @@ bun run synth
 - Production apex/`www` and legacy `carolyn.diloreto.com` Amplify associations with permanent canonical redirects
 - GitHub Actions OIDC trust restricted to this repository's `production` environment, whose deployment branch policy allows only `main`
 - An Amplify-only deployment role
-- Fourteen-day SSR log retention, a minimal 5xx alarm, and email notifications
+- Fourteen-day SSR log retention, a persistent 5xx-rate alarm, and email notifications
 - An account-wide $5 monthly actual/forecast AWS budget warning
 
 Route 53 is authoritative for `carolyndiloreto.com`, and `EnableDomainAssociation` now defaults to `true` as the deployed steady state. Setting it to `false` is destructive and removes both Amplify domain associations; it is not a routine rollback switch.
@@ -275,7 +275,7 @@ Current public pricing assumptions, before free-tier credits:
 | --- | --- |
 | Route 53 hosted zone | $0.50/month plus about $0.40 per million standard queries |
 | Dedicated KMS key | About $1/month plus negligible API use |
-| CloudWatch 5xx alarm | About $0.10/month; logs/SNS are usage-based |
+| CloudWatch 5xx-rate alarm | About $0.20/month for its two alarm metrics; logs/SNS are usage-based |
 | Amplify standard build | $0.01/minute |
 | Amplify CDN storage | $0.023/GB-month |
 | Amplify transfer out | $0.15/GB |
@@ -283,7 +283,7 @@ Current public pricing assumptions, before free-tier credits:
 | Amplify SSR duration | $0.20/GB-hour |
 | AWS Budget monitoring | Free for notification-only budgets |
 
-Expected fixed baseline is roughly $1.60/month plus low logs, build, CDN, transfer, DNS query, and SSR usage. Data transfer is the largest likely variable. Amplify WAF is intentionally omitted because its Amplify integration charge alone is $15/month before normal WAF charges. A DynamoDB-backed password-attempt limiter is also intentionally omitted while traffic and abuse remain negligible; it would add trusted client-IP handling, atomic counter/TTL policy, IAM, and failure modes disproportionate to the current risk. Revisit distributed limiting if invalid-password traffic or SSR cost materially increases. PR previews, staging branches, and unnecessary alarms are disabled.
+Expected fixed baseline is roughly $1.70/month plus low logs, build, CDN, transfer, DNS query, and SSR usage. Data transfer is the largest likely variable. Amplify WAF is intentionally omitted because its Amplify integration charge alone is $15/month before normal WAF charges. A DynamoDB-backed password-attempt limiter is also intentionally omitted while traffic and abuse remain negligible; it would add trusted client-IP handling, atomic counter/TTL policy, IAM, and failure modes disproportionate to the current risk. Revisit distributed limiting if invalid-password traffic or SSR cost materially increases. PR previews, staging branches, and unnecessary alarms are disabled.
 
 After one complete billing week, review Cost Explorer by service, Amplify build minutes/data transfer/SSR use, CloudWatch ingestion, KMS, and Route 53. Recalculate the monthly projection and investigate any forecast approaching the $5 warning.
 

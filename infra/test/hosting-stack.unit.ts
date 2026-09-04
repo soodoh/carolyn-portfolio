@@ -366,17 +366,55 @@ describe("HostingStack production resources", () => {
 		expect(alarm.Properties).toEqual({
 			AlarmActions: [{ Ref: topicLogicalId }],
 			AlarmDescription:
-				"At least one Amplify Hosting 5xx response in five minutes",
+				"Amplify Hosting 5xx rate is at least 2% with 20 or more requests in two of three five-minute periods",
 			ComparisonOperator: "GreaterThanOrEqualToThreshold",
-			Dimensions: [
-				{ Name: "App", Value: { "Fn::GetAtt": ["AmplifyApp", "AppId"] } },
+			DatapointsToAlarm: 2,
+			EvaluationPeriods: 3,
+			Metrics: [
+				{
+					Expression: "IF(requests >= 20, 100 * errors / requests, 0)",
+					Id: "expr_1",
+					Label: "Amplify Hosting 5xx error rate (%)",
+					ReturnData: true,
+				},
+				{
+					Id: "errors",
+					MetricStat: {
+						Metric: {
+							Dimensions: [
+								{
+									Name: "App",
+									Value: { "Fn::GetAtt": ["AmplifyApp", "AppId"] },
+								},
+							],
+							MetricName: "5xxErrors",
+							Namespace: "AWS/AmplifyHosting",
+						},
+						Period: 300,
+						Stat: "Sum",
+					},
+					ReturnData: false,
+				},
+				{
+					Id: "requests",
+					MetricStat: {
+						Metric: {
+							Dimensions: [
+								{
+									Name: "App",
+									Value: { "Fn::GetAtt": ["AmplifyApp", "AppId"] },
+								},
+							],
+							MetricName: "Requests",
+							Namespace: "AWS/AmplifyHosting",
+						},
+						Period: 300,
+						Stat: "Sum",
+					},
+					ReturnData: false,
+				},
 			],
-			EvaluationPeriods: 1,
-			MetricName: "5xxErrors",
-			Namespace: "AWS/AmplifyHosting",
-			Period: 300,
-			Statistic: "Sum",
-			Threshold: 1,
+			Threshold: 2,
 			TreatMissingData: "notBreaching",
 		});
 
